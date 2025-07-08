@@ -14,7 +14,7 @@
 		D24556CB2E1933E400409BD7 /* Exceptions for "SaiSai" folder in "SaiSai" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				SupportingFiles/Info.plist,
 			);
 			target = D24556B12E192BE100409BD7 /* SaiSai */;
 		};
