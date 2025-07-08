@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SaiSaiHomeView: View {
+struct HomeView: View {
     
     var body: some View {
         ScrollView {
@@ -187,5 +187,5 @@ struct SaiSaiHomeView: View {
 }
 
 #Preview {
-    SaiSaiHomeView()
+    HomeView()
 }
