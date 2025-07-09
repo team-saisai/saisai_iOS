@@ -8,4 +8,4 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 
-BASE_URL = http:/$()/43.202.239.148:8080/api
+BASE_URL = http:/$()/43.202.239.148:8080
