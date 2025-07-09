@@ -52,8 +52,7 @@
 		D24556A92E192BE100409BD7 = {
 			isa = PBXGroup;
 			children = (
-				E202BAEC2E1E3F3900ECEE0E /* Release.xcconfig */,
-				E202BAEA2E1E3F2A00ECEE0E /* Debug.xcconfig */,
+				E202BAEE2E1E423B00ECEE0E /* XCConfig */,
 				D24556B42E192BE100409BD7 /* SaiSai */,
 				D24556B32E192BE100409BD7 /* Products */,
 			);
@@ -65,6 +64,15 @@
 				D24556B22E192BE100409BD7 /* SaiSai.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E202BAEE2E1E423B00ECEE0E /* XCConfig */ = {
+			isa = PBXGroup;
+			children = (
+				E202BAEC2E1E3F3900ECEE0E /* Release.xcconfig */,
+				E202BAEA2E1E3F2A00ECEE0E /* Debug.xcconfig */,
+			);
+			path = XCConfig;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
