@@ -22,22 +22,14 @@ final class LoginViewModel: ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let data = try await API().login(email: emailText, password: passwordText)
-                let accessToken = data.data.accessToken
-                let refreshToken = data.data.refreshToken
-                
-                let aT = KeychainManagerImpl().save(token: "accessToken", forKey: accessToken)
-                let rT = KeychainManagerImpl().save(token: "refreshToken", forKey: refreshToken)
-                
-                if !(aT && rT) {
-                    print("DEBUG")
-                    print(aT, rT)
-                    return
-                }
-                print("SUCCESS")
+                let service = NetworkService<AuthAPI>()
+                let _ = try await service.request(
+                    .login(email: emailText, password: passwordText),
+                    responseDTO: LoginResponseDTO.self)
                 await delegate?.isLoggedIn(true)
             } catch {
-                print("로그인 실패 😭")
+                // TODO: - Alert logic 추가
+                print("로그인 실패😣")
             }
         }
     }

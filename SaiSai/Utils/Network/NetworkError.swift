@@ -11,9 +11,10 @@ enum NetworkError: Error {
     case invalidURL
     case invalidRequestBody
     case invalidHTTPResponse
-    case BadRequest
-    case ServerError
-    case TokenError
-    case Reissue
-    case VersionUpdate
+    case badRequest
+    case serverError
+    case tokenError
+    case reissue
+    case versionUpdate
+    case unauthroized
 }
