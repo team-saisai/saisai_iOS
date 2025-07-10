@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E202BAEB2E1E3F2A00ECEE0E /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E202BAEA2E1E3F2A00ECEE0E /* Debug.xcconfig */; };
+		E202BAED2E1E3F3900ECEE0E /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E202BAEC2E1E3F3900ECEE0E /* Release.xcconfig */; };
+		E202BC402E1E91D300ECEE0E /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = E202BC3F2E1E91D300ECEE0E /* CombineMoya */; };
+		E202BC422E1E91D300ECEE0E /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = E202BC412E1E91D300ECEE0E /* Moya */; };
+		E202BC442E1E91D300ECEE0E /* ReactiveMoya in Frameworks */ = {isa = PBXBuildFile; productRef = E202BC432E1E91D300ECEE0E /* ReactiveMoya */; };
+		E202BC462E1E91D300ECEE0E /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = E202BC452E1E91D300ECEE0E /* RxMoya */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		D24556B22E192BE100409BD7 /* SaiSai.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SaiSai.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E202BAEA2E1E3F2A00ECEE0E /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		E202BAEC2E1E3F3900ECEE0E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -36,6 +47,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E202BC422E1E91D300ECEE0E /* Moya in Frameworks */,
+				E202BC402E1E91D300ECEE0E /* CombineMoya in Frameworks */,
+				E202BC462E1E91D300ECEE0E /* RxMoya in Frameworks */,
+				E202BC442E1E91D300ECEE0E /* ReactiveMoya in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,6 +60,7 @@
 		D24556A92E192BE100409BD7 = {
 			isa = PBXGroup;
 			children = (
+				E202BAEE2E1E423B00ECEE0E /* XCConfig */,
 				D24556B42E192BE100409BD7 /* SaiSai */,
 				D24556B32E192BE100409BD7 /* Products */,
 			);
@@ -56,6 +72,15 @@
 				D24556B22E192BE100409BD7 /* SaiSai.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E202BAEE2E1E423B00ECEE0E /* XCConfig */ = {
+			isa = PBXGroup;
+			children = (
+				E202BAEC2E1E3F3900ECEE0E /* Release.xcconfig */,
+				E202BAEA2E1E3F2A00ECEE0E /* Debug.xcconfig */,
+			);
+			path = XCConfig;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -78,6 +103,10 @@
 			);
 			name = SaiSai;
 			packageProductDependencies = (
+				E202BC3F2E1E91D300ECEE0E /* CombineMoya */,
+				E202BC412E1E91D300ECEE0E /* Moya */,
+				E202BC432E1E91D300ECEE0E /* ReactiveMoya */,
+				E202BC452E1E91D300ECEE0E /* RxMoya */,
 			);
 			productName = SaiSai;
 			productReference = D24556B22E192BE100409BD7 /* SaiSai.app */;
@@ -107,6 +136,9 @@
 			);
 			mainGroup = D24556A92E192BE100409BD7;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E202BC3E2E1E91D300ECEE0E /* XCRemoteSwiftPackageReference "Moya" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D24556B32E192BE100409BD7 /* Products */;
 			projectDirPath = "";
@@ -122,6 +154,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E202BAED2E1E3F3900ECEE0E /* Release.xcconfig in Resources */,
+				E202BAEB2E1E3F2A00ECEE0E /* Debug.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,6 +174,7 @@
 /* Begin XCBuildConfiguration section */
 		D24556BB2E192BE300409BD7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E202BAEA2E1E3F2A00ECEE0E /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -204,6 +239,7 @@
 		};
 		D24556BC2E192BE300409BD7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E202BAEC2E1E3F3900ECEE0E /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -270,7 +306,7 @@
 				DEVELOPMENT_TEAM = 876W82FDBV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SaiSai/Info.plist;
+				INFOPLIST_FILE = SaiSai/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -302,7 +338,7 @@
 				DEVELOPMENT_TEAM = 876W82FDBV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SaiSai/Info.plist;
+				INFOPLIST_FILE = SaiSai/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -345,6 +381,40 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E202BC3E2E1E91D300ECEE0E /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E202BC3F2E1E91D300ECEE0E /* CombineMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E202BC3E2E1E91D300ECEE0E /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = CombineMoya;
+		};
+		E202BC412E1E91D300ECEE0E /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E202BC3E2E1E91D300ECEE0E /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
+		};
+		E202BC432E1E91D300ECEE0E /* ReactiveMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E202BC3E2E1E91D300ECEE0E /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = ReactiveMoya;
+		};
+		E202BC452E1E91D300ECEE0E /* RxMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E202BC3E2E1E91D300ECEE0E /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = RxMoya;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D24556AA2E192BE100409BD7 /* Project object */;
 }

@@ -11,7 +11,7 @@ import SwiftUI
 struct SaiSaiApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            CoreView()
         }
     }
 }
