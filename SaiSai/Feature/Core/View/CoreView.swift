@@ -13,7 +13,7 @@ struct CoreView: View {
     
     var body: some View {
         if vm.isLoggedIn {
-            HomeView()
+            MainView()
         } else {
             LoginView(vm: LoginViewModel(delegate: self.vm))
         }
