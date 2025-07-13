@@ -61,12 +61,3 @@ struct SingleVerticalCourseView: View {
         }
     }
 }
-
-
-extension Date {
-    var formattedText: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/DD"
-        return dateFormatter.string(from: self)
-    }
-}
