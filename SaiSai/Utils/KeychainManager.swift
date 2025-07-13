@@ -16,6 +16,10 @@ protocol KeychainManager {
 final class KeychainManagerImpl: KeychainManager {
     
     func save(token: String, forKey key: String) -> Bool {
+        
+        // FOR DEBUG
+        print(token)
+        
         guard let data = token.data(using: .utf8) else {
             return false
         }
@@ -34,6 +38,7 @@ final class KeychainManagerImpl: KeychainManager {
     }
     
     func retrieveToken(forKey key: String) -> String? {
+        
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,
@@ -47,6 +52,9 @@ final class KeychainManagerImpl: KeychainManager {
               let token = String(data: data, encoding: .utf8) else {
             return nil
         }
+        // FOR DEBUG
+        print(token)
+        
         return token
     }
     
