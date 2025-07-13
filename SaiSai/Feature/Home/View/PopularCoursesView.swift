@@ -1,5 +1,5 @@
 //
-//  FavoriteChallengeView.swift
+//  PopuluarCoursesView.swift
 //  SaiSai
 //
 //  Created by 이창현 on 7/13/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FavoriteChallengeView: View {
+struct PopularCoursesView: View {
     
     @ObservedObject var vm: HomeViewModel
     

@@ -17,17 +17,17 @@ struct RecentCourseView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("최근 챌린지")
                         .font(.pretendard(size: 12))
-                    Text("여의서로 - 여의대로")
+                    Text("\(vm.recentRide.courseName )")
                         .font(.pretendard(.semibold, size: 20))
                         .padding(.bottom, 34)
                 }
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("2024.06.10")
+                    Text("\(vm.recentRide.recentRideAt)")
                         .font(.pretendard(.regular, size: 12))
                         .foregroundStyle(.gray70)
                     HStack(spacing: 12) {
-                        Text("총거리 5.8km")
-                        Text("완주율 100%")
+                        Text("총거리 \(String(format: "%.1f", vm.recentRide.distance))km")
+                        Text("완주율 \(vm.recentRide.progressRate)%")
                     }
                 }
             }

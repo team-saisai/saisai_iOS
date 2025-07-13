@@ -20,7 +20,7 @@ struct HomeView: View {
                 RecentCourseView(vm: vm)
                     .padding(.bottom, 40)
                 // MARK: - 인기 챌린지(API 연동)
-                FavoriteChallengeView(vm: vm)
+                PopularCoursesView(vm: vm)
                 
                 // BadgeCollectionView()
             }

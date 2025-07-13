@@ -13,7 +13,7 @@ import Foundation
 struct MyRecentRidesResponseDTO: Decodable {
     let code: String
     let message: String
-    let data: [RecentRideInfo]
+    let data: RecentRideInfo
 }
 
 struct PopularCourseResponseDTO: Decodable {
@@ -25,10 +25,10 @@ struct PopularCourseResponseDTO: Decodable {
 // MARK: - DataInfo
 struct RecentRideInfo: Decodable {
     let courseId: Int
-    let courseNme: String
+    let courseName: String
     let sigun: String
     let courseImageUrl: String?
-    let distance: CGFloat
+    let distance: Float
     let progressRate: Int
     let recentRideAt: String
 }
@@ -36,9 +36,9 @@ struct RecentRideInfo: Decodable {
 struct CourseInfo: Decodable {
     let courseId: Int
     let courseName: String
-    let level: String
-    let distance: CGFloat
-    let estimatedTime: CGFloat
+    let level: Int
+    let distance: Float
+    let estimatedTime: Float
     let sigun: String
     let courseImageUrl: String?
     let challengeStatus: String
