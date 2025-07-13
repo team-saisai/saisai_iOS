@@ -6,3 +6,42 @@
 //
 
 import Foundation
+
+// MARK: - Request DTO
+
+// MARK: - ResponseDTO
+struct MyRidesResponseDTO: Decodable {
+    let code: String
+    let message: String
+    let data: [MyRidesInfo]
+}
+
+struct PopularCourseResponseDTO: Decodable {
+    let code: String
+    let message: String
+    let data: [CourseInfo]
+}
+
+// MARK: - DataInfo
+struct MyRidesInfo: Decodable {
+    let courseId: Int
+    let courseNme: String
+    let sigun: String
+    let courseImageUrl: String?
+    let distance: CGFloat
+    let progressRate: Int
+    let recentRideAt: String
+}
+
+struct CourseInfo: Decodable {
+    let courseId: Int
+    let courseName: String
+    let level: String
+    let distance: CGFloat
+    let estimatedTime: CGFloat
+    let sigun: String
+    let courseImageUrl: String?
+    let challengeStatus: String
+    let endedAt: String
+    let challengerCount: Int
+}
