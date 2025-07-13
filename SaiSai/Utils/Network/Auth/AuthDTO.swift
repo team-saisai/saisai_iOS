@@ -39,6 +39,7 @@ struct ReissueResponseDTO: Decodable {
     let data: TokenInfo
 }
 
+// MARK: - DataInfo
 struct TokenInfo: Decodable {
     let accessToken: String
     let refreshToken: String
