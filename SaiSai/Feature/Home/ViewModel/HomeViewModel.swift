@@ -8,4 +8,10 @@
 import Foundation
 
 final class HomeViewModel: ObservableObject {
+    @Published var name: String = "델라"
+    @Published var isRecentRideExists: Bool = false
+    @Published var popularCourses: [CourseInfo] = []
+    
+    func fetchData() {
+    }
 }

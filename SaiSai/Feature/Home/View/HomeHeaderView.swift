@@ -8,11 +8,52 @@
 import SwiftUI
 
 struct HomeHeaderView: View {
+    
+    @ObservedObject var vm: HomeViewModel
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(spacing: 0) {
+            HStack {
+                Text("사이사이")
+                    .font(.hakgoyansimSamulham)
+                    .foregroundStyle(.white)
+                Spacer()
+                Button(action: {
+                    // TODO: - 알림 버튼 기능 구현
+                    print("알림 버튼 클릭")
+                }, label: {
+                    Image("icBell")
+                })
+            }
+            .padding(.bottom, 24)
+            
+            HStack(spacing: 0) {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("안녕하세요 \(vm.name)님!")
+                    Text("오늘도 함께 달려보아요:)")
+                }
+                .font(.pretendard(.medium, size: 26))
+                .foregroundStyle(.white)
+                
+                Spacer()
+            }
+            .padding(.bottom, 12)
+            
+            // MARK: - 기상정보(API 연동)
+            HStack(spacing: 18) {
+                HStack(spacing: 4) {
+                    Image("icPin")
+                    Text("서울 마포구")
+                }
+                HStack(spacing: 4) {
+                    Image("icCloud")
+                    Text("19.6C")
+                }
+                Spacer()
+            }
+            .font(.pretendard(.regular, size: 13))
+            .foregroundStyle(.gray30)
+            .padding(.bottom, 32)
+        }
     }
-}
-
-#Preview {
-    HomeHeaderView()
 }

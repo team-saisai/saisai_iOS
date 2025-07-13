@@ -8,11 +8,26 @@
 import SwiftUI
 
 struct FavoriteChallengeView: View {
+    
+    @ObservedObject var vm: HomeViewModel
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 0) {
+                Text("인기 챌린지")
+                    .foregroundStyle(.white)
+                    .font(.pretendard(.semibold, size: 18))
+                Spacer()
+            }
+            .padding(.bottom, 16)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(vm.popularCourses.indices, id: \.self) {
+                        SingleVerticalCourseView(courseInfo: vm.popularCourses[$0])
+                    }
+                }
+            }
+        }
     }
-}
-
-#Preview {
-    FavoriteChallengeView()
 }
