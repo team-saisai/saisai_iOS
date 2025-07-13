@@ -10,10 +10,10 @@ import Foundation
 // MARK: - Request DTO
 
 // MARK: - ResponseDTO
-struct MyRidesResponseDTO: Decodable {
+struct MyRecentRidesResponseDTO: Decodable {
     let code: String
     let message: String
-    let data: [MyRidesInfo]
+    let data: [RecentRideInfo]
 }
 
 struct PopularCourseResponseDTO: Decodable {
@@ -23,7 +23,7 @@ struct PopularCourseResponseDTO: Decodable {
 }
 
 // MARK: - DataInfo
-struct MyRidesInfo: Decodable {
+struct RecentRideInfo: Decodable {
     let courseId: Int
     let courseNme: String
     let sigun: String
