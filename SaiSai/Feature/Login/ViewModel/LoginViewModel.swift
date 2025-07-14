@@ -31,6 +31,8 @@ final class LoginViewModel: ObservableObject {
                 let refreshToken = response.data.refreshToken
                 saveTokens(accessToken: accessToken, refreshToken: refreshToken)
                 
+                print(accessToken)
+                
                 await delegate?.isLoggedIn(true)
             } catch {
                 // TODO: - Alert logic 추가

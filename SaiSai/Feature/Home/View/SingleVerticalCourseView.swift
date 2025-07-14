@@ -25,7 +25,7 @@ struct SingleVerticalCourseView: View {
                         .padding(.bottom, 4)
                     
                     HStack(spacing: 0) {
-                        Text("\(courseInfo.distance)km")
+                        Text("\(String(format:"%.1f", courseInfo.distance))km")
                         Text("난이도 \(courseInfo.level)") // 전환 메서드 필요
                     }
                     .padding(.bottom, 10)

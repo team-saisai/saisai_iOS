@@ -1,5 +1,5 @@
 //
-//  CourseAPI.swift
+//  ChallengeAPI.swift
 //  SaiSai
 //
 //  Created by 이창현 on 7/13/25.
@@ -8,14 +8,14 @@
 import Foundation
 import Moya
 
-enum CourseAPI {
+enum ChallengeAPI {
     case getRecentMyRides
     
     case getPopularCourses
 
 }
 
-extension CourseAPI: TargetType {
+extension ChallengeAPI: TargetType {
     
     var path: String {
         switch self {
@@ -46,7 +46,7 @@ extension CourseAPI: TargetType {
     }
 }
 
-extension CourseAPI {
+extension ChallengeAPI {
     var task: Moya.Task {
         switch self {
         case .getRecentMyRides:

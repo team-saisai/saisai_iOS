@@ -17,7 +17,7 @@ final class HomeViewModel: ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let courseService = NetworkService<CourseAPI>()
+                let courseService = NetworkService<ChallengeAPI>()
                 
                 // TODO: - 이름 추가 필요
                 
