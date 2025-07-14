@@ -10,7 +10,8 @@ import Foundation
 final class HomeViewModel: ObservableObject {
     @Published var name: String = "델라"
     @Published var isRecentRideExists: Bool = false
-    @Published var recentRide: RecentRideInfo = RecentRideInfo(courseId: 0, courseName: "", sigun: "", courseImageUrl: nil, distance: 0.0, progressRate: 0, recentRideAt: "")
+    @Published var isRecentRideDone: Bool = false
+    @Published var recentRide: RecentRideInfo? = nil
     @Published var popularCourses: [CourseInfo] = []
     
     func fetchData() {
@@ -46,8 +47,11 @@ extension HomeViewModel {
     }
     
     @MainActor
-    private func setRecentRides(_ recentRide: RecentRideInfo) {
+    private func setRecentRides(_ recentRide: RecentRideInfo?) {
         self.recentRide = recentRide
+        if let _ = recentRide {
+            self.isRecentRideExists = true
+        }
     }
     
     @MainActor

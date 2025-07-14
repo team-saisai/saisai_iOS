@@ -21,7 +21,7 @@ struct MyInfoDTO: Decodable {
 struct MyRecentRidesResponseDTO: Decodable {
     let code: String
     let message: String
-    let data: RecentRideInfo
+    let data: RecentRideInfo?
 }
 
 // MARK: - Response DTO

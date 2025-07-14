@@ -17,8 +17,10 @@ struct HomeView: View {
                 HomeHeaderView(vm: vm)
                 
                 // MARK: - 최근 코스(API 연동?)
-                RecentCourseView(vm: vm)
-                    .padding(.bottom, 40)
+                if vm.isRecentRideExists {
+                    RecentCourseView(vm: vm)
+                        .padding(.bottom, 40)
+                }
                 // MARK: - 인기 챌린지(API 연동)
                 PopularCoursesView(vm: vm)
                 
