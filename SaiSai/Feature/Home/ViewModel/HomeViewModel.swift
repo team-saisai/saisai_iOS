@@ -18,10 +18,12 @@ final class HomeViewModel: ObservableObject {
             guard let self = self else { return }
             do {
                 let courseService = NetworkService<ChallengeAPI>()
+                let myService = NetworkService<MyAPI>()
                 
-                // TODO: - 이름 추가 필요
+                let myInfoResponse = try await myService.request(.getMyInfo, responseDTO: MyInfoDTO.self)
+                await setName(myInfoResponse.data.nickname)
                 
-                let recentResponse = try await courseService.request(.getRecentMyRides, responseDTO: MyRecentRidesResponseDTO.self)
+                let recentResponse = try await myService.request(.getRecentMyRides, responseDTO: MyRecentRidesResponseDTO.self)
                 let recent = recentResponse.data
                 await setRecentRides(recent)
                 

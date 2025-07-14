@@ -1,35 +1,31 @@
 //
-//  ChallengeAPI.swift
+//  MyAPI.swift
 //  SaiSai
 //
-//  Created by 이창현 on 7/13/25.
+//  Created by 이창현 on 7/14/25.
 //
 
 import Foundation
 import Moya
 
-enum ChallengeAPI {
+enum MyAPI {
+    case getMyInfo
     case getRecentMyRides
-    
-    case getPopularCourses
-
 }
 
-extension ChallengeAPI: TargetType {
+extension MyAPI: TargetType {
     
     var path: String {
         switch self {
+        case .getMyInfo:
+            return "/api/my"
         case .getRecentMyRides:
             return "/api/my/rides"
-        case .getPopularCourses:
-            return "/api/challenges/popular"
         }
     }
-    
     var method: Moya.Method {
         switch self {
-        case .getRecentMyRides: .get
-        case .getPopularCourses: .get
+        case .getMyInfo, .getRecentMyRides: .get
         }
     }
     
@@ -46,12 +42,10 @@ extension ChallengeAPI: TargetType {
     }
 }
 
-extension ChallengeAPI {
+extension MyAPI {
     var task: Moya.Task {
         switch self {
-        case .getRecentMyRides:
-            return .requestPlain
-        case .getPopularCourses:
+        case .getMyInfo, .getRecentMyRides:
             return .requestPlain
         }
     }

@@ -10,12 +10,6 @@ import Foundation
 // MARK: - Request DTO
 
 // MARK: - ResponseDTO
-struct MyRecentRidesResponseDTO: Decodable {
-    let code: String
-    let message: String
-    let data: RecentRideInfo
-}
-
 struct PopularCourseResponseDTO: Decodable {
     let code: String
     let message: String
@@ -23,25 +17,17 @@ struct PopularCourseResponseDTO: Decodable {
 }
 
 // MARK: - DataInfo
-struct RecentRideInfo: Decodable {
-    let courseId: Int
-    let courseName: String
-    let sigun: String
-    let courseImageUrl: String?
-    let distance: Float
-    let progressRate: Int
-    let recentRideAt: String
-}
-
 struct CourseInfo: Decodable {
     let courseId: Int
     let courseName: String
-    let level: Int
-    let distance: Float
-    let estimatedTime: Float
+    let level: Int /// 1 : 하, 2 : 중, 3 : 상
+    let distance: Double
+    let estimatedTime: Double
     let sigun: String
     let courseImageUrl: String?
-    let challengeStatus: String
+    let challengeStatus: String /// ENDED(종료), ONGOING(진행), UPCOMING(예정)
     let endedAt: String
     let challengerCount: Int
+    let isEventActive: Bool
+    let reward: Int
 }
