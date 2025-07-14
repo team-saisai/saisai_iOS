@@ -12,10 +12,19 @@ struct CoreView: View {
     @StateObject var vm: CoreViewModel = .init()
     
     var body: some View {
-        if vm.isLoggedIn {
-            MainView()
-        } else {
-            LoginView(vm: LoginViewModel(delegate: self.vm))
+        ZStack {
+            if vm.isSplashRepresented {
+                SplashView()
+            } else {
+                if vm.isLoggedIn {
+                    MainView()
+                } else {
+                    LoginView(vm: LoginViewModel(delegate: self.vm))
+                }
+            }
+        }
+        .onAppear {
+            vm.validateToken()
         }
     }
 }
