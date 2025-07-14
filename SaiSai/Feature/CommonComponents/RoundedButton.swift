@@ -26,9 +26,16 @@ struct RoundedButton: View {
     
     var body: some View {
         Button(action: action, label: {
-            Text(text)
-                .foregroundStyle(.white)
-                .font(.pretendard(.medium, size: 12))
+            HStack(spacing: 3.5) {
+                if bgColor == .titleChipRed {
+                    Image("fireIcon")
+                        .resizable()
+                        .frame(width: 12.5, height: 14)
+                }
+                Text(text)
+                    .foregroundStyle(.white)
+                    .font(.pretendard(.medium, size: 12))
+            }
         })
         .padding(.horizontal, 9)
         .padding(.vertical, 6)
