@@ -49,8 +49,9 @@ extension HomeViewModel {
     @MainActor
     private func setRecentRides(_ recentRide: RecentRideInfo?) {
         self.recentRide = recentRide
-        if let _ = recentRide {
+        if let recentRide = recentRide {
             self.isRecentRideExists = true
+            self.isRecentRideDone = (recentRide.progressRate == 100 ? true : false)
         }
     }
     
