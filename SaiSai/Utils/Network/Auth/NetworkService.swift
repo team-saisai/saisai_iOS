@@ -47,6 +47,8 @@ extension NetworkService {
     
     func reissue() async throws {
         
+        print("--- REISSUE ---")
+        
         let provider = MoyaProvider<AuthAPI>()
         
         return try await withCheckedThrowingContinuation { continuation in
@@ -62,6 +64,7 @@ extension NetworkService {
                         let _ = KeychainManagerImpl().save(
                             token: response.data.refreshToken,
                             forKey: HTTPHeaderField.refreshToken.rawValue)
+                        print("REISUE SUCCESS!")
                     } catch {
                         continuation.resume()
                     }

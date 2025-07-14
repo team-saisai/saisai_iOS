@@ -27,7 +27,7 @@ struct HomeView: View {
                 // BadgeCollectionView()
             }
             .padding(.top, 20)
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 20)
         }
         .padding(.top, 1)
         .background(.gray90)

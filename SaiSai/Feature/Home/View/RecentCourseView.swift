@@ -17,38 +17,47 @@ struct RecentCourseView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("최근 챌린지")
                         .font(.pretendard(size: 12))
+                        .foregroundStyle(.gray40)
+                    
                     Text("\(vm.recentRide?.courseName ?? "")")
                         .font(.pretendard(.semibold, size: 20))
                         .padding(.bottom, 34)
+                        .foregroundStyle(.white)
                 }
+                
                 VStack(alignment: .leading, spacing: 6) {
                     Text("\(vm.recentRide?.recentRideAt ?? "")")
                         .font(.pretendard(.regular, size: 12))
                         .foregroundStyle(.gray70)
+                    
                     HStack(spacing: 12) {
                         Text("총거리 \(String(format: "%.1f", vm.recentRide?.distance ?? 0.0))km")
+                        
                         Text("완주율 \(vm.recentRide?.progressRate ?? 0)%")
                     }
                 }
             }
+            .padding(.all, 18)
             .foregroundStyle(.white)
-            Spacer()
-            VStack(spacing: 0) {
-                Spacer()
-                Button(action: {
-                    // TODO: - 다시 도전하기 기능구현
-                    print("다시 도전하기 클릭")
-                }, label: {
-                    Text("다시 도전하기")
-                        .foregroundStyle(.white)
-                        .font(.pretendard(.medium, size: 12))
-                })
-                .padding(.horizontal, 9)
-                .padding(.vertical, 6)
-                .background(RoundedRectangle(cornerRadius: 4).fill(Color(red: 87 / 255, green: 59 / 255, blue: 245 / 255)))
+            
+            ZStack {
+                Image("icMapEx")
+                VStack(alignment: .trailing) {
+                    Spacer()
+                    
+                    HStack(alignment: .bottom) {
+                        Spacer()
+                        
+                        RoundedButton(radius: 4,
+                                      bgColor: .customPurple,
+                                      text: (vm.isRecentRideDone ? "다시하기" : "이어하기"),
+                                      action: { print("임시 버튼 Output") })
+                    }
+                }
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 17.5, trailing: 12))
             }
         }
-        .padding(.all, 18)
-        .background(RoundedRectangle(cornerRadius: 8).fill(.gray100.opacity(0.04)))
+        .background(RoundedRectangle(cornerRadius: 8).fill(.main))
+        .frame(maxWidth: .infinity)
     }
 }
