@@ -18,7 +18,7 @@ final class CoreViewModel: ObservableObject {
                 let myInfoService = NetworkService<MyAPI>()
                 let _ = try await myInfoService.request(.getMyInfo, responseDTO: MyInfoDTO.self)
                 await viewTransitionWithDelay(isLoggedIn: true)
-                
+
                 /// For Debug
                 let access = KeychainManagerImpl().retrieveToken(forKey: HTTPHeaderField.accessToken.rawValue)
                 let refresh = KeychainManagerImpl().retrieveToken(forKey: HTTPHeaderField.refreshToken.rawValue)

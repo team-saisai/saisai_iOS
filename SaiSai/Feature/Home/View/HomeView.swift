@@ -13,20 +13,17 @@ struct HomeView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 0) {
-                HomeHeaderView(vm: vm)
+            LazyVStack(spacing: 40) {
                 
-                // MARK: - 최근 코스(API 연동?)
-                if vm.isRecentRideExists {
-                    RecentCourseView(vm: vm)
-                        .padding(.bottom, 40)
-                }
-                // MARK: - 인기 챌린지(API 연동)
+                HomeHeaderView(vm: vm)
+
+                if vm.isRecentRideExists { RecentCourseView(vm: vm) }
+
                 PopularChallengesView(vm: vm)
                 
-                // BadgeCollectionView()
+                BadgeCollectionView()
             }
-            .padding(.top, 20)
+            .padding(.vertical, 20)
             .padding(.horizontal, 20)
         }
         .padding(.top, 1)

@@ -22,7 +22,7 @@ struct PopularChallengesView: View {
             .padding(.bottom, 16)
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
+                LazyHStack(spacing: 10) {
                     ForEach(vm.popularChallenges.indices, id: \.self) {
                         SingleVerticalCourseView(courseInfo: vm.popularChallenges[$0])
                     }

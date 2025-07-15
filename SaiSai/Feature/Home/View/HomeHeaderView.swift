@@ -37,7 +37,6 @@ struct HomeHeaderView: View {
                 
                 Spacer()
             }
-            .padding(.bottom, 32)
         }
     }
 }
