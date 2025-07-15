@@ -37,22 +37,6 @@ struct HomeHeaderView: View {
                 
                 Spacer()
             }
-            .padding(.bottom, 12)
-            
-            // MARK: - 기상정보(API 연동)
-            HStack(spacing: 18) {
-                HStack(spacing: 4) {
-                    Image("icPin")
-                    Text("서울 마포구")
-                }
-                HStack(spacing: 4) {
-                    Image("icCloud")
-                    Text("19.6C")
-                }
-                Spacer()
-            }
-            .font(.pretendard(.regular, size: 13))
-            .foregroundStyle(.gray30)
             .padding(.bottom, 32)
         }
     }
