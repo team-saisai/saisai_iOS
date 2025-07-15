@@ -34,21 +34,21 @@ struct RecentCourseView: View {
                         HStack(spacing: 3) {
                             Text("총거리 ")
                                 .font(.pretendard(.regular, size: 14))
-                                .foregroundColor(.gray20)
+                                .foregroundStyle(.gray20)
                             
                             Text("\(String(format: "%.1f", vm.recentRide?.distance ?? 0.0))km")
                                 .font(.pretendard(size: 14))
-                                .foregroundColor(Color.customLime)
+                                .foregroundStyle(Color.customLime)
                         }
                         
                         HStack(spacing: 3) {
                             Text("완주율 ")
                                 .font(.pretendard(.regular, size: 14))
-                                .foregroundColor(.gray20)
+                                .foregroundStyle(.gray20)
                             
                             Text("\(vm.recentRide?.progressRate ?? 0)%")
                                 .font(.pretendard(size: 14))
-                                .foregroundColor(Color.customLime)
+                                .foregroundStyle(Color.customLime)
                         }
                     }
                 }

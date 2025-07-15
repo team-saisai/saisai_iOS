@@ -16,6 +16,8 @@ struct SingleVerticalCourseView: View {
             VStack(alignment: .leading, spacing: 0) {
                 
                 Image("icMapEx") /// ImageUrl 로 수정 필요
+                    .resizable()
+                    .scaledToFit()
                 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("\(courseInfo.courseName)")
@@ -26,16 +28,13 @@ struct SingleVerticalCourseView: View {
                     HStack(spacing: 5) {
                         Text("\(String(format:"%.1f", courseInfo.distance))km")
                         Text("·")
-                        Text("난이도 \(courseInfo.level)") // 전환 메서드 필요
+                        LevelView()
                     }
                     .padding(.bottom, 10)
                     .font(.pretendard(.medium, size: 12))
                     .foregroundStyle(.gray40)
                     
-                    Text("\(courseInfo.challengerCount)명 도전중")
-                        .font(.pretendard(.regular, size: 12))
-                        .foregroundStyle(Color(red: 128 / 255, green: 105 / 255, blue: 253 / 255))
-                        .padding(.bottom, 14)
+                    FooterView()
                 }
                 .padding(.horizontal, 12)
             }
@@ -56,5 +55,47 @@ struct SingleVerticalCourseView: View {
         }
         .background(.main)
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+// MARK: - LevelView, FooterView
+extension SingleVerticalCourseView {
+    
+    private func LevelView() -> some View {
+        HStack(spacing: 2) {
+            Text("난이도 ")
+            switch courseInfo.level {
+            case 1:
+                Text("하")
+                    .foregroundStyle(.levelLow)
+            case 2:
+                Text("중")
+                    .foregroundStyle(.levelMiddle)
+            case 3:
+                Text("상")
+                    .foregroundStyle(.levelHigh)
+            default:
+                Text("")
+            }
+        }
+    }
+    
+    private func FooterView() -> some View {
+        HStack(spacing: 8) {
+            HStack(spacing: 2) {
+                Image("thunderIcon")
+                    .resizable()
+                    .frame(width: 10, height: 14)
+                Text("\(courseInfo.challengerCount)명")
+            }
+            HStack(spacing: 2) {
+                Image("starIcon")
+                    .frame(width: 12.5, height: 12)
+                Text("\(courseInfo.reward.commaDecimal)p")
+            }
+        }
+        .font(.pretendard(.regular, size: 12))
+        .foregroundStyle(.iconPurple)
+        .padding(.bottom, 14)
     }
 }
