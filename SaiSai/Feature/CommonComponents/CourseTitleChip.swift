@@ -15,8 +15,36 @@ enum TitleChipType {
 
 struct CourseTitleChip: View {
     
-    // MARK: - Properties
     let titleChip: TitleChipType
+    
+    var body: some View {
+        HStack(spacing: 3.5) {
+            if case .ongoing = titleChip {
+                Image("fireIcon")
+                    .resizable()
+                    .frame(width: 12.5, height: 14)
+            }
+            Text(text)
+                .foregroundStyle(.white)
+                .font(.pretendard(.medium, size: 12))
+        }
+        .padding(.horizontal, 9)
+        .padding(.vertical, 6)
+        .background(RoundedRectangle(cornerRadius: 8).fill(bgColor))
+    }
+}
+
+// MARK: - Init + Computed Property
+extension CourseTitleChip {
+    
+    init(isEvent: Bool = false, challengeStatus: ChallengeStatus, endedAt: String) {
+        if isEvent {
+            titleChip = .event
+        } else {
+            titleChip = (challengeStatus == .ended ? .ended : .ongoing(endedAt: endedAt))
+        }
+    }
+    
     var text: String {
         switch titleChip {
         case .event: "이벤트"
@@ -33,31 +61,5 @@ struct CourseTitleChip: View {
         case .ongoing:
             return .titleChipRed
         }
-    }
-    
-    // MARK: - Init
-    init(isEvent: Bool = false, challengeStatus: ChallengeStatus, endedAt: String) {
-        if isEvent {
-            titleChip = .event
-        } else {
-            titleChip = (challengeStatus == .ended ? .ended : .ongoing(endedAt: endedAt))
-        }
-    }
-    
-    // MARK: - Body
-    var body: some View {
-        HStack(spacing: 3.5) {
-            if case .ongoing = titleChip {
-                Image("fireIcon")
-                    .resizable()
-                    .frame(width: 12.5, height: 14)
-            }
-            Text(text)
-                .foregroundStyle(.white)
-                .font(.pretendard(.medium, size: 12))
-        }
-        .padding(.horizontal, 9)
-        .padding(.vertical, 6)
-        .background(RoundedRectangle(cornerRadius: 8).fill(bgColor))
     }
 }
