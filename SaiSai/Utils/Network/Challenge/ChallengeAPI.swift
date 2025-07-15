@@ -9,21 +9,21 @@ import Foundation
 import Moya
 
 enum ChallengeAPI {
-    case getPopularCourses
+    case getPopularChallenges
 }
 
 extension ChallengeAPI: TargetType {
     
     var path: String {
         switch self {
-        case .getPopularCourses:
+        case .getPopularChallenges:
             return "/api/challenges/popular"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .getPopularCourses: .get
+        case .getPopularChallenges: .get
         }
     }
     
@@ -43,7 +43,7 @@ extension ChallengeAPI: TargetType {
 extension ChallengeAPI {
     var task: Moya.Task {
         switch self {
-        case .getPopularCourses:
+        case .getPopularChallenges:
             return .requestPlain
         }
     }

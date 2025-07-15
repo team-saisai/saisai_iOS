@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Request DTO
 
 // MARK: - ResponseDTO
-struct PopularCourseResponseDTO: Decodable {
+struct PopularChallengeResponseDTO: Decodable {
     let code: String
     let message: String
     let data: [CourseInfo]
@@ -20,14 +20,29 @@ struct PopularCourseResponseDTO: Decodable {
 struct CourseInfo: Decodable {
     let courseId: Int
     let courseName: String
-    let level: Int /// 1 : 하, 2 : 중, 3 : 상
+    let level: Int
     let distance: Double
     let estimatedTime: Double
     let sigun: String
     let courseImageUrl: String?
-    let challengeStatus: String /// ENDED(종료), ONGOING(진행), UPCOMING(예정)
+    let challengeStatus: String
     let endedAt: String
     let challengerCount: Int
     let isEventActive: Bool
     let reward: Int
+    
+    var challengeStatusCase: ChallengeStatus {
+        if let challengeStatus = ChallengeStatus(rawValue: challengeStatus) {
+            return challengeStatus
+        } else {
+            print("received wrong challengeStatus: \(challengeStatus)")
+            return .ongoing
+        }
+    }
+}
+
+enum ChallengeStatus: String {
+    case ended = "ENDED" /// 종료
+    case ongoing = "ONGOING" /// 진행
+    case upcoming = "UPCOMING" /// 예정
 }

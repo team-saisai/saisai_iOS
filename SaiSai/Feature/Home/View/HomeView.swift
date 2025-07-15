@@ -22,7 +22,7 @@ struct HomeView: View {
                         .padding(.bottom, 40)
                 }
                 // MARK: - 인기 챌린지(API 연동)
-                PopularCoursesView(vm: vm)
+                PopularChallengesView(vm: vm)
                 
                 // BadgeCollectionView()
             }

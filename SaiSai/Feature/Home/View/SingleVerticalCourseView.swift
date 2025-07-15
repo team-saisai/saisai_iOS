@@ -12,10 +12,9 @@ struct SingleVerticalCourseView: View {
     @State var courseInfo: CourseInfo
     
     var body: some View {
-        // TODO: - 길 이름, 난이도, 도전인원등은 API 에서 데이터 받아서 보여줘야 함.
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
-                // TODO: - 이미지
+                
                 Image("icMapEx") /// ImageUrl 로 수정 필요
                 
                 VStack(alignment: .leading, spacing: 0) {
@@ -24,8 +23,9 @@ struct SingleVerticalCourseView: View {
                         .font(.pretendard(.medium, size: 16))
                         .padding(.bottom, 4)
                     
-                    HStack(spacing: 0) {
+                    HStack(spacing: 5) {
                         Text("\(String(format:"%.1f", courseInfo.distance))km")
+                        Text("·")
                         Text("난이도 \(courseInfo.level)") // 전환 메서드 필요
                     }
                     .padding(.bottom, 10)
@@ -38,26 +38,23 @@ struct SingleVerticalCourseView: View {
                         .padding(.bottom, 14)
                 }
                 .padding(.horizontal, 12)
-                
             }
-            .background(RoundedRectangle(cornerRadius: 8).fill(.black.opacity(0.04)))
             
-            HStack(spacing: 0) {
-                VStack(spacing: 0) {
-                    Text("~\(courseInfo.endedAt)") // 전환 메서드 필요
-                        .font(.pretendard(.medium, size: 12))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 9)
-                        .padding(.vertical, 6)
-                        .background(RoundedRectangle(cornerRadius: 6).fill(Color(red: 222 / 255, green: 102 / 255, blue: 102 / 255)))
-                        .padding(.leading, 5)
-                        .padding(.top, 5)
-                    
+            // MARK: - Title Chip
+            VStack(spacing: 0) {
+                HStack(spacing: 4) {
+                    CourseTitleChip(challengeStatus: courseInfo.challengeStatusCase,
+                                    endedAt: courseInfo.endedAt)
+                    if courseInfo.isEventActive {
+                        CourseTitleChip(isEvent: true, challengeStatus: .ended, endedAt: "")
+                    }
                     Spacer()
                 }
                 Spacer()
             }
-            
+            .padding(.all, 6)
         }
+        .background(.main)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }

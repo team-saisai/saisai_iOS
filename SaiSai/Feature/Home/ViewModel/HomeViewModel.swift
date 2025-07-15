@@ -12,7 +12,7 @@ final class HomeViewModel: ObservableObject {
     @Published var isRecentRideExists: Bool = false
     @Published var isRecentRideDone: Bool = false
     @Published var recentRide: RecentRideInfo? = nil
-    @Published var popularCourses: [CourseInfo] = []
+    @Published var popularChallenges: [CourseInfo] = []
     
     func fetchData() {
         Task { [weak self] in
@@ -28,9 +28,9 @@ final class HomeViewModel: ObservableObject {
                 let recent = recentResponse.data
                 await setRecentRides(recent)
                 
-                let popularResponse = try await courseService.request(.getPopularCourses, responseDTO: PopularCourseResponseDTO.self)
+                let popularResponse = try await courseService.request(.getPopularChallenges, responseDTO: PopularChallengeResponseDTO.self)
                 let populars = popularResponse.data
-                await setPopularCourses(populars)
+                await setPopularChallenges(populars)
                 
             } catch {
                 print("홈 정보 제공 실패 😭")
@@ -56,7 +56,7 @@ extension HomeViewModel {
     }
     
     @MainActor
-    private func setPopularCourses(_ popularCourses: [CourseInfo]) {
-        self.popularCourses = popularCourses
+    private func setPopularChallenges(_ popularChallenges: [CourseInfo]) {
+        self.popularChallenges = popularChallenges
     }
 }

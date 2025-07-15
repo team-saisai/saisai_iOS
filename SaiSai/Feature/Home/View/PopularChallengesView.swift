@@ -1,5 +1,5 @@
 //
-//  PopuluarCoursesView.swift
+//  PopuluarChallengesView.swift
 //  SaiSai
 //
 //  Created by 이창현 on 7/13/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PopularCoursesView: View {
+struct PopularChallengesView: View {
     
     @ObservedObject var vm: HomeViewModel
     
@@ -23,8 +23,8 @@ struct PopularCoursesView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
-                    ForEach(vm.popularCourses.indices, id: \.self) {
-                        SingleVerticalCourseView(courseInfo: vm.popularCourses[$0])
+                    ForEach(vm.popularChallenges.indices, id: \.self) {
+                        SingleVerticalCourseView(courseInfo: vm.popularChallenges[$0])
                     }
                 }
             }

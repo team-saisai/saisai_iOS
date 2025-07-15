@@ -16,7 +16,6 @@ final class NetworkService<T: TargetType> {
         do {
             return try await sendRequest(target, D.self)
         } catch NetworkError.reissue {
-            print("---reissue needed in request catch---")
             try await reissue()
             return try await sendRequest(target, D.self)
         }
@@ -28,13 +27,12 @@ final class NetworkService<T: TargetType> {
                 switch result {
                 case .success(let response):
                     do {
-                        if response.statusCode == 401 {
-                            print("---Throwing NetworkError.reissue---")
-                            throw NetworkError.reissue
-                        }
                         let decoded = try JSONDecoder().decode(D.self, from: response.data)
                         continuation.resume(returning: decoded)
                     } catch {
+                        if response.statusCode == 401 {
+                            continuation.resume(throwing: NetworkError.reissue)
+                        }
                         continuation.resume(throwing: error)
                     }
                 case .failure(let error):

@@ -69,7 +69,7 @@ struct RecentCourseView: View {
                             
                             RoundedButton(radius: 4,
                                           bgColor: .customPurple,
-                                          text: (vm.isRecentRideDone ? "다시하기" : "이어하기"),
+                                          text: (vm.isRecentRideDone ? "다시 도전하기" : "이어하기"),
                                           action: { print("임시 버튼 Output") })
                         }
                     }
