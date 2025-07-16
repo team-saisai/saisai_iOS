@@ -14,14 +14,11 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 40) {
-                
                 HomeHeaderView(vm: vm)
 
                 if vm.isRecentRideExists { RecentCourseView(vm: vm) }
 
                 PopularChallengesView(vm: vm)
-                
-                BadgeCollectionView()
             }
             .padding(.vertical, 20)
             .padding(.horizontal, 20)
