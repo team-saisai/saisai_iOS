@@ -40,9 +40,3 @@ struct CourseInfo: Decodable {
         }
     }
 }
-
-enum ChallengeStatus: String {
-    case ended = "ENDED" /// 종료
-    case ongoing = "ONGOING" /// 진행
-    case upcoming = "UPCOMING" /// 예정
-}
