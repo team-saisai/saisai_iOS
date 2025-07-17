@@ -15,9 +15,13 @@ final class NetworkService<T: TargetType> {
     func request<D: Decodable>(_ target: T, responseDTO: D.Type) async throws -> D {
         do {
             return try await sendRequest(target, D.self)
-        } catch NetworkError.reissue {
-            try await reissue()
-            return try await sendRequest(target, D.self)
+        } catch let error as MoyaError {
+            if error.response?.statusCode == 401 {
+                try await reissue()
+                return try await sendRequest(target, D.self)
+            } else {
+                throw error
+            }
         }
     }
     
@@ -27,9 +31,6 @@ final class NetworkService<T: TargetType> {
                 switch result {
                 case .success(let response):
                     do {
-                        if response.statusCode == 401 {
-                            throw NetworkError.reissue
-                        }
                         let decoded = try JSONDecoder().decode(D.self, from: response.data)
                         continuation.resume(returning: decoded)
                     } catch {
@@ -47,6 +48,8 @@ extension NetworkService {
     
     func reissue() async throws {
         
+        print("--- REISSUE ---")
+        
         let provider = MoyaProvider<AuthAPI>()
         
         return try await withCheckedThrowingContinuation { continuation in
@@ -62,6 +65,8 @@ extension NetworkService {
                         let _ = KeychainManagerImpl().save(
                             token: response.data.refreshToken,
                             forKey: HTTPHeaderField.refreshToken.rawValue)
+                        print("REISUE SUCCESS!")
+                        continuation.resume()
                     } catch {
                         continuation.resume()
                     }

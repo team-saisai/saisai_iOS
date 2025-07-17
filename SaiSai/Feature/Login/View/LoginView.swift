@@ -12,17 +12,18 @@ struct LoginView: View {
     @StateObject var vm: LoginViewModel
     
     var body: some View {
-        VStack(spacing: 50) {
-            VStack(spacing: 15) {
-                TextField("이메일", text: $vm.emailText)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-                    .textContentType(.emailAddress)
-                SecureField("패스워드", text: $vm.passwordText)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-                    .textContentType(.password)
-            }
+        VStack(spacing: 30) {
+            Spacer()
+            
+            TextField("이메일", text: $vm.emailText)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .textContentType(.emailAddress)
+            
+            SecureField("패스워드", text: $vm.passwordText)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .textContentType(.password)
             
             Button {
                 vm.requestLogin()
@@ -35,7 +36,10 @@ struct LoginView: View {
                     .background(.blue)
                     .cornerRadius(12)
             }
+            
+            Spacer()
         }
         .padding(.horizontal, 50)
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }

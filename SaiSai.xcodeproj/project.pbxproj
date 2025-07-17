@@ -13,6 +13,7 @@
 		E202BC422E1E91D300ECEE0E /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = E202BC412E1E91D300ECEE0E /* Moya */; };
 		E202BC442E1E91D300ECEE0E /* ReactiveMoya in Frameworks */ = {isa = PBXBuildFile; productRef = E202BC432E1E91D300ECEE0E /* ReactiveMoya */; };
 		E202BC462E1E91D300ECEE0E /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = E202BC452E1E91D300ECEE0E /* RxMoya */; };
+		E25DF4D62E28B54E00C15895 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = E25DF4D52E28B54E00C15895 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 				E202BC402E1E91D300ECEE0E /* CombineMoya in Frameworks */,
 				E202BC462E1E91D300ECEE0E /* RxMoya in Frameworks */,
 				E202BC442E1E91D300ECEE0E /* ReactiveMoya in Frameworks */,
+				E25DF4D62E28B54E00C15895 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +109,7 @@
 				E202BC412E1E91D300ECEE0E /* Moya */,
 				E202BC432E1E91D300ECEE0E /* ReactiveMoya */,
 				E202BC452E1E91D300ECEE0E /* RxMoya */,
+				E25DF4D52E28B54E00C15895 /* Kingfisher */,
 			);
 			productName = SaiSai;
 			productReference = D24556B22E192BE100409BD7 /* SaiSai.app */;
@@ -138,6 +141,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				E202BC3E2E1E91D300ECEE0E /* XCRemoteSwiftPackageReference "Moya" */,
+				E25DF4D42E28B54E00C15895 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D24556B32E192BE100409BD7 /* Products */;
@@ -391,6 +395,14 @@
 				minimumVersion = 15.0.3;
 			};
 		};
+		E25DF4D42E28B54E00C15895 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.5.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -413,6 +425,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E202BC3E2E1E91D300ECEE0E /* XCRemoteSwiftPackageReference "Moya" */;
 			productName = RxMoya;
+		};
+		E25DF4D52E28B54E00C15895 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E25DF4D42E28B54E00C15895 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

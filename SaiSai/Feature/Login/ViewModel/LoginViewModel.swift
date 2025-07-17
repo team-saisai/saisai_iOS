@@ -23,15 +23,26 @@ final class LoginViewModel: ObservableObject {
             guard let self = self else { return }
             do {
                 let service = NetworkService<AuthAPI>()
-                let _ = try await service.request(
+                let response = try await service.request(
                     .login(email: emailText, password: passwordText),
                     responseDTO: LoginResponseDTO.self)
+                
+                let accessToken = response.data.accessToken
+                let refreshToken = response.data.refreshToken
+                saveTokens(accessToken: accessToken, refreshToken: refreshToken)
+                
                 await delegate?.isLoggedIn(true)
             } catch {
                 // TODO: - Alert logic 추가
                 print("로그인 실패😣")
             }
         }
+    }
+    
+    private func saveTokens(accessToken: String, refreshToken: String) {
+        let keychainManager = KeychainManagerImpl()
+        let _ = keychainManager.save(token: accessToken, forKey: HTTPHeaderField.accessToken.rawValue)
+        let _ = keychainManager.save(token: refreshToken, forKey: HTTPHeaderField.refreshToken.rawValue)
     }
 }
 
