@@ -13,6 +13,12 @@ final class HomeViewModel: ObservableObject {
     @Published var isRecentRideDone: Bool = false
     @Published var recentRide: RecentRideInfo? = nil
     @Published var popularChallenges: [CourseInfo] = []
+    @Published var badges: [BadgeInfo] = []
+    var eightBadgesList: [[BadgeInfo]] {
+        stride(from: 0, to: badges.count, by: 8).map { index in
+            Array(badges[index..<min(index + 8, badges.count)])
+        }
+    }
     
     func fetchData() {
         Task { [weak self] in
@@ -20,6 +26,7 @@ final class HomeViewModel: ObservableObject {
             do {
                 let courseService = NetworkService<ChallengeAPI>()
                 let myService = NetworkService<MyAPI>()
+                let badgeService = NetworkService<BadgeAPI>()
                 
                 let myInfoResponse = try await myService.request(.getMyInfo, responseDTO: MyInfoDTO.self)
                 await setName(myInfoResponse.data.nickname)
@@ -32,14 +39,17 @@ final class HomeViewModel: ObservableObject {
                 let populars = popularResponse.data
                 await setPopularChallenges(populars)
                 
-            } catch {
+                let badgeResponse = try await badgeService.request(.getBadgesList, responseDTO: MyBadgesListResponseDTO.self)
+                let badges = badgeResponse.data
+                await setBadges(badges)
+            } catch let error {
                 print("홈 정보 제공 실패 😭")
             }
         }
     }
 }
 
-// MARK: - Methods for Published Var
+// MARK: - Methods for updating UI
 extension HomeViewModel {
     @MainActor
     private func setName(_ name: String) {
@@ -58,5 +68,15 @@ extension HomeViewModel {
     @MainActor
     private func setPopularChallenges(_ popularChallenges: [CourseInfo]) {
         self.popularChallenges = popularChallenges
+    }
+    
+    @MainActor
+    private func setBadges(_ badges: [BadgeInfo]) {
+        let numOfBadgeToAdd = 8 - badges.count % 8
+        var badgesToAdd: [BadgeInfo] = []
+        for _ in 0..<numOfBadgeToAdd {
+            badgesToAdd.append(.init(userBadgeId: 0, badgeName: "", badgeImageUrl: ""))
+        }
+        self.badges = badges + badgesToAdd
     }
 }

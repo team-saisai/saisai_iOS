@@ -33,5 +33,5 @@ struct BadgeDetailResponseDTO: Decodable {
 struct BadgeInfo: Decodable {
     let userBadgeId: Int
     let badgeName: String
-    let badgeNameUrl: String
+    let badgeImageUrl: String
 }

@@ -19,6 +19,8 @@ struct HomeView: View {
                 if vm.isRecentRideExists { RecentCourseView(vm: vm) }
 
                 PopularChallengesView(vm: vm)
+                
+                BadgeCollectionView(vm: vm)
             }
             .padding(.vertical, 20)
             .padding(.horizontal, 20)

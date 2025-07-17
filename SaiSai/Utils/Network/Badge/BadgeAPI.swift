@@ -18,9 +18,9 @@ extension BadgeAPI: TargetType {
     var path: String {
         switch self {
         case .getBadgesList:
-            "/badges/me"
+            "api/badges/me"
         case .getBadgeDetail(let badgeId):
-            "/badges/me/\(badgeId)"
+            "api/badges/me/\(badgeId)"
         }
     }
     
@@ -32,7 +32,7 @@ extension BadgeAPI: TargetType {
     
     var headers: [String : String]? {
         let accessToken = KeychainManagerImpl().retrieveToken(forKey: HTTPHeaderField.accessToken.rawValue) ?? ""
-        return [ HTTPHeaderField.authorization.rawValue: accessToken]
+        return [HTTPHeaderField.authorization.rawValue: accessToken]
     }
     
     var validationType: ValidationType {
