@@ -17,7 +17,8 @@ struct SingleVerticalCourseView: View {
                 
                 Image("icMapEx") /// ImageUrl 로 수정 필요
                     .resizable()
-                    .scaledToFit()
+                    .frame(height: 160)
+                    .frame(maxWidth: .infinity)
                 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("\(courseInfo.courseName)")
@@ -55,6 +56,7 @@ struct SingleVerticalCourseView: View {
         }
         .background(.main)
         .clipShape(RoundedRectangle(cornerRadius: 12))
+        .frame(width: 170)
     }
 }
 

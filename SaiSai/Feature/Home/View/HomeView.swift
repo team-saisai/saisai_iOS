@@ -16,11 +16,15 @@ struct HomeView: View {
             LazyVStack(spacing: 40) {
                 HomeHeaderView(vm: vm)
 
-                if vm.isRecentRideExists { RecentCourseView(vm: vm) }
-
-                PopularChallengesView(vm: vm)
-                
-                BadgeCollectionView(vm: vm)
+                if vm.isLoading {
+                    ProgressView()
+                } else {
+                    if vm.isRecentRideExists { RecentCourseView(vm: vm) }
+                    
+                    PopularChallengesView(vm: vm)
+                    
+                    BadgeCollectionView(vm: vm)
+                }
             }
             .padding(.vertical, 20)
             .padding(.horizontal, 20)

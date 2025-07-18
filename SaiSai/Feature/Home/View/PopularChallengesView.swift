@@ -28,6 +28,7 @@ struct PopularChallengesView: View {
                     }
                 }
             }
+            .scrollIndicators(.hidden)
         }
     }
 }

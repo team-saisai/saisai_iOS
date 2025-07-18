@@ -8,7 +8,8 @@
 import Foundation
 
 final class HomeViewModel: ObservableObject {
-    @Published var name: String = "델라"
+    @Published var name: String = ""
+    @Published var isLoading: Bool = true
     @Published var isRecentRideExists: Bool = false
     @Published var isRecentRideDone: Bool = false
     @Published var recentRide: RecentRideInfo? = nil
@@ -42,6 +43,8 @@ final class HomeViewModel: ObservableObject {
                 let badgeResponse = try await badgeService.request(.getBadgesList, responseDTO: MyBadgesListResponseDTO.self)
                 let badges = badgeResponse.data
                 await setBadges(badges)
+                
+                await toggleIsLoading(false)
             } catch {
                 print("홈 정보 제공 실패 😭")
             }
@@ -78,5 +81,10 @@ extension HomeViewModel {
             badgesToAdd.append(.init(userBadgeId: 0, badgeName: "", badgeImageUrl: ""))
         }
         self.badges = badges + badgesToAdd
+    }
+    
+    @MainActor
+    private func toggleIsLoading(_ isLoading: Bool) {
+        self.isLoading = isLoading
     }
 }
