@@ -32,7 +32,6 @@ struct BadgeCollectionView: View {
         }
         .frame(maxHeight: .infinity)
     }
-    
 }
 
 extension BadgeCollectionView {

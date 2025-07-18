@@ -52,7 +52,7 @@ struct CourseDetailResponseDTO: Decodable {
         let distance: Double
         let estimatedTime: Double
         let sigun: String
-        let imageUrl: String
+        let imageUrl: String?
         let challengerCount: Int
         let finisherCount: Int
         let hasUncompletedRide: Bool
@@ -69,7 +69,7 @@ struct CourseContentInfo: Decodable {
     let distance: Double
     let estimatedTime: Double
     let sigun: String
-    let imageUrl: String
+    let imageUrl: String?
     let courseChallengerCount: Int
     let courseFinisherCount: Int
     let challengeStatus: String
@@ -77,6 +77,15 @@ struct CourseContentInfo: Decodable {
     let isEventActive: Bool
     let reward: Int
     let themeNames: [String]
+    
+    var challengeStatusCase: ChallengeStatus {
+        if let challengeStatus = ChallengeStatus(rawValue: challengeStatus) {
+            return challengeStatus
+        } else {
+            print("received wrong challengeStatus: \(challengeStatus)")
+            return .ongoing
+        }
+    }
 }
 
 struct SortInfo: Decodable {

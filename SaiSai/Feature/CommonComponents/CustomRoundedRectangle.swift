@@ -1,14 +1,14 @@
 //
-//  RoundedButton.swift
+//  CustomRoundedRectangle.swift
 //  SaiSai
 //
-//  Created by 이창현 on 7/14/25.
+//  Created by 이창현 on 7/18/25.
 //
 
 import SwiftUI
 
-struct RoundedButton: View {
-
+struct CustomRoundedRectangle: View {
+    
     let radius: CGFloat
     let bgColor: Color
     let horizontalPadding: CGFloat
@@ -16,7 +16,6 @@ struct RoundedButton: View {
     let font: Font
     let text: String
     let hasFireImage: Bool
-    let action: @MainActor () -> Void
     
     init(radius: CGFloat,
          bgColor: Color,
@@ -24,8 +23,7 @@ struct RoundedButton: View {
          verticalPadding: CGFloat = 6,
          text: String,
          font: Font = .pretendard(.medium, size: 12),
-         hasFireImage: Bool = false,
-         action: @escaping @MainActor () -> Void) {
+         hasFireImage: Bool = false) {
         self.radius = radius
         self.bgColor = bgColor
         self.horizontalPadding = horizontalPadding
@@ -33,18 +31,21 @@ struct RoundedButton: View {
         self.text = text
         self.font = font
         self.hasFireImage = hasFireImage
-        self.action = action
     }
-    
+
     var body: some View {
-        Button(action: action, label: {
-            CustomRoundedRectangle(radius: radius,
-                                   bgColor: bgColor,
-                                   horizontalPadding: horizontalPadding,
-                                   verticalPadding: verticalPadding,
-                                   text: text,
-                                   font: font,
-                                   hasFireImage: hasFireImage)
-        })
+        HStack(spacing: 3.5) {
+            if hasFireImage {
+                Image("fireIcon")
+                    .resizable()
+                    .frame(width: 12.5, height: 14)
+            }
+            Text(text)
+                .foregroundStyle(.white)
+                .font(font)
+        }
+        .padding(.horizontal, horizontalPadding)
+        .padding(.vertical, verticalPadding)
+        .background(RoundedRectangle(cornerRadius: radius).fill(bgColor))
     }
 }

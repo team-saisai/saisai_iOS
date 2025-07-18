@@ -9,7 +9,7 @@ import Foundation
 import Moya
 
 enum CourseAPI {
-    case getCoursesList(page: Int = 1, status: ChallengeStatus)
+    case getCoursesList(page: Int? = nil, status: ChallengeStatus? = nil)
     case getCourseDetail(courseId: Int)
 }
 
@@ -18,9 +18,9 @@ extension CourseAPI: TargetType {
     var path: String {
         switch self {
         case .getCoursesList:
-            return "/v1/courses"
+            return "api/courses"
         case .getCourseDetail(let courseId):
-            return "/v1/courses/\(courseId)"
+            return "api/courses/\(courseId)"
         }
     }
     
@@ -50,10 +50,15 @@ extension CourseAPI {
     var task: Moya.Task {
         switch self {
         case .getCoursesList(let page, let status):
-            return .requestParameters(parameters: [
-                "page": page,
-                "status": status.rawValue
-            ], encoding: URLEncoding.queryString)
+            var params: [String: Any] = [:]
+            if let page = page {
+                params["page"] = page
+            }
+            if let status = status {
+                params["status"] = status.rawValue
+            }
+            return .requestParameters(parameters: params,
+                                      encoding: URLEncoding.queryString)
         case .getCourseDetail:
             return .requestPlain
         }

@@ -24,7 +24,7 @@ final class HomeViewModel: ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let courseService = NetworkService<ChallengeAPI>()
+                let challengeService = NetworkService<ChallengeAPI>()
                 let myService = NetworkService<MyAPI>()
                 let badgeService = NetworkService<BadgeAPI>()
                 
@@ -35,14 +35,14 @@ final class HomeViewModel: ObservableObject {
                 let recent = recentResponse.data
                 await setRecentRides(recent)
                 
-                let popularResponse = try await courseService.request(.getPopularChallenges, responseDTO: PopularChallengeResponseDTO.self)
+                let popularResponse = try await challengeService.request(.getPopularChallenges, responseDTO: PopularChallengeResponseDTO.self)
                 let populars = popularResponse.data
                 await setPopularChallenges(populars)
                 
                 let badgeResponse = try await badgeService.request(.getBadgesList, responseDTO: MyBadgesListResponseDTO.self)
                 let badges = badgeResponse.data
                 await setBadges(badges)
-            } catch let error {
+            } catch {
                 print("홈 정보 제공 실패 😭")
             }
         }
