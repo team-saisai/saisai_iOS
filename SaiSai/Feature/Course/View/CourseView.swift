@@ -24,8 +24,8 @@ struct CourseView: View {
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(spacing: 8) {
-                        RoundedButton(radius: 6, bgColor: .gray90, horizontalPadding: 14, verticalPadding: 8.5, text: "챌린지 중", font: .pretendard(size: 14), hasFireImage: true, action: {})
-                        // TODO: - ForEach(theme) 추가 예정 
+                        ChallengeFilter()
+                        // TODO: - ForEach(theme) 추가 예정
                         
                         RoundedButton(radius: 6, bgColor: .gray80, horizontalPadding: 14, verticalPadding: 8.5, text: "테마1", font: .pretendard(size: 14), action: {})
                         RoundedButton(radius: 6, bgColor: .gray80, horizontalPadding: 14, verticalPadding: 8.5, text: "테마2", font: .pretendard(size: 14), action: {})
@@ -50,7 +50,6 @@ struct CourseView: View {
                 if vm.hasReachedLast {
                     ProgressView()
                         .onAppear() {
-                            vm.incrementCurrentPage()
                             vm.fetchData()
                         }
                 }
@@ -59,5 +58,13 @@ struct CourseView: View {
             .padding(.horizontal, 20)
         }
         .background(.gray90)
+    }
+}
+
+extension CourseView {
+    private func ChallengeFilter() -> some View {
+        RoundedButton(radius: 6, bgColor: .gray90, horizontalPadding: 14, verticalPadding: 8.5, text: "챌린지 중", font: .pretendard(size: 14), hasFireImage: true, action: {})
+            .border(Color.red, width: 1)
+            .foregroundStyle(.red)
     }
 }

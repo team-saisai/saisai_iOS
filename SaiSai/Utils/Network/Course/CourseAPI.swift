@@ -55,7 +55,7 @@ extension CourseAPI {
                 params["page"] = page
             }
             if let status = status {
-                params["status"] = status.rawValue
+                params["challengeStatus"] = status.rawValue
             }
             return .requestParameters(parameters: params,
                                       encoding: URLEncoding.queryString)

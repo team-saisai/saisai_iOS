@@ -37,11 +37,11 @@ struct CustomRoundedRectangle: View {
         HStack(spacing: 3.5) {
             if hasFireImage {
                 Image("fireIcon")
+                    .renderingMode(.template)
                     .resizable()
                     .frame(width: 12.5, height: 14)
             }
             Text(text)
-                .foregroundStyle(.white)
                 .font(font)
         }
         .padding(.horizontal, horizontalPadding)

@@ -6,12 +6,16 @@
 //
 
 import Foundation
+import Combine
 
 final class CourseViewModel: ObservableObject {
     @Published var hasReachedLast: Bool = true
-    @Published var filterStatus: ChallengeStatus? = nil
+    @Published var isOnlyOngoing: Bool = false
     @Published var contentInfoList: [CourseContentInfo] = []
     var currentPage: Int = 1
+    var filteredStatus: ChallengeStatus? {
+        isOnlyOngoing ? .ongoing : nil
+    }
     
     func fetchData() {
         Task { [weak self] in
@@ -20,9 +24,9 @@ final class CourseViewModel: ObservableObject {
                 if !hasReachedLast { return }
                 let courseService = NetworkService<CourseAPI>()
                 let courseListResponse = try await courseService.request(.getCoursesList(page: currentPage,
-                                                                                         status: filterStatus),
+                                                                                         status: filteredStatus),
                                                                          responseDTO: AllCourseListResponse.self)
-                print(currentPage)
+                currentPage += 1
                 await setCourseList(courseListResponse.data.content)
                 if courseListResponse.data.last { await toggleIsLoading(false) }
             } catch let error {
@@ -30,10 +34,6 @@ final class CourseViewModel: ObservableObject {
                 print("코스 리스트 정보 제공 실패")
             }
         }
-    }
-    
-    func incrementCurrentPage() {
-        currentPage += 1
     }
     
     @MainActor
