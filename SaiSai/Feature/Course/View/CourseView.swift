@@ -65,9 +65,53 @@ struct CourseView: View {
 }
 
 extension CourseView {
+    
+    private enum FilterMetric {
+        static let verticalPadding = 8.5
+        static let challengeLeadingPadding = 10.5
+        static let challengeTrailingPadding = 12.0
+        static let themeFilterHorizontalPadding = 14.0
+        static let radius = 6.0
+    }
+    
     private func ChallengeFilter() -> some View {
-        RoundedButton(radius: 6, bgColor: .gray90, horizontalPadding: 14, verticalPadding: 8.5, text: "챌린지 중", font: .pretendard(size: 14), hasFireImage: true, action: {})
-            .border(Color.red, width: 1)
-            .foregroundStyle(.red)
+        Filter(isChallengeFilter: true, text: "챌린지 중", action: { vm.toggleOnlyOngoingFilterStatus() })
+            .foregroundStyle(vm.isOnlyOngoing ? .titleChipRed : .white)
+            .background(vm.isOnlyOngoing ? .gray80 : .gray90)
+            .overlay {
+                RoundedRectangle(cornerRadius: FilterMetric.radius)
+                    .stroke(vm.isOnlyOngoing ? .titleChipRed : .white , lineWidth: 1.5)
+            }
+    }
+    
+//    private func ThemeFilter(_ filter: String) -> some View {
+//        
+//    }
+    
+    private func Filter(isChallengeFilter: Bool,
+                       text: String,
+                       action: @escaping @MainActor () -> Void) -> some View {
+        Button(action: action,
+               label: {
+            HStack(spacing: 6) {
+                if isChallengeFilter {
+                    Image("fireIcon")
+                        .renderingMode(.template)
+                        .resizable()
+                        .frame(width: 13.8, height: 15.4)
+                }
+                Text(text)
+                    .font(.pretendard(size: 14))
+            }
+            .padding(.vertical, FilterMetric.verticalPadding)
+            .padding(.leading,
+                     isChallengeFilter ?
+                     FilterMetric.challengeLeadingPadding :
+                        FilterMetric.themeFilterHorizontalPadding)
+            .padding(.trailing,
+                     isChallengeFilter ?
+                     FilterMetric.challengeTrailingPadding :
+                        FilterMetric.themeFilterHorizontalPadding)
+        })
     }
 }

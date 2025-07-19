@@ -12,6 +12,7 @@ final class CourseViewModel: ObservableObject {
     @Published var hasReachedLast: Bool = true
     @Published var isOnlyOngoing: Bool = false
     @Published var contentInfoList: [CourseContentInfo] = []
+    @Published var filterList: [String] = ["필터1", "필터2", "필터3", "필터4", "필터5", "필터6"]
     var currentPage: Int = 1
     var filteredStatus: ChallengeStatus? {
         isOnlyOngoing ? .ongoing : nil
@@ -42,7 +43,12 @@ final class CourseViewModel: ObservableObject {
     }
     
     @MainActor
-    func toggleIsLoading(_ isLoading: Bool) {
+    private func toggleIsLoading(_ isLoading: Bool) {
         self.hasReachedLast = isLoading
+    }
+    
+    @MainActor
+    func toggleOnlyOngoingFilterStatus() {
+        self.isOnlyOngoing.toggle()
     }
 }
