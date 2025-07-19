@@ -25,6 +25,8 @@ struct CourseView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(spacing: 8) {
                         RoundedButton(radius: 6, bgColor: .gray90, horizontalPadding: 14, verticalPadding: 8.5, text: "챌린지 중", font: .pretendard(size: 14), hasFireImage: true, action: {})
+                        // TODO: - ForEach(theme) 추가 예정 
+                        
                         RoundedButton(radius: 6, bgColor: .gray80, horizontalPadding: 14, verticalPadding: 8.5, text: "테마1", font: .pretendard(size: 14), action: {})
                         RoundedButton(radius: 6, bgColor: .gray80, horizontalPadding: 14, verticalPadding: 8.5, text: "테마2", font: .pretendard(size: 14), action: {})
                         RoundedButton(radius: 6, bgColor: .gray80, horizontalPadding: 14, verticalPadding: 8.5, text: "테마3", font: .pretendard(size: 14), action: {})
