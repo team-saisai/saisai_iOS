@@ -12,7 +12,7 @@ struct HomeView: View {
     @StateObject var vm: HomeViewModel = .init()
     
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 40) {
                 HomeHeaderView(vm: vm)
 

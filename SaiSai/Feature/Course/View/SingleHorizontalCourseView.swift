@@ -19,9 +19,12 @@ struct SingleHorizontalCourseView: View {
                 HStack(spacing: 0) {
                     Image("icMapEx") /// ImageUrl 로 수정 필요
                         .resizable()
-                        .scaledToFit()
                         .frame(width: 168)
                         .frame(maxHeight: .infinity)
+                        .overlay {
+                            LinearGradient(gradient: .init(colors: [.clear, .main]),
+                                           startPoint: .center, endPoint: .trailing)
+                        }
                     
                     VStack(alignment: .leading, spacing: 0) {
                         Text("\(contentInfo.courseName)")
@@ -69,11 +72,10 @@ struct SingleHorizontalCourseView: View {
                 }
                 .padding(.all, 6)
             }
-            .background(.main)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .frame(height: 144)
         }
-
+        .background(.main)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .frame(height: 144)
     }
 }
 
@@ -114,6 +116,5 @@ extension SingleHorizontalCourseView {
         }
         .font(.pretendard(.regular, size: 12))
         .foregroundStyle(.iconPurple)
-        .padding(.bottom, 14)
     }
 }
