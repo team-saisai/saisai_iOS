@@ -39,7 +39,7 @@ struct MainView: View {
         
     }
     init() {
-        UITabBar.appearance().backgroundColor = UIColor.main
+        UITabBar.appearance().barTintColor = UIColor.main
         UITabBar.appearance().unselectedItemTintColor = UIColor.gray50
     }
 }
