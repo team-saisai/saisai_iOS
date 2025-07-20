@@ -34,10 +34,7 @@ struct CourseView: View {
                                     .foregroundStyle(vm.filterList[idx].isSelected ? .customLightPurple : .white)
                                     .background {
                                         RoundedRectangle(cornerRadius: FilterMetric.radius)
-                                            .fill(vm.filterList[idx].isSelected ? Color(red: 51 / 255,
-                                                                                        green: 50 / 255,
-                                                                                        blue: 71 / 255) :
-                                                    .gray80)
+                                            .fill(vm.filterList[idx].isSelected ? .themeHighlightedBg : .gray80)
                                     }
                                         
                             }
@@ -53,6 +50,10 @@ struct CourseView: View {
                             }
                             .padding(.bottom, 20)
                         }
+                    } else {
+                        Text("코스가 없습니다...")
+                            .font(.pretendard(.bold, size: 30))
+                            .foregroundStyle(.white)
                     }
                     
                     if vm.hasReachedLast {
