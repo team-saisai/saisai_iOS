@@ -36,7 +36,7 @@ struct CustomRoundedRectangle: View {
     var body: some View {
         HStack(spacing: 3.5) {
             if hasFireImage {
-                Image("fireIcon")
+                Image(.icFireIcon)
                     .renderingMode(.template)
                     .resizable()
                     .frame(width: 12.5, height: 14)

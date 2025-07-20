@@ -15,7 +15,7 @@ struct SingleVerticalCourseView: View {
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
                 
-                Image("icMapEx") /// ImageUrl 로 수정 필요
+                Image(.icMapEx) /// ImageUrl 로 수정 필요
                     .resizable()
                     .frame(height: 160)
                     .frame(maxWidth: .infinity)
@@ -29,7 +29,7 @@ struct SingleVerticalCourseView: View {
                     HStack(spacing: 5) {
                         Text("\(String(format:"%.1f", courseInfo.distance))km")
                         Text("·")
-                        LevelView()
+                        LevelView(level: courseInfo.level)
                     }
                     .padding(.bottom, 10)
                     .font(.pretendard(.medium, size: 12))
@@ -60,38 +60,19 @@ struct SingleVerticalCourseView: View {
     }
 }
 
-// MARK: - LevelView, FooterView
+// MARK: - FooterView
 extension SingleVerticalCourseView {
-    
-    private func LevelView() -> some View {
-        HStack(spacing: 2) {
-            Text("난이도 ")
-            switch courseInfo.level {
-            case 1:
-                Text("하")
-                    .foregroundStyle(.levelLow)
-            case 2:
-                Text("중")
-                    .foregroundStyle(.levelMiddle)
-            case 3:
-                Text("상")
-                    .foregroundStyle(.levelHigh)
-            default:
-                Text("")
-            }
-        }
-    }
     
     private func FooterView() -> some View {
         HStack(spacing: 8) {
             HStack(spacing: 2) {
-                Image("thunderIcon")
+                Image(.icThunderIcon)
                     .resizable()
                     .frame(width: 10, height: 14)
                 Text("\(courseInfo.challengerCount)명")
             }
             HStack(spacing: 2) {
-                Image("starIcon")
+                Image(.icStarIcon)
                     .frame(width: 12.5, height: 12)
                 Text("\(courseInfo.reward.commaDecimal)p")
             }

@@ -56,7 +56,7 @@ struct RecentCourseView: View {
             .foregroundStyle(.white)
             
             ZStack {
-                Image("icMapEx")
+                Image(.icMapEx)
                     .resizable()
                     .frame(height: 170)
                     .frame(maxWidth: .infinity) // TODO: - 나중에 수정 확인

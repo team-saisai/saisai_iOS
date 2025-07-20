@@ -10,16 +10,30 @@ import SwiftUI
 struct CourseDetailView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    let courseName: String
+    @StateObject var vm: CourseDetailViewModel
     
     var body: some View {
-        VStack {
-            Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            VStack {
+                Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+            }
+            
+            VStack {
+                Spacer()
+                
+                CourseDetailBottomItem(vm: vm)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(.horizontal, 18)
+            .padding(.bottom, 42)
+        }
+        .onAppear {
+            vm.fetchData()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(.all)
         .background(.red)
-        .navigationTitle(courseName)
+        .navigationTitle(vm.courseDetail?.courseName ?? "")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {

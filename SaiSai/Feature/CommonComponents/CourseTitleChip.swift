@@ -20,7 +20,7 @@ struct CourseTitleChip: View {
     var body: some View {
         HStack(spacing: 3.5) {
             if case .ongoing = titleChip {
-                Image("fireIcon")
+                Image(.icFireIcon)
                     .resizable()
                     .frame(width: 12.5, height: 14)
             }

@@ -22,7 +22,7 @@ struct HomeHeaderView: View {
                     // TODO: - 알림 버튼 기능 구현
                     print("알림 버튼 클릭")
                 }, label: {
-                    Image("icBell")
+                    Image(.icBell)
                 })
             }
             .padding(.bottom, 24)

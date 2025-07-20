@@ -42,23 +42,7 @@ struct AllCourseListResponse: Decodable {
 struct CourseDetailResponseDTO: Decodable {
     let code: String
     let message: String
-    let data: DataInfo
-    
-    struct DataInfo: Decodable {
-        let courseId: Int
-        let courseName: String
-        let summary: String
-        let level: Int
-        let distance: Double
-        let estimatedTime: Double
-        let sigun: String
-        let imageUrl: String?
-        let challengerCount: Int
-        let finisherCount: Int
-        let hasUncompletedRide: Bool
-        let themeNames: [String]
-        let gpxPoints: [GpxPointInfo]
-    }
+    let data: CourseDetailInfo
 }
 
 // MARK: - DataInfo
@@ -92,6 +76,22 @@ struct SortInfo: Decodable {
     let empty: Bool
     let unsorted: Bool
     let sorted: Bool
+}
+
+struct CourseDetailInfo: Decodable {
+    let courseId: Int
+    let courseName: String
+    let summary: String
+    let level: Int
+    let distance: Double
+    let estimatedTime: Double
+    let sigun: String
+    let imageUrl: String?
+    let challengerCount: Int
+    let finisherCount: Int
+    let hasUncompletedRide: Bool
+    let themeNames: [String]
+    let gpxPoints: [GpxPointInfo]
 }
 
 struct GpxPointInfo: Decodable {

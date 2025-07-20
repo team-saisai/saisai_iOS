@@ -13,25 +13,25 @@ struct MainView: View {
             TabView {
                 HomeView()
                     .tabItem {
-                        Image(.home)
+                        Image(.icHome)
                             .renderingMode(.template)
                         Text("홈")
                     }
                 CourseView()
                     .tabItem {
-                        Image(.course)
+                        Image(.icCourse)
                             .renderingMode(.template)
                         Text("코스")
                     }
                 HistoryView()
                     .tabItem {
-                        Image(.history)
+                        Image(.icHistory)
                             .renderingMode(.template)
                         Text("기록")
                     }
                 MypageView()
                     .tabItem {
-                        Image(.mypage)
+                        Image(.icMypage)
                             .renderingMode(.template)
                         Text("마이")
                     }

@@ -14,7 +14,7 @@ struct SingleHorizontalCourseView: View {
     var body: some View {
         ZStack {
             HStack(spacing: 0) {
-                Image("icMapEx") /// ImageUrl 로 수정 필요
+                Image(.icMapEx) /// ImageUrl 로 수정 필요
                     .resizable()
                     .frame(width: 168)
                     .frame(maxHeight: .infinity)
@@ -32,7 +32,7 @@ struct SingleHorizontalCourseView: View {
                     HStack(spacing: 5) {
                         Text("\(String(format:"%.1f", contentInfo.distance))km")
                         Text("·")
-                        LevelView()
+                        LevelView(level: contentInfo.level)
                     }
                     .padding(.bottom, 10)
                     .font(.pretendard(.medium, size: 12))
@@ -77,35 +77,16 @@ struct SingleHorizontalCourseView: View {
 
 extension SingleHorizontalCourseView {
     
-    private func LevelView() -> some View {
-        HStack(spacing: 2) {
-            Text("난이도 ")
-            switch contentInfo.level {
-            case 1:
-                Text("하")
-                    .foregroundStyle(.levelLow)
-            case 2:
-                Text("중")
-                    .foregroundStyle(.levelMiddle)
-            case 3:
-                Text("상")
-                    .foregroundStyle(.levelHigh)
-            default:
-                Text("")
-            }
-        }
-    }
-    
     private func FooterView() -> some View {
         HStack(spacing: 8) {
             HStack(spacing: 2) {
-                Image("thunderIcon")
+                Image(.icThunderIcon)
                     .resizable()
                     .frame(width: 10, height: 14)
                 Text("\(contentInfo.courseChallengerCount)명")
             }
             HStack(spacing: 2) {
-                Image("starIcon")
+                Image(.icStarIcon)
                     .frame(width: 12.5, height: 12)
                 Text("\(contentInfo.reward.commaDecimal)p")
             }

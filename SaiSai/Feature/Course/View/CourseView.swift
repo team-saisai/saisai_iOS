@@ -45,7 +45,9 @@ struct CourseView: View {
                     if !vm.contentInfoList.isEmpty {
                         ForEach(vm.contentInfoList.indices, id: \.self) { index in
                             NavigationLink {
-                                CourseDetailView(courseName: vm.contentInfoList[index].courseName)
+                                CourseDetailView(
+                                    vm: CourseDetailViewModel(
+                                        courseId: vm.contentInfoList[index].courseId))
                             } label: {
                                 HStack {
                                     SingleHorizontalCourseView(contentInfo: vm.contentInfoList[index])
@@ -101,7 +103,7 @@ extension CourseView {
                label: {
             HStack(spacing: 6) {
                 if isChallengeFilter {
-                    Image("fireIcon")
+                    Image(.icFireIcon)
                         .renderingMode(.template)
                         .resizable()
                         .frame(width: 13.8, height: 15.4)
