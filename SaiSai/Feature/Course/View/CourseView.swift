@@ -28,14 +28,19 @@ struct CourseView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHStack(spacing: 8) {
                             ChallengeFilter()
-                            // TODO: - ForEach(theme) 추가 예정
                             
-                            RoundedButton(radius: 6, bgColor: .gray80, horizontalPadding: 14, verticalPadding: 8.5, text: "테마1", font: .pretendard(size: 14), action: {})
-                            RoundedButton(radius: 6, bgColor: .gray80, horizontalPadding: 14, verticalPadding: 8.5, text: "테마2", font: .pretendard(size: 14), action: {})
-                            RoundedButton(radius: 6, bgColor: .gray80, horizontalPadding: 14, verticalPadding: 8.5, text: "테마3", font: .pretendard(size: 14), action: {})
-                            RoundedButton(radius: 6, bgColor: .gray80, horizontalPadding: 14, verticalPadding: 8.5, text: "테마4", font: .pretendard(size: 14), action: {})
-                            RoundedButton(radius: 6, bgColor: .gray80, horizontalPadding: 14, verticalPadding: 8.5, text: "테마5", font: .pretendard(size: 14), action: {})
-                            RoundedButton(radius: 6, bgColor: .gray80, horizontalPadding: 14, verticalPadding: 8.5, text: "테마6", font: .pretendard(size: 14), action: {})
+                            ForEach(vm.filterList.indices, id: \.self) { idx in
+                                ThemeFilter(vm.filterList[idx], action: { vm.filterList[idx].isSelected.toggle() })
+                                    .foregroundStyle(vm.filterList[idx].isSelected ? .customLightPurple : .white)
+                                    .background {
+                                        RoundedRectangle(cornerRadius: FilterMetric.radius)
+                                            .fill(vm.filterList[idx].isSelected ? Color(red: 51 / 255,
+                                                                                        green: 50 / 255,
+                                                                                        blue: 71 / 255) :
+                                                    .gray80)
+                                    }
+                                        
+                            }
                         }
                         .padding(.bottom, 24)
                         .frame(maxWidth: .infinity)
@@ -75,7 +80,7 @@ extension CourseView {
     }
     
     private func ChallengeFilter() -> some View {
-        Filter(isChallengeFilter: true, text: "챌린지 중", action: { vm.toggleOnlyOngoingFilterStatus() })
+        Filter(isChallengeFilter: true, text: "챌린지 중", action: { vm.challengeButtonClicked() })
             .foregroundStyle(vm.isOnlyOngoing ? .titleChipRed : .white)
             .background(vm.isOnlyOngoing ? .gray80 : .gray90)
             .overlay {
@@ -84,13 +89,13 @@ extension CourseView {
             }
     }
     
-//    private func ThemeFilter(_ filter: String) -> some View {
-//        
-//    }
+    private func ThemeFilter(_ theme: ThemeInfo, action: @escaping () -> Void) -> some View {
+        Filter(isChallengeFilter: false, text: theme.name, action: action)
+    }
     
     private func Filter(isChallengeFilter: Bool,
                        text: String,
-                       action: @escaping @MainActor () -> Void) -> some View {
+                       action: @escaping () -> Void) -> some View {
         Button(action: action,
                label: {
             HStack(spacing: 6) {

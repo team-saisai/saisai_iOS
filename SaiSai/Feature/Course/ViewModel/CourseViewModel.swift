@@ -12,7 +12,7 @@ final class CourseViewModel: ObservableObject {
     @Published var hasReachedLast: Bool = true
     @Published var isOnlyOngoing: Bool = false
     @Published var contentInfoList: [CourseContentInfo] = []
-    @Published var filterList: [String] = ["필터1", "필터2", "필터3", "필터4", "필터5", "필터6"]
+    @Published var filterList: [ThemeInfo] = ThemeInfo.sampleList
     var currentPage: Int = 1
     var filteredStatus: ChallengeStatus? {
         isOnlyOngoing ? .ongoing : nil
@@ -37,6 +37,16 @@ final class CourseViewModel: ObservableObject {
         }
     }
     
+    func challengeButtonClicked() {
+        Task {
+            await initCurrentPage()
+            await toggleOnlyOngoingFilterStatus()
+            await toggleIsLoading(true)
+            await removeAllCoursesFromList()
+            fetchData()
+        }
+    }
+    
     @MainActor
     private func setCourseList(_ contentInfoList: [CourseContentInfo]) {
         self.contentInfoList += contentInfoList
@@ -50,5 +60,15 @@ final class CourseViewModel: ObservableObject {
     @MainActor
     func toggleOnlyOngoingFilterStatus() {
         self.isOnlyOngoing.toggle()
+    }
+    
+    @MainActor
+    func removeAllCoursesFromList() {
+        self.contentInfoList.removeAll()
+    }
+    
+    @MainActor
+    func initCurrentPage() {
+        self.currentPage = 1
     }
 }
