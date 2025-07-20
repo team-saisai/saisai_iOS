@@ -36,7 +36,6 @@ struct CourseView: View {
                                         RoundedRectangle(cornerRadius: FilterMetric.radius)
                                             .fill(vm.filterList[idx].isSelected ? .themeHighlightedBg : .gray80)
                                     }
-                                        
                             }
                         }
                         .padding(.bottom, 24)
@@ -45,10 +44,15 @@ struct CourseView: View {
                     
                     if !vm.contentInfoList.isEmpty {
                         ForEach(vm.contentInfoList.indices, id: \.self) { index in
-                            HStack {
-                                SingleHorizontalCourseView(contentInfo: vm.contentInfoList[index])
+                            NavigationLink {
+                                CourseDetailView(courseName: vm.contentInfoList[index].courseName)
+                            } label: {
+                                HStack {
+                                    SingleHorizontalCourseView(contentInfo: vm.contentInfoList[index])
+                                }
+                                .padding(.bottom, 20)
                             }
-                            .padding(.bottom, 20)
+                            
                         }
                     }
                     
@@ -91,8 +95,8 @@ extension CourseView {
     }
     
     private func Filter(isChallengeFilter: Bool,
-                       text: String,
-                       action: @escaping () -> Void) -> some View {
+                        text: String,
+                        action: @escaping () -> Void) -> some View {
         Button(action: action,
                label: {
             HStack(spacing: 6) {
