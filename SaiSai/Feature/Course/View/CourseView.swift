@@ -50,10 +50,6 @@ struct CourseView: View {
                             }
                             .padding(.bottom, 20)
                         }
-                    } else {
-                        Text("코스가 없습니다...")
-                            .font(.pretendard(.bold, size: 30))
-                            .foregroundStyle(.white)
                     }
                     
                     if vm.hasReachedLast {
