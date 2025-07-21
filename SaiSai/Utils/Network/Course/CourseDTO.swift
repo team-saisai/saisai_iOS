@@ -97,7 +97,7 @@ struct CourseDetailInfo: Decodable {
 struct GpxPointInfo: Decodable {
     let latitude: Double
     let longitude: Double
-    let elevation: Double
+    let elevation: Double?
     let segmentDistance: Double
     let totalDistance: Double
 }

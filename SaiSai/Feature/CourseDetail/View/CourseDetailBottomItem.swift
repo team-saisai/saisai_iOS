@@ -25,12 +25,13 @@ struct CourseDetailBottomItem: View {
                         VStack(spacing: 6.5) {
                             Image(.icBicycle)
                                 .resizable()
-                                .frame(width: 16.4, height: 15.2)
+                                .frame(width: 26.4, height: 15.2)
                             
                             Text("도전하기")
                                 .font(.pretendard(.semibold, size: 12))
                                 .foregroundStyle(.gray90)
                         }
+                        .padding(EdgeInsets(top: 16.5, leading: 6, bottom: 12, trailing: 6))
                         .background(RoundedRectangle(cornerRadius: 14).fill(Color.customLime))
                     }
                     
@@ -40,9 +41,9 @@ struct CourseDetailBottomItem: View {
                 }
             }
         }
-        .background(RoundedRectangle(cornerRadius: 16).fill(Color.courseDetailBg))
         .padding(.vertical, 20)
         .padding(.horizontal, 22)
+        .background(RoundedRectangle(cornerRadius: 16).fill(Color.courseDetailBg))
     }
 }
 
@@ -55,13 +56,11 @@ extension CourseDetailBottomItem {
                 .padding(.bottom, 6)
             
             HStack(spacing: 5) {
-                Text("\(String(format: "%1f", vm.courseDetail?.distance ?? 0.0))km")
+                Text("\(String(format: "%.1f", vm.courseDetail?.distance ?? 0.0))km")
                 Text("·")
                 LevelView(level: vm.courseDetail?.level ?? 0)
             }
             .padding(.bottom, 8)
-            
-            
         }
     }
 }

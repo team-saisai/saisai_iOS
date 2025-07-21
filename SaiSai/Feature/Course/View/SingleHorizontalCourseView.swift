@@ -85,10 +85,12 @@ extension SingleHorizontalCourseView {
                     .frame(width: 10, height: 14)
                 Text("\(contentInfo.courseChallengerCount)명")
             }
-            HStack(spacing: 2) {
-                Image(.icStarIcon)
-                    .frame(width: 12.5, height: 12)
-                Text("\(contentInfo.reward.commaDecimal)p")
+            if contentInfo.reward != 0 {
+                HStack(spacing: 2) {
+                    Image(.icStarIcon)
+                        .frame(width: 12.5, height: 12)
+                    Text("\(contentInfo.reward.commaDecimal)p")
+                }
             }
         }
         .font(.pretendard(.regular, size: 12))

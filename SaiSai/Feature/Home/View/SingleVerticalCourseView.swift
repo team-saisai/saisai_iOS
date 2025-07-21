@@ -71,10 +71,12 @@ extension SingleVerticalCourseView {
                     .frame(width: 10, height: 14)
                 Text("\(courseInfo.challengerCount)명")
             }
-            HStack(spacing: 2) {
-                Image(.icStarIcon)
-                    .frame(width: 12.5, height: 12)
-                Text("\(courseInfo.reward.commaDecimal)p")
+            if courseInfo.reward != 0 {
+                HStack(spacing: 2) {
+                    Image(.icStarIcon)
+                        .frame(width: 12.5, height: 12)
+                    Text("\(courseInfo.reward.commaDecimal)p")
+                }
             }
         }
         .font(.pretendard(.regular, size: 12))
