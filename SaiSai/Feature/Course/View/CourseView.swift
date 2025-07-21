@@ -22,26 +22,15 @@ struct CourseView: View {
             .padding(.vertical, 18)
             .padding(.leading, 24)
             
+            HStack {
+                ChallengeFilter()
+                Spacer()
+            }
+            .padding(.bottom, 24)
+            .padding(.leading, 22)
+            
             ScrollView(.vertical, showsIndicators: true) {
-                LazyVStack(spacing: 0) {
-                    
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        LazyHStack(spacing: 8) {
-                            ChallengeFilter()
-                            
-                            ForEach(vm.filterList.indices, id: \.self) { idx in
-                                ThemeFilter(vm.filterList[idx], action: { vm.filterList[idx].isSelected.toggle() })
-                                    .foregroundStyle(vm.filterList[idx].isSelected ? .customLightPurple : .white)
-                                    .background {
-                                        RoundedRectangle(cornerRadius: FilterMetric.radius)
-                                            .fill(vm.filterList[idx].isSelected ? .themeHighlightedBg : .gray80)
-                                    }
-                            }
-                        }
-                        .padding(.bottom, 24)
-                        .frame(maxWidth: .infinity)
-                    }
-                    
+                LazyVStack {
                     if !vm.contentInfoList.isEmpty {
                         ForEach(vm.contentInfoList.indices, id: \.self) { index in
                             NavigationLink {
@@ -58,10 +47,11 @@ struct CourseView: View {
                         }
                     }
                     
-                    if vm.hasReachedLast {
+                    if vm.hasReachedSinglePageLast {
                         ProgressView()
                             .onAppear() {
                                 vm.fetchData()
+                                print("Reached ProgressView!")
                             }
                     }
                 }
@@ -90,10 +80,6 @@ extension CourseView {
                 RoundedRectangle(cornerRadius: FilterMetric.radius)
                     .stroke(vm.isOnlyOngoing ? .titleChipRed : .white , lineWidth: 1.5)
             }
-    }
-    
-    private func ThemeFilter(_ theme: ThemeInfo, action: @escaping () -> Void) -> some View {
-        Filter(isChallengeFilter: false, text: theme.name, action: action)
     }
     
     private func Filter(isChallengeFilter: Bool,

@@ -9,10 +9,9 @@ import Foundation
 import Combine
 
 final class CourseViewModel: ObservableObject {
-    @Published var hasReachedLast: Bool = true
+    @Published var hasReachedSinglePageLast: Bool = true
     @Published var isOnlyOngoing: Bool = false
     @Published var contentInfoList: [CourseContentInfo] = []
-    @Published var filterList: [ThemeInfo] = ThemeInfo.sampleList
     var currentPage: Int = 1
     var filteredStatus: ChallengeStatus? {
         isOnlyOngoing ? .ongoing : nil
@@ -22,8 +21,10 @@ final class CourseViewModel: ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                if !hasReachedLast { return }
+                if !hasReachedSinglePageLast { return }
                 let courseService = NetworkService<CourseAPI>()
+                print("DEBUGING : \(hasReachedSinglePageLast)")
+                print("Requesting Page: \(currentPage)")
                 let courseListResponse = try await courseService.request(.getCoursesList(page: currentPage,
                                                                                          status: filteredStatus),
                                                                          responseDTO: AllCourseListResponse.self)
@@ -54,7 +55,7 @@ final class CourseViewModel: ObservableObject {
     
     @MainActor
     private func toggleIsLoading(_ isLoading: Bool) {
-        self.hasReachedLast = isLoading
+        self.hasReachedSinglePageLast = isLoading
     }
     
     @MainActor
