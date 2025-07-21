@@ -92,6 +92,16 @@ struct CourseDetailInfo: Decodable {
     let hasUncompletedRide: Bool
     let themeNames: [String]
     let gpxPoints: [GpxPointInfo]
+    
+    var estimatedHour: Int {
+        let totalTime = Int(estimatedTime)
+        return totalTime / 60
+    }
+    
+    var estimatedMinute: Int {
+        let totalTime = Int(estimatedTime)
+        return totalTime % 60
+    }
 }
 
 struct GpxPointInfo: Decodable {

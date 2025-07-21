@@ -12,6 +12,7 @@ final class CourseDetailViewModel: ObservableObject {
     // MARK: - Properties
     let courseId: Int
     @Published var courseDetail: CourseDetailInfo? = nil
+    @Published var isSummaryViewFolded: Bool = true
     
     // MARK: - Init
     init(courseId: Int) {

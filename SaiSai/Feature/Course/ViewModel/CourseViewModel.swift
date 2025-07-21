@@ -23,8 +23,6 @@ final class CourseViewModel: ObservableObject {
             do {
                 if !hasReachedSinglePageLast { return }
                 let courseService = NetworkService<CourseAPI>()
-                print("DEBUGING : \(hasReachedSinglePageLast)")
-                print("Requesting Page: \(currentPage)")
                 let courseListResponse = try await courseService.request(.getCoursesList(page: currentPage,
                                                                                          status: filteredStatus),
                                                                          responseDTO: AllCourseListResponse.self)

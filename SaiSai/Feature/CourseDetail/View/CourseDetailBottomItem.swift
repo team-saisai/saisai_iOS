@@ -12,8 +12,8 @@ struct CourseDetailBottomItem: View {
     @ObservedObject var vm: CourseDetailViewModel
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack {
+        LazyVStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .top) {
                 CourseDetailSummaryView()
                 
                 Spacer()
@@ -35,13 +35,35 @@ struct CourseDetailBottomItem: View {
                         .background(RoundedRectangle(cornerRadius: 14).fill(Color.customLime))
                     }
                     
-                    Text("1h 30m")
+                    Text("\(vm.courseDetail?.estimatedHour ?? 0)h \(vm.courseDetail?.estimatedMinute ?? 0)m")
                         .font(.pretendard(size: 12))
                         .foregroundStyle(.customLime)
                 }
             }
+            
+            HStack(spacing: 11) {
+                HStack(spacing: 5) {
+                    Image(.icThunderIcon)
+                        .resizable()
+                        .frame(width: 11.7, height: 16.6)
+                    Text("\(vm.courseDetail?.challengerCount.commaDecimal ?? "")명 도전중")
+                }
+                HStack(spacing: 3.5) {
+                    Image(.icStarInCircle)
+                        .frame(width: 15, height: 15)
+                    Text("\(vm.courseDetail?.finisherCount.commaDecimal ?? "")명 완주")
+                }
+                Spacer()
+            }
+            .font(.pretendard(.regular, size: 12))
+            .foregroundStyle(.iconPurple)
+            
+            if !vm.isSummaryViewFolded {
+                SummaryView()
+                    .padding(.top, 24)
+            }
         }
-        .padding(.vertical, 20)
+        .padding(.vertical, 18)
         .padding(.horizontal, 22)
         .background(RoundedRectangle(cornerRadius: 16).fill(Color.courseDetailBg))
     }
@@ -61,6 +83,16 @@ extension CourseDetailBottomItem {
                 LevelView(level: vm.courseDetail?.level ?? 0)
             }
             .padding(.bottom, 8)
+            .font(.pretendard(size: 12))
+            .foregroundStyle(.gray40)
         }
+    }
+
+    private func SummaryView() -> some View {
+        Text(vm.courseDetail?.summary ?? "")
+            .foregroundStyle(.white)
+            .font(.pretendard(.regular, size: 14))
+            .multilineTextAlignment(.leading)
+            .lineLimit(nil)
     }
 }
