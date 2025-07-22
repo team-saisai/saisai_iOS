@@ -39,4 +39,9 @@ final class CourseDetailViewModel: ObservableObject {
     private func setCourseDetail(_ courseDetail: CourseDetailInfo) {
         self.courseDetail = courseDetail
     }
+    
+    @MainActor
+    func toggleSummaryFoldState() {
+        self.isSummaryViewFolded.toggle()
+    }
 }

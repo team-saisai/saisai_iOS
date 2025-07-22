@@ -21,7 +21,9 @@ struct CourseDetailView: View {
             VStack {
                 Spacer()
                 
-                CourseDetailBottomItem(vm: vm)
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    CourseDetailBottomItem(vm: vm)                    
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.horizontal, 18)
