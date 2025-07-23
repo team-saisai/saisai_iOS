@@ -21,7 +21,7 @@ struct CourseDetailView: View {
             VStack {
                 Spacer()
                 
-                withAnimation(.easeInOut(duration: 0.3)) {
+                withAnimation(.easeInOut(duration: 5)) {
                     CourseDetailBottomItem(vm: vm)                    
                 }
             }

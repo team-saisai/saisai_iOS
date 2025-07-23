@@ -108,16 +108,14 @@ extension CourseDetailBottomItem {
         Button {
             vm.toggleSummaryFoldState()
         } label: {
-            VStack {
-                Image(systemName: vm.isSummaryViewFolded ? "chevron.down" : "chevron.up")
-                    .resizable()
-                    .renderingMode(.template)
-                    .frame(width: 40, height: 4)
-                    .foregroundStyle(.gray20)
-            }
-            .frame(width: 200, height: 10)
-            .background(.courseDetailBg)
-            .clipShape(RoundedRectangle(cornerRadius: 16).trim(from: 0, to: 0.5))
+            Image(systemName: vm.isSummaryViewFolded ? "chevron.down" : "chevron.up")
+                .resizable()
+                .renderingMode(.template)
+                .frame(width: 40, height: 4)
+                .foregroundStyle(.gray20)
         }
+        .clipShape(RoundedRectangle(cornerRadius: 16).trim(from: 0, to: 0.5))
+        .frame(width: 200, height: 10)
+        .background(.courseDetailBg)
     }
 }

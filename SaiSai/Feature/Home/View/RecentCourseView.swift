@@ -66,10 +66,13 @@ struct RecentCourseView: View {
                     HStack(alignment: .bottom) {
                         Spacer()
                         
-                        RoundedButton(radius: 4,
-                                      bgColor: .customPurple,
-                                      text: (vm.isRecentRideDone ? "다시 도전하기" : "이어하기"),
-                                      action: { print("임시 버튼 Output") })
+                        NavigationLink(
+                            destination: CourseDetailView(
+                                vm: CourseDetailViewModel(courseId: vm.recentRide?.courseId ?? 0))) {
+                                    CustomRoundedRectangle(radius: 4,
+                                                  bgColor: .customPurple,
+                                                  text: (vm.isRecentRideDone ? "다시 도전하기" : "이어하기"))
+                                }
                     }
                     
                 }
