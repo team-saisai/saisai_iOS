@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MapKit
 
 // MARK: - Request DTO
 
@@ -90,6 +91,9 @@ struct CourseDetailInfo: Decodable {
     let challengerCount: Int
     let finisherCount: Int
     let hasUncompletedRide: Bool
+    let challengeStatus: String?
+    let challengeEndedAt: String?
+    let isEventActive: Bool
     let themeNames: [String]
     let gpxPoints: [GpxPointInfo]
     
@@ -101,6 +105,25 @@ struct CourseDetailInfo: Decodable {
     var estimatedMinute: Int {
         let totalTime = Int(estimatedTime)
         return totalTime % 60
+    }
+    
+    var challengeStatusCase: ChallengeStatus {
+        if let challengeStatus = challengeStatus, let status = ChallengeStatus(rawValue: challengeStatus) {
+            return status
+        } else {
+            print("received wrong challengeStatus")
+            return .ongoing
+        }
+    }
+    
+    var locations: [CLLocationCoordinate2D] {
+        return gpxPoints.compactMap {
+            CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude)
+        }
+    }
+    
+    var convertedSummary: String {
+        return summary.replacingOccurrences(of: "<br>", with: "\n")
     }
 }
 

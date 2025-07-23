@@ -15,14 +15,17 @@ struct CourseDetailView: View {
     var body: some View {
         ZStack {
             VStack {
-                Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+                CourseRidingView(vm: vm)
             }
             
-            VStack {
+            VStack(spacing: 8) {
                 Spacer()
                 
-                withAnimation(.easeInOut(duration: 5)) {
-                    CourseDetailBottomItem(vm: vm)                    
+                if vm.hasUncompletedRide {
+                    Circle()
+                } else {
+                    CourseTitleChipsView()
+                    CourseDetailBottomItem(vm: vm)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -34,7 +37,7 @@ struct CourseDetailView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(.all)
-        .background(.red)
+        .background(.gray20)
         .navigationTitle(vm.courseDetail?.courseName ?? "")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -51,5 +54,20 @@ struct CourseDetailView: View {
                 }
             }
         }
+    }
+}
+
+extension CourseDetailView {
+    @ViewBuilder
+    private func CourseTitleChipsView() -> some View {
+        HStack(spacing: 4) {
+            CourseTitleChip(challengeStatus: vm.courseDetail?.challengeStatusCase ?? .ended,
+                            endedAt: vm.courseDetail?.challengeEndedAt ?? "")
+            if let courseDetail = vm.courseDetail,  courseDetail.isEventActive {
+                CourseTitleChip(isEvent: true, challengeStatus: .ended, endedAt: "")
+            }
+            Spacer()
+        }
+        .padding(.horizontal, 12)
     }
 }

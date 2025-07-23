@@ -97,7 +97,7 @@ extension CourseDetailBottomItem {
     }
 
     private func SummaryView() -> some View {
-        Text(vm.courseDetail?.summary ?? "")
+        Text(vm.courseDetail?.convertedSummary ?? "")
             .foregroundStyle(.white)
             .font(.pretendard(.regular, size: 14))
             .multilineTextAlignment(.leading)

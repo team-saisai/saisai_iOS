@@ -64,7 +64,7 @@ extension HomeViewModel {
         self.recentRide = recentRide
         if let recentRide = recentRide {
             self.isRecentRideExists = true
-            self.isRecentRideDone = (recentRide.progressRate == 100 ? true : false)
+            self.isRecentRideDone = recentRide.progressDone
         }
     }
     

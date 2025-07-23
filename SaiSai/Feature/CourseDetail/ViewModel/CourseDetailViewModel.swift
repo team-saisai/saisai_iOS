@@ -12,6 +12,7 @@ final class CourseDetailViewModel: ObservableObject {
     // MARK: - Properties
     let courseId: Int
     @Published var courseDetail: CourseDetailInfo? = nil
+    @Published var hasUncompletedRide: Bool = false
     @Published var isSummaryViewFolded: Bool = true
     
     // MARK: - Init
@@ -28,6 +29,7 @@ final class CourseDetailViewModel: ObservableObject {
                     .getCourseDetail(courseId: courseId),
                     responseDTO: CourseDetailResponseDTO.self)
                 await setCourseDetail(response.data)
+                await setUncompletedRide(response.data.hasUncompletedRide)
             } catch {
                 print(error)
                 print("코스 디테일 조회 실패😭")
@@ -43,5 +45,10 @@ final class CourseDetailViewModel: ObservableObject {
     @MainActor
     func toggleSummaryFoldState() {
         self.isSummaryViewFolded.toggle()
+    }
+    
+    @MainActor
+    func setUncompletedRide(_ hasUncompletedRide: Bool) {
+        self.hasUncompletedRide = hasUncompletedRide
     }
 }
