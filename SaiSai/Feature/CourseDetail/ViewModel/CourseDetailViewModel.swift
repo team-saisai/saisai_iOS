@@ -56,6 +56,10 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         }
     }
     
+    func requestStartRiding() {
+        
+    }
+    
     @MainActor
     private func setCourseDetail(_ courseDetail: CourseDetailInfo) {
         self.courseDetail = courseDetail
