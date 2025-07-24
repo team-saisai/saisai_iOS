@@ -18,10 +18,22 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     @Published var userLatitude: Double = 0
     @Published var userLongitude: Double = 0
     @Published var spentSeconds: Int = 0
+    @Published var rideId: Int = 0
+    @Published var totalDistance: Double = 0.0
+    @Published var currentDistance: Double = 0.0
+    var progressPercentage: Double {
+        if totalDistance <= 0 {
+            return 0
+        }
+        return currentDistance / totalDistance
+    }
     private let locationManager: CLLocationManager = .init()
     private var startTime: Date? = nil
     private var timer: Timer? = nil
     private var baseSeconds: Int = 0
+    
+    let courseService = NetworkService<CourseAPI>()
+    let ridesService = NetworkService<RidesAPI>()
     
     
     // MARK: - Init
@@ -43,7 +55,6 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let courseService = NetworkService<CourseAPI>()
                 let response = try await courseService.request(
                     .getCourseDetail(courseId: courseId),
                     responseDTO: CourseDetailResponseDTO.self)
@@ -57,8 +68,109 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     }
     
     func requestStartRiding() {
-        
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let response = try await ridesService.request(.startRides(courseId: courseId), responseDTO: StartRidesResponseDTO.self)
+                await setRideId(response.data.rideId)
+                await setTotalDistance(totalDistance)
+            } catch {
+                print(error)
+                print("라이딩 시작 실패")
+            }
+        }
     }
+    
+    func requestPauseRiding() {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let _ = try await ridesService.request(
+                    .pauseRides(
+                        rideId: rideId,
+                        duration: spentSeconds,
+                        totalDistance: currentDistance),
+                    responseDTO: PauseRidesResponseDTO.self)
+                exitTimer()
+            } catch {
+                print(error)
+                print("라이딩 중지 실패")
+            }
+        }
+    }
+    
+    func requestResumeRiding() {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let response = try await ridesService.request(
+                    .resumeRides(rideId: rideId),
+                    responseDTO: ResumeRidesResponseDTO.self)
+                baseSeconds = response.data.durationSecond
+                currentDistance = response.data.actualDistance // 아직 명세에 추가 안됨.
+                startTimer()
+            } catch {
+                print(error)
+                print("라이딩 재개 실패")
+            }
+        }
+    }
+    
+    func requestCompleteRiding() {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let response = try await ridesService.request(
+                    .completeRides(rideId: rideId,
+                                   duration: spentSeconds,
+                                   actualDistance: currentDistance),
+                    responseDTO: ResumeRidesResponseDTO.self)
+            } catch {
+                print(error)
+                print("라이딩 재개 실패")
+            }
+        }
+    }
+}
+
+extension CourseDetailViewModel: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+    {
+        Task { [weak self] in
+            guard let self = self else { return }
+            guard let location = locations.last else { return }
+            print("latitude: \(location.coordinate.latitude)")
+            print("longitude: \(location.coordinate.longitude)")
+            await setUserLocation(location.coordinate.latitude, location.coordinate.longitude)
+        }
+    }
+}
+
+// MARK: - Timer Methods
+extension CourseDetailViewModel {
+    func startTimer() {
+        startTime = Date()
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerPerSecond), userInfo: nil, repeats: true)
+        if let timer = timer {
+            RunLoop.main.add(timer, forMode: .common)
+        }
+    }
+    
+    @objc func updateTimerPerSecond() {
+        guard let startTime = startTime else { return }
+        let timeElapsed = Int(Date().timeIntervalSince(startTime))
+        spentSeconds = timeElapsed + baseSeconds
+    }
+    
+    private func exitTimer() {
+        timer?.invalidate()
+        timer = nil
+        print("EXIT TIMER")
+    }
+}
+
+// MARK: - Methods for Updating UI
+extension CourseDetailViewModel {
     
     @MainActor
     private func setCourseDetail(_ courseDetail: CourseDetailInfo) {
@@ -91,40 +203,19 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         self.userLatitude = userLatitude
         self.userLongitude = userLongitude
     }
-}
-
-extension CourseDetailViewModel: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
-    {
-        Task { [weak self] in
-            guard let self = self else { return }
-            guard let location = locations.last else { return }
-            print("latitude: \(location.coordinate.latitude)")
-            print("longitude: \(location.coordinate.longitude)")
-            await setUserLocation(location.coordinate.latitude, location.coordinate.longitude)
-        }
-    }
-}
-
-// MARK: - Timer
-extension CourseDetailViewModel {
-    func startTimer() {
-        startTime = Date()
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerPerSecond), userInfo: nil, repeats: true)
-        if let timer = timer {
-            RunLoop.main.add(timer, forMode: .common)
-        }
+    
+    @MainActor
+    func setRideId(_ rideId: Int) {
+        self.rideId = rideId
     }
     
-    @objc func updateTimerPerSecond() {
-        guard let startTime = startTime else { return }
-        let timeElapsed = Int(Date().timeIntervalSince(startTime))
-        spentSeconds = timeElapsed + baseSeconds
+    @MainActor
+    func setTotalDistance(_ totalDistance: Double) {
+        self.totalDistance = totalDistance
     }
     
-    private func exitTimer() {
-        timer?.invalidate()
-        timer = nil
-        print("EXIT TIMER")
+    @MainActor
+    func setCurrentDistance(_ currentDistance: Double) {
+        self.currentDistance = currentDistance
     }
 }

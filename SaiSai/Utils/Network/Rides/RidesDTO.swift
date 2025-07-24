@@ -51,6 +51,7 @@ struct ResumeRidesResponseDTO: Decodable {
     struct DataInfo: Decodable {
         let rideId: Int
         let durationSecond: Int
+        let actualDistance: Double // 아직 명세에 추가 안됨.
     }
 }
 
