@@ -61,7 +61,6 @@ struct CourseContentInfo: Decodable {
     let challengeEndedAt: String
     let isEventActive: Bool
     let reward: Int
-    let themeNames: [String]
     
     var challengeStatusCase: ChallengeStatus {
         if let challengeStatus = ChallengeStatus(rawValue: challengeStatus) {
@@ -94,7 +93,6 @@ struct CourseDetailInfo: Decodable {
     let challengeStatus: String?
     let challengeEndedAt: String?
     let isEventActive: Bool
-    let themeNames: [String]
     let gpxPoints: [GpxPointInfo]
     
     var estimatedHour: Int {

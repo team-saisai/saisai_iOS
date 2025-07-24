@@ -50,6 +50,7 @@ struct ResumeRidesResponseDTO: Decodable {
     
     struct DataInfo: Decodable {
         let rideId: Int
+        let durationSecond: Int
     }
 }
 
