@@ -29,9 +29,31 @@ struct CourseRidingView: View {
                         .fill(Color.customLime)
                         .frame(width: 14, height: 14)
                 }
+                
+//                UserAnnotation()
+                
+//                Annotation("나",
+//                           coordinate: CLLocationCoordinate2D(
+//                            latitude: vm.userLatitude,
+//                            longitude: vm.userLongitude)) {
+//                                Circle()
+//                                    .fill(Color.red)
+//                                    .frame(width: 14, height: 14)
+//                            }
+//                            .annotationTitles(.hidden)
             }
         }
         .ignoresSafeArea(.all)
+        .mapControls {
+            MapUserLocationButton()
+        }
+        .onAppear {
+            vm.startUpdatingLocation()
+        }
+        .onDisappear() {
+            vm.stopUpdatingLocation()
+        }
     }
 }
+
 

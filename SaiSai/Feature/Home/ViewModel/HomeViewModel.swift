@@ -87,4 +87,10 @@ extension HomeViewModel {
     private func toggleIsLoading(_ isLoading: Bool) {
         self.isLoading = isLoading
     }
+    
+    @MainActor
+    func requestLocationPermission() {
+        let locationManager = LocationPermissionManager()
+        locationManager.locationManagerDidChangeAuthorization(locationManager.manager)
+    }
 }

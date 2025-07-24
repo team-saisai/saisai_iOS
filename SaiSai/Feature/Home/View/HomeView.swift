@@ -33,6 +33,7 @@ struct HomeView: View {
         .background(.gray90)
         .onAppear {
             vm.fetchData()
+            vm.requestLocationPermission()
         }
     }
 }
