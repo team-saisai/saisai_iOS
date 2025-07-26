@@ -34,6 +34,7 @@ struct HomeHeaderView: View {
                 }
                 .font(.pretendard(.medium, size: 26))
                 .foregroundStyle(.white)
+                .lineLimit(1)
                 
                 Spacer()
             }
