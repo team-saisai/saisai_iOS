@@ -21,13 +21,14 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
+    let challengeService = NetworkService<ChallengeAPI>()
+    let myService = NetworkService<MyAPI>()
+    let badgeService = NetworkService<BadgeAPI>()
+    
     func fetchData() {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let challengeService = NetworkService<ChallengeAPI>()
-                let myService = NetworkService<MyAPI>()
-                let badgeService = NetworkService<BadgeAPI>()
                 
                 let myInfoResponse = try await myService.request(.getMyInfo, responseDTO: MyInfoDTO.self)
                 await setName(myInfoResponse.data.nickname)

@@ -19,6 +19,10 @@ struct CourseDetailView: View {
             }
             
             VStack(spacing: 8) {
+                if vm.hasUncompletedRide {
+                    TimerView(vm: vm)
+                }
+                
                 Spacer()
                 
                 if vm.hasUncompletedRide {

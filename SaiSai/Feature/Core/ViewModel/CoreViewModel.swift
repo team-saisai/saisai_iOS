@@ -11,11 +11,12 @@ final class CoreViewModel: ObservableObject {
     @Published var isLoggedIn: Bool = false
     @Published var isSplashRepresented: Bool = true
     
+    let myInfoService = NetworkService<MyAPI>()
+    
     func validateToken() {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let myInfoService = NetworkService<MyAPI>()
                 let _ = try await myInfoService.request(.getMyInfo, responseDTO: MyInfoDTO.self)
                 await viewTransitionWithDelay(isLoggedIn: true)
 

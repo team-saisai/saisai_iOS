@@ -17,12 +17,13 @@ final class CourseViewModel: ObservableObject {
         isOnlyOngoing ? .ongoing : nil
     }
     
+    let courseService = NetworkService<CourseAPI>()
+    
     func fetchData() {
         Task { [weak self] in
             guard let self = self else { return }
             do {
                 if !hasReachedSinglePageLast { return }
-                let courseService = NetworkService<CourseAPI>()
                 let courseListResponse = try await courseService.request(.getCoursesList(page: currentPage,
                                                                                          status: filteredStatus),
                                                                          responseDTO: AllCourseListResponse.self)
