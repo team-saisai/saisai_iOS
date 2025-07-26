@@ -30,17 +30,11 @@ struct CourseRidingView: View {
                         .frame(width: 14, height: 14)
                 }
                 
-//                UserAnnotation()
-                
-//                Annotation("나",
-//                           coordinate: CLLocationCoordinate2D(
-//                            latitude: vm.userLatitude,
-//                            longitude: vm.userLongitude)) {
-//                                Circle()
-//                                    .fill(Color.red)
-//                                    .frame(width: 14, height: 14)
-//                            }
-//                            .annotationTitles(.hidden)
+                if let heading = vm.heading {
+                    UserAnnotation {
+                        CustomUserAnnotationView(heading: heading)
+                    }
+                }
             }
         }
         .ignoresSafeArea(.all)
@@ -56,4 +50,19 @@ struct CourseRidingView: View {
     }
 }
 
+struct CustomUserAnnotation: View {
+    var heading: CLLocationDirection
 
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(Color.customLime)
+                .frame(width: 16, height: 16)
+
+            Image(systemName: "arrowtriangle.up.fill")
+                .foregroundColor(.white)
+                .rotationEffect(.degrees(heading))
+                .offset(y: -12)
+        }
+    }
+}

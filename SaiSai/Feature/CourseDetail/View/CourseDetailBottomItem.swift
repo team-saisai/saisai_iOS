@@ -58,6 +58,9 @@ extension CourseDetailBottomItem {
         VStack(spacing: 6) {
             Button {
                 // TODO: - 도전하기 API 추가
+                vm.hasUncompletedRide = true
+                vm.isSummaryViewFolded = true
+                
             } label: {
                 VStack(spacing: 6.5) {
                     Image(.icBicycle)

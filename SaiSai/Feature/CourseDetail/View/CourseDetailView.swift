@@ -22,7 +22,7 @@ struct CourseDetailView: View {
                 Spacer()
                 
                 if vm.hasUncompletedRide {
-                    Circle()
+                    RidingStatusBottomItem(vm: vm)
                 } else {
                     CourseTitleChipsView()
                     CourseDetailBottomItem(vm: vm)

@@ -21,13 +21,18 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     @Published var rideId: Int = 0
     @Published var totalDistance: Double = 0.0
     @Published var currentDistance: Double = 0.0
+    @Published var heading: CLLocationDirection? = nil
     var progressPercentage: Double {
         if totalDistance <= 0 {
             return 0
         }
         return currentDistance / totalDistance
     }
-    private let locationManager: CLLocationManager = .init()
+    let locationManager: CLLocationManager = {
+        let locationManager = CLLocationManager()
+        locationManager.startUpdatingHeading()
+        return locationManager
+    }()
     private var startTime: Date? = nil
     private var timer: Timer? = nil
     private var baseSeconds: Int = 0
@@ -41,7 +46,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         self.courseId = courseId
         super.init()
         self.locationManager.delegate = self
-        self.locationManager.startUpdatingLocation()
+//        self.locationManager.startUpdatingLocation()
     }
     
     // MARK: - Deinit
@@ -142,6 +147,12 @@ extension CourseDetailViewModel: CLLocationManagerDelegate {
             print("latitude: \(location.coordinate.latitude)")
             print("longitude: \(location.coordinate.longitude)")
             await setUserLocation(location.coordinate.latitude, location.coordinate.longitude)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        DispatchQueue.main.async {
+            self.heading = newHeading.trueHeading
         }
     }
 }
