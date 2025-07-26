@@ -38,12 +38,6 @@ extension BadgeCollectionView {
     
     private func BadgesContainerView(_ badges: [BadgeInfo]) -> some View {
         VStack(alignment: .leading, spacing: 14) {
-            HStack {
-                Text("Subtitle")
-                    .font(.pretendard(.medium, size: 16))
-                    .foregroundStyle(.white)
-                Spacer()
-            }
             
             if badges.count == 8 {
                 HStack {
