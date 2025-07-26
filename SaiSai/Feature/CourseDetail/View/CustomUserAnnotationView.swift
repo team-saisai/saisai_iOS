@@ -12,15 +12,9 @@ struct CustomUserAnnotationView: View {
     var heading: Double
     
     var body: some View {
-        ZStack {
-            Circle()
-                .fill(Color.customLime)
-                .frame(width: 16, height: 16)
-
-            Image(systemName: "arrowtriangle.up.fill")
-                .foregroundColor(.white)
-                .rotationEffect(.degrees(heading))
-                .offset(y: -12)
-        }
+        Image(.directionIcon)
+            .resizable()
+            .frame(width: 32, height: 32)
+            .rotationEffect(.degrees(heading))
     }
 }

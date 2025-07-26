@@ -20,7 +20,10 @@ struct CourseDetailView: View {
             
             VStack(spacing: 8) {
                 if vm.hasUncompletedRide {
-                    TimerView(vm: vm)
+                    VStack {
+                        TimerView(vm: vm)
+                    }
+                    .padding(.top, 14)
                 }
                 
                 Spacer()
@@ -40,7 +43,6 @@ struct CourseDetailView: View {
             vm.fetchData()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .ignoresSafeArea(.all)
         .background(.gray20)
         .navigationTitle(vm.courseDetail?.courseName ?? "")
         .navigationBarTitleDisplayMode(.inline)

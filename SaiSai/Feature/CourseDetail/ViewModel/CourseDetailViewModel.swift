@@ -65,6 +65,9 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     responseDTO: CourseDetailResponseDTO.self)
                 await setCourseDetail(response.data)
                 await setUncompletedRide(response.data.hasUncompletedRide)
+                if response.data.hasUncompletedRide {
+                    requestResumeRiding()
+                }
             } catch {
                 print(error)
                 print("코스 디테일 조회 실패😭")
@@ -77,6 +80,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
             guard let self = self else { return }
             do {
                 let response = try await ridesService.request(.startRides(courseId: courseId), responseDTO: StartRidesResponseDTO.self)
+                startTimer()
                 await setRideId(response.data.rideId)
                 await setTotalDistance(totalDistance)
             } catch {
@@ -163,7 +167,7 @@ extension CourseDetailViewModel {
         startTime = Date()
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerPerSecond), userInfo: nil, repeats: true)
         if let timer = timer {
-            RunLoop.main.add(timer, forMode: .common)
+            RunLoop.main.add(timer, forMode: .default)
         }
     }
     
@@ -171,6 +175,7 @@ extension CourseDetailViewModel {
         guard let startTime = startTime else { return }
         let timeElapsed = Int(Date().timeIntervalSince(startTime))
         spentSeconds = timeElapsed + baseSeconds
+        print(spentSeconds)
     }
     
     private func exitTimer() {
