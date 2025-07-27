@@ -1,5 +1,5 @@
 //
-//  LoginDTO.swift
+//  AuthDTO.swift
 //  SaiSai
 //
 //  Created by ch on 7/9/25.

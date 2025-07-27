@@ -37,10 +37,10 @@ final class CourseViewModel: ObservableObject {
         }
     }
     
-    func challengeButtonClicked() {
+    func setOnlyOngoing(_ isOnlyOngoing: Bool) {
         Task {
             await initCurrentPage()
-            await toggleOnlyOngoingFilterStatus()
+            await setOnlyOngoingFilterStatus(isOnlyOngoing)
             await toggleIsLoading(true)
             await removeAllCoursesFromList()
             fetchData()
@@ -58,8 +58,8 @@ final class CourseViewModel: ObservableObject {
     }
     
     @MainActor
-    func toggleOnlyOngoingFilterStatus() {
-        self.isOnlyOngoing.toggle()
+    func setOnlyOngoingFilterStatus(_ isOnlyOngoing: Bool) {
+        self.isOnlyOngoing = isOnlyOngoing
     }
     
     @MainActor

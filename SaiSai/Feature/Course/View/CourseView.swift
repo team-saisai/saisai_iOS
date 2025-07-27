@@ -26,8 +26,8 @@ struct CourseView: View {
                 ChallengeFilter()
                 Spacer()
             }
-            .padding(.bottom, 24)
-            .padding(.leading, 22)
+//            .padding(.bottom, 24)
+//            .padding(.leading, 22)
             
             ScrollView(.vertical, showsIndicators: true) {
                 LazyVStack {
@@ -63,49 +63,44 @@ struct CourseView: View {
 }
 
 extension CourseView {
-    
-    private enum FilterMetric {
-        static let verticalPadding = 8.5
-        static let challengeLeadingPadding = 10.5
-        static let challengeTrailingPadding = 12.0
-        static let themeFilterHorizontalPadding = 14.0
-        static let radius = 6.0
-    }
-    
+    @ViewBuilder
     private func ChallengeFilter() -> some View {
-        Filter(isChallengeFilter: true, text: "챌린지 중", action: { vm.challengeButtonClicked() })
-            .foregroundStyle(vm.isOnlyOngoing ? .titleChipRed : .white)
-            .background(vm.isOnlyOngoing ? .gray80 : .gray90)
-            .overlay {
-                RoundedRectangle(cornerRadius: FilterMetric.radius)
-                    .stroke(vm.isOnlyOngoing ? .titleChipRed : .white , lineWidth: 1.5)
-            }
-    }
-    
-    private func Filter(isChallengeFilter: Bool,
-                        text: String,
-                        action: @escaping () -> Void) -> some View {
-        Button(action: action,
-               label: {
-            HStack(spacing: 6) {
-                if isChallengeFilter {
-                    Image(.icFireIcon)
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 13.8, height: 15.4)
+        let options: [String] = ["챌린지", "일반 코스"]
+        let highlightedColor: Color = .customPurple
+        let defaultColor: Color = .gray80
+        
+        HStack(spacing: 0) {
+            ForEach(options.indices, id: \.self) { idx in
+                ZStack {
+                    Rectangle()
+                        .foregroundStyle(defaultColor)
+                    Rectangle()
+                        .fill(highlightedColor)
+                        .cornerRadius(50)
+                        .opacity(idx == 0 && vm.isOnlyOngoing || idx == 1 && !vm.isOnlyOngoing ? 1 : 0)
+                        .onTapGesture {
+                            withAnimation(.interactiveSpring()) {
+                                vm.setOnlyOngoing(idx == 0 ? true : false)
+                            }
+                        }
                 }
-                Text(text)
-                    .font(.pretendard(size: 14))
+                .overlay {
+                    HStack(spacing: 8) {
+                        if idx == 0 {
+                            Image(.icFireIcon)
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 13.8, height: 15.4)
+                        }
+                        
+                        Text(options[idx])
+                            .font(.pretendard(size: 14))
+                            .foregroundColor(.white)
+                    }
+                }
             }
-            .padding(.vertical, FilterMetric.verticalPadding)
-            .padding(.leading,
-                     isChallengeFilter ?
-                     FilterMetric.challengeLeadingPadding :
-                        FilterMetric.themeFilterHorizontalPadding)
-            .padding(.trailing,
-                     isChallengeFilter ?
-                     FilterMetric.challengeTrailingPadding :
-                        FilterMetric.themeFilterHorizontalPadding)
-        })
+        }
+        .frame(height: 34)
+        .cornerRadius(50)
     }
 }
