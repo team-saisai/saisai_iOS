@@ -58,7 +58,6 @@ extension CourseDetailBottomItem {
         VStack(spacing: 6) {
             Button {
                 vm.requestStartRiding()
-                vm.hasUncompletedRide = true
                 vm.isSummaryViewFolded = true
             } label: {
                 VStack(spacing: 6.5) {

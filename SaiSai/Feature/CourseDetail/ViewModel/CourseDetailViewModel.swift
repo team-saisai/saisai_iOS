@@ -13,15 +13,15 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     // MARK: - Properties
     let courseId: Int
     @Published var courseDetail: CourseDetailInfo? = nil
-    @Published var hasUncompletedRide: Bool = false
     @Published var isSummaryViewFolded: Bool = true
     @Published var userLatitude: Double = 0
     @Published var userLongitude: Double = 0
     @Published var spentSeconds: Int = 0
-    @Published var rideId: Int = 0
+    @Published var rideId: Int? = nil
     @Published var totalDistance: Double = 0.0
     @Published var currentDistance: Double = 0.0
     @Published var heading: CLLocationDirection? = nil
+    @Published var isRideCompleted: Bool = false
     var progressPercentage: Double {
         if totalDistance <= 0 {
             return 0
@@ -33,6 +33,9 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         locationManager.startUpdatingHeading()
         return locationManager
     }()
+    var hasUncompletedRide: Bool {
+        rideId == nil ? false : true
+    }
     private var startTime: Date? = nil
     private var timer: Timer? = nil
     private var baseSeconds: Int = 0
@@ -64,8 +67,8 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     .getCourseDetail(courseId: courseId),
                     responseDTO: CourseDetailResponseDTO.self)
                 await setCourseDetail(response.data)
-                await setUncompletedRide(response.data.hasUncompletedRide)
-                if response.data.hasUncompletedRide {
+                await setRideId(response.data.rideId)
+                if let _ = response.data.rideId {
                     requestResumeRiding()
                 }
             } catch {
@@ -94,6 +97,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
+                guard let rideId = rideId else { return }
                 let _ = try await ridesService.request(
                     .pauseRides(
                         rideId: rideId,
@@ -112,11 +116,13 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
+                guard let rideId = rideId else { return }
+                print("RIDEID: \(rideId)")
                 let response = try await ridesService.request(
                     .resumeRides(rideId: rideId),
                     responseDTO: ResumeRidesResponseDTO.self)
                 baseSeconds = response.data.durationSecond
-                currentDistance = response.data.actualDistance // 아직 명세에 추가 안됨.
+                await setCurrentDistance(response.data.actualDistance)
                 startTimer()
             } catch {
                 print(error)
@@ -129,14 +135,15 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let response = try await ridesService.request(
+                guard let rideId = rideId else { return }
+                let _ = try await ridesService.request(
                     .completeRides(rideId: rideId,
                                    duration: spentSeconds,
                                    actualDistance: currentDistance),
-                    responseDTO: ResumeRidesResponseDTO.self)
+                    responseDTO: CompleteRidesResponseDTO.self)
             } catch {
                 print(error)
-                print("라이딩 재개 실패")
+                print("라이딩 종료 실패")
             }
         }
     }
@@ -199,8 +206,8 @@ extension CourseDetailViewModel {
     }
     
     @MainActor
-    func setUncompletedRide(_ hasUncompletedRide: Bool) {
-        self.hasUncompletedRide = hasUncompletedRide
+    func setRideId(_ rideId: Int?) {
+        self.rideId = rideId
     }
     
     @MainActor
