@@ -12,7 +12,7 @@ struct CustomUserAnnotationView: View {
     var heading: Double
     
     var body: some View {
-        Image(.directionIcon)
+        Image(.userPositionIcon)
             .resizable()
             .frame(width: 32, height: 32)
             .rotationEffect(.degrees(heading))

@@ -25,9 +25,10 @@ struct CourseView: View {
             HStack {
                 ChallengeFilter()
                 Spacer()
+                // TODO: - 드롭다운 추가
             }
-//            .padding(.bottom, 24)
-//            .padding(.leading, 22)
+            .padding(.bottom, 24)
+            .padding(.horizontal, 20)
             
             ScrollView(.vertical, showsIndicators: true) {
                 LazyVStack {
@@ -70,26 +71,37 @@ extension CourseView {
         let defaultColor: Color = .gray80
         
         HStack(spacing: 0) {
+            ZStack {
+                
+            }
+            
             ForEach(options.indices, id: \.self) { idx in
                 ZStack {
                     Rectangle()
                         .foregroundStyle(defaultColor)
                     Rectangle()
-                        .fill(highlightedColor)
+                        .padding(
+                            EdgeInsets(
+                                top: 8.5,
+                                leading: idx == 0 ? 18.4 : 22,
+                                bottom: 8.5,
+                                trailing: 22))
                         .cornerRadius(50)
-                        .opacity(idx == 0 && vm.isOnlyOngoing || idx == 1 && !vm.isOnlyOngoing ? 1 : 0)
+                        .opacity((idx == 0 && vm.isOnlyOngoing || idx == 1 && !vm.isOnlyOngoing) ? 1 : 0)
                         .onTapGesture {
                             withAnimation(.interactiveSpring()) {
                                 vm.setOnlyOngoing(idx == 0 ? true : false)
                             }
                         }
+                        .background(RoundedRectangle(cornerRadius: 50).fill(highlightedColor))
                 }
                 .overlay {
                     HStack(spacing: 8) {
                         if idx == 0 {
                             Image(.icFireIcon)
-                                .renderingMode(.template)
                                 .resizable()
+                                .renderingMode(.template)
+                                .foregroundStyle(.white)
                                 .frame(width: 13.8, height: 15.4)
                         }
                         
