@@ -31,35 +31,31 @@ struct RecentCourseView: View {
                         .foregroundStyle(.gray70)
                     
                     HStack(spacing: 3) {
-                        Text("총거리 ")
-                            .font(.pretendard(.regular, size: 14))
-                            .foregroundStyle(.gray20)
-                        
                         Text("\(String(format: "%.1f", vm.recentRide?.distance ?? 0.0))km")
-                            .font(.pretendard(size: 14))
-                            .foregroundStyle(Color.customLime)
-                            .lineLimit(1)
-                    }
-                    
-                    HStack(spacing: 3) {
+                        
+                        Text("·")
+                        
                         Text("완주율 ")
                             .font(.pretendard(.regular, size: 14))
-                            .foregroundStyle(.gray20)
                         
                         Text("\(vm.recentRide?.progressRate ?? 0)%")
-                            .font(.pretendard(size: 14))
-                            .foregroundStyle(Color.customLime)
+                            .foregroundStyle(.customLime)
+                            .font(.pretendard(size: 13))
                     }
+                    .foregroundStyle(.gray10)
+                    .font(.pretendard(.regular, size: 13))
                 }
             }
             .padding(EdgeInsets(top: 18, leading: 15, bottom: 18, trailing: 0))
-            .foregroundStyle(.white)
+            .frame(height: 145)
+            
+            Spacer()
             
             ZStack {
                 Image(.icMapEx)
                     .resizable()
-                    .frame(height: 170)
-                    .frame(maxWidth: .infinity) // TODO: - 나중에 수정 확인
+//                    .frame(width: 155, height: 145)
+//                    .frame(maxWidth: .infinity) // TODO: - 나중에 수정 확인
                 VStack(alignment: .trailing) {
                     Spacer()
                     
@@ -74,12 +70,11 @@ struct RecentCourseView: View {
                                                   text: (vm.isRecentRideDone ? "다시 도전하기" : "이어하기"))
                                 }
                     }
-                    
                 }
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 17.5, trailing: 12))
             }
+            .frame(width: 155, height: 145)
         }
-        .frame(height: 170)
         .frame(maxWidth: .infinity)
         .background(RoundedRectangle(cornerRadius: 8).fill(.main))
     }

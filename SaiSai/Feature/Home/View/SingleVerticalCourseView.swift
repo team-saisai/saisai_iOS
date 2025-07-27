@@ -21,10 +21,20 @@ struct SingleVerticalCourseView: View {
                     .frame(maxWidth: .infinity)
                 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("\(courseInfo.courseName)")
-                        .foregroundStyle(.white)
-                        .font(.pretendard(.medium, size: 16))
-                        .padding(.bottom, 4)
+                    HStack {
+                        Text("\(courseInfo.courseName)")
+                            .foregroundStyle(.white)
+                            .font(.pretendard(.medium, size: 16))
+                            .padding(.bottom, 4)
+                        Spacer()
+                        Button {
+                            
+                        } label: {
+                            Image(systemName: "bookmark") // TODO: - API 추가되면 이 바인딩 필요
+                                .resizable()
+                                .frame(width: 10.5, height: 13.5)
+                        }
+                    }
                     
                     HStack(spacing: 5) {
                         Text("\(String(format:"%.1f", courseInfo.distance))km")
@@ -56,7 +66,7 @@ struct SingleVerticalCourseView: View {
         }
         .background(.main)
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .frame(width: 170)
+        .frame(width: 200)
     }
 }
 

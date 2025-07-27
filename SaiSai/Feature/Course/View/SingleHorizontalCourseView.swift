@@ -24,28 +24,30 @@ struct SingleHorizontalCourseView: View {
                     }
                 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("\(contentInfo.courseName)")
-                        .foregroundStyle(.white)
-                        .font(.pretendard(.medium, size: 16))
-                        .padding(.bottom, 4)
+                    HStack {
+                        Text("\(contentInfo.courseName)")
+                            .font(.pretendard(.medium, size: 16))
+                        Spacer()
+                        Button {
+                            
+                        } label: {
+                            Image(systemName: "bookmark") // TODO: - API 추가되면 이 바인딩 필요
+                                .resizable()
+                                .frame(width: 10.5, height: 13.5)
+                        }
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.bottom, 4)
+                    .padding(.trailing, 14)
                     
                     HStack(spacing: 5) {
                         Text("\(String(format:"%.1f", contentInfo.distance))km")
                         Text("·")
                         LevelView(level: contentInfo.level)
                     }
-                    .padding(.bottom, 10)
+                    .padding(.bottom, 44)
                     .font(.pretendard(.medium, size: 12))
                     .foregroundStyle(.gray40)
-                    
-                    // TODO: - 테마 추가되면 테마로 변경
-                    HStack {
-                        CustomRoundedRectangle(radius: 4,
-                                               bgColor: .gray80,
-                                               text: "테마1",
-                                               font: .pretendard(.regular, size: 12))
-                    }
-                    .padding(.bottom, 20)
                     
                     FooterView()
                 }
@@ -83,7 +85,7 @@ extension SingleHorizontalCourseView {
                 Image(.icThunderIcon)
                     .resizable()
                     .frame(width: 10, height: 14)
-                Text("\(contentInfo.courseChallengerCount)명")
+                Text("\(contentInfo.courseChallengerCount.commaDecimal)명 도전중")
             }
             if contentInfo.reward != 0 {
                 HStack(spacing: 2) {
