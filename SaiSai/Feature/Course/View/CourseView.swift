@@ -70,49 +70,35 @@ extension CourseView {
         let highlightedColor: Color = .customPurple
         let defaultColor: Color = .gray80
         
-        HStack(spacing: 0) {
-            ZStack {
-                
-            }
-            
-            ForEach(options.indices, id: \.self) { idx in
-                ZStack {
-                    Rectangle()
-                        .foregroundStyle(defaultColor)
-                    Rectangle()
-                        .padding(
-                            EdgeInsets(
-                                top: 8.5,
-                                leading: idx == 0 ? 18.4 : 22,
-                                bottom: 8.5,
-                                trailing: 22))
-                        .cornerRadius(50)
-                        .opacity((idx == 0 && vm.isOnlyOngoing || idx == 1 && !vm.isOnlyOngoing) ? 1 : 0)
-                        .onTapGesture {
-                            withAnimation(.interactiveSpring()) {
-                                vm.setOnlyOngoing(idx == 0 ? true : false)
+        ZStack {
+            HStack(spacing: 0) {
+                ForEach(options.indices, id: \.self) { idx in
+                    Button {
+                        vm.setOnlyOngoing(idx == 0 ? true : false)
+                    } label: {
+                        HStack(spacing: 4) {
+                            if idx == 0 {
+                                Image(.icFireIcon)
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .frame(width: 13.8, height: 15.4)
                             }
+                            Text(options[idx])
                         }
-                        .background(RoundedRectangle(cornerRadius: 50).fill(highlightedColor))
-                }
-                .overlay {
-                    HStack(spacing: 8) {
-                        if idx == 0 {
-                            Image(.icFireIcon)
-                                .resizable()
-                                .renderingMode(.template)
-                                .foregroundStyle(.white)
-                                .frame(width: 13.8, height: 15.4)
-                        }
-                        
-                        Text(options[idx])
-                            .font(.pretendard(size: 14))
-                            .foregroundColor(.white)
+                        .font(.pretendard(.medium, size: 14))
+                        .foregroundStyle(.white)
+                        .padding(.vertical, 8.5)
+                        .padding(.leading, idx == 0 ? 14 : 22)
+                        .padding(.trailing, 22)
+                        .background(RoundedRectangle(cornerRadius: 50)
+                            .fill((
+                                idx == 0 && vm.isOnlyOngoing ||
+                                idx == 1 && !vm.isOnlyOngoing) ?
+                                  highlightedColor : .clear))
                     }
                 }
             }
+            .background(RoundedRectangle(cornerRadius: 50).fill(defaultColor))
         }
-        .frame(height: 34)
-        .cornerRadius(50)
     }
 }

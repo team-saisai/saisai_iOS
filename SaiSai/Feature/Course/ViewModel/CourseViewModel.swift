@@ -10,7 +10,7 @@ import Combine
 
 final class CourseViewModel: ObservableObject {
     @Published var hasReachedSinglePageLast: Bool = true
-    @Published var isOnlyOngoing: Bool = false
+    @Published var isOnlyOngoing: Bool = true
     @Published var contentInfoList: [CourseContentInfo] = []
     var currentPage: Int = 1
     var filteredStatus: ChallengeStatus? {
