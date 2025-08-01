@@ -25,18 +25,18 @@ struct CourseInfo: Decodable {
     let estimatedTime: Double
     let sigun: String
     let courseImageUrl: String?
-    let challengeStatus: String
+    let challengeStatus: String?
     let endedAt: String
-    let challengerCount: Int
-    let isEventActive: Bool
-    let reward: Int
+//    let isBookmarked: Bool
+    let challengerCount: Int?
+    let isEventActive: Bool?
+    let reward: Int?
     
-    var challengeStatusCase: ChallengeStatus {
-        if let challengeStatus = ChallengeStatus(rawValue: challengeStatus) {
-            return challengeStatus
+    var challengeStatusCase: ChallengeStatus? {
+        if let challengeStatus = challengeStatus, let status = ChallengeStatus(rawValue: challengeStatus) {
+            return status
         } else {
-            print("received wrong challengeStatus: \(challengeStatus)")
-            return .ongoing
+            return nil
         }
     }
 }

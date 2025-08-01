@@ -10,12 +10,11 @@ import Combine
 
 final class CourseViewModel: ObservableObject {
     @Published var hasReachedSinglePageLast: Bool = true
-    @Published var isOnlyOngoing: Bool = true
+    @Published var isChallengeSelected: Bool = true
     @Published var contentInfoList: [CourseContentInfo] = []
+    @Published var selectedFilter: CourseSortOption = .levelAsc
+    @Published var isRequestingBookmarks: Bool = false
     var currentPage: Int = 1
-    var filteredStatus: ChallengeStatus? {
-        isOnlyOngoing ? .ongoing : nil
-    }
     
     let courseService = NetworkService<CourseAPI>()
     
@@ -24,15 +23,44 @@ final class CourseViewModel: ObservableObject {
             guard let self = self else { return }
             do {
                 if !hasReachedSinglePageLast { return }
-                let courseListResponse = try await courseService.request(.getCoursesList(page: currentPage,
-                                                                                         status: filteredStatus),
-                                                                         responseDTO: AllCourseListResponse.self)
+                let courseListResponse = try await courseService.request(
+                    .getCoursesList(
+                        page: currentPage,
+                        isChallenge: isChallengeSelected,
+                        sort: selectedFilter
+                    ),
+                    responseDTO: AllCourseListResponse.self)
                 currentPage += 1
                 await setCourseList(courseListResponse.data.content)
                 if courseListResponse.data.last { await toggleIsLoading(false) }
             } catch let error {
                 print(error)
                 print("코스 리스트 정보 제공 실패")
+            }
+        }
+    }
+    
+    func requestBookmark(courseId: Int, index: Int, pastValue: Bool) {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                await setIsRequestingBookmarks(true)
+                if pastValue { // 북마크 해제 요청
+                    let response = try await courseService.request(
+                        .deleteBookmark(courseId: courseId),
+                        responseDTO: BookmarkResponseDTO.self
+                    )
+                    await toggleBookmarkState(index, response.data.isCourseBookmarked)
+                } else { // 북마크 등록 요청
+                    let response = try await courseService.request(
+                        .saveBookmark(courseId: courseId),
+                        responseDTO: BookmarkResponseDTO.self)
+                    await toggleBookmarkState(index, response.data.isCourseBookmarked)
+                }
+                await setIsRequestingBookmarks(false)
+            } catch {
+                await setIsRequestingBookmarks(false)
+                print("북마크 상태 변경 실패 🥲")
             }
         }
     }
@@ -59,7 +87,7 @@ final class CourseViewModel: ObservableObject {
     
     @MainActor
     func setOnlyOngoingFilterStatus(_ isOnlyOngoing: Bool) {
-        self.isOnlyOngoing = isOnlyOngoing
+        self.isChallengeSelected = isOnlyOngoing
     }
     
     @MainActor
@@ -70,5 +98,16 @@ final class CourseViewModel: ObservableObject {
     @MainActor
     func initCurrentPage() {
         self.currentPage = 1
+    }
+    
+    @MainActor
+    func toggleBookmarkState(_ index: Int, _ isBookmarked: Bool) {
+        if contentInfoList.count <= index { return }
+        self.contentInfoList[index].isBookmarked = isBookmarked
+    }
+    
+    @MainActor
+    func setIsRequestingBookmarks(_ isRequestingBookmarks: Bool) {
+        self.isRequestingBookmarks = isRequestingBookmarks
     }
 }

@@ -67,10 +67,17 @@ extension CourseDetailView {
     @ViewBuilder
     private func CourseTitleChipsView() -> some View {
         HStack(spacing: 4) {
-            CourseTitleChip(challengeStatus: vm.courseDetail?.challengeStatusCase ?? .ended,
-                            endedAt: vm.courseDetail?.challengeEndedAt ?? "")
-            if let courseDetail = vm.courseDetail,  courseDetail.isEventActive {
-                CourseTitleChip(isEvent: true, challengeStatus: .ended, endedAt: "")
+            if let status = vm.courseDetail?.challengeStatusCase {
+                CourseTitleChip(
+                    challengeStatus: status,
+                    endedAt: vm.courseDetail?.challengeEndedAt ?? "")
+            }
+            if let courseDetail = vm.courseDetail, let isEventActive = courseDetail.isEventActive, isEventActive {
+                CourseTitleChip(
+                    isEvent: true,
+                    challengeStatus: .ended,
+                    endedAt: ""
+                )
             }
             Spacer()
         }

@@ -12,54 +12,68 @@ struct CourseView: View {
     @StateObject var vm: CourseViewModel = .init()
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Text("코스")
-                    .font(.pretendard(.semibold, size: 20))
-                    .foregroundStyle(.white)
-                Spacer()
-            }
-            .padding(.vertical, 18)
-            .padding(.leading, 24)
-            
-            HStack {
-                ChallengeFilter()
-                Spacer()
-                // TODO: - 드롭다운 추가
-            }
-            .padding(.bottom, 24)
-            .padding(.horizontal, 20)
-            
-            ScrollView(.vertical, showsIndicators: true) {
-                LazyVStack {
-                    if !vm.contentInfoList.isEmpty {
-                        ForEach(vm.contentInfoList.indices, id: \.self) { index in
-                            NavigationLink {
-                                CourseDetailView(
-                                    vm: CourseDetailViewModel(
-                                        courseId: vm.contentInfoList[index].courseId))
-                            } label: {
-                                HStack {
-                                    SingleHorizontalCourseView(contentInfo: vm.contentInfoList[index])
+        ZStack {
+            VStack(spacing: 0) {
+                HStack {
+                    Text("코스")
+                        .font(.pretendard(.semibold, size: 20))
+                        .foregroundStyle(.white)
+                    Spacer()
+                }
+                .padding(.vertical, 18)
+                .padding(.leading, 24)
+                
+                HStack {
+                    ChallengeFilter()
+                    Spacer()
+                    // TODO: - 드롭다운 추가
+                }
+                .padding(.bottom, 24)
+                .padding(.horizontal, 20)
+                
+                ScrollView(.vertical, showsIndicators: true) {
+                    LazyVStack {
+                        if !vm.contentInfoList.isEmpty {
+                            ForEach(vm.contentInfoList.indices, id: \.self) { index in
+                                NavigationLink {
+                                    CourseDetailView(
+                                        vm: CourseDetailViewModel(
+                                            courseId: vm.contentInfoList[index].courseId))
+                                } label: {
+                                    HStack {
+                                        SingleHorizontalCourseView(
+                                            index: index,
+                                            vm: vm
+                                        )
+                                    }
+                                    .padding(.bottom, 20)
                                 }
-                                .padding(.bottom, 20)
+                                
                             }
-                            
+                        }
+                        
+                        if vm.hasReachedSinglePageLast {
+                            ProgressView()
+                                .onAppear() {
+                                    vm.fetchData()
+                                    print("Reached ProgressView!")
+                                }
                         }
                     }
-                    
-                    if vm.hasReachedSinglePageLast {
-                        ProgressView()
-                            .onAppear() {
-                                vm.fetchData()
-                                print("Reached ProgressView!")
-                            }
-                    }
+                    .padding(.horizontal, 20)
                 }
-                .padding(.horizontal, 20)
+            }
+            .background(.gray90)
+            
+            if vm.isRequestingBookmarks {
+                VStack {
+                    ProgressView()
+                        .opacity(0.7)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.gray5.opacity(0.05))
             }
         }
-        .background(.gray90)
     }
 }
 
@@ -92,8 +106,8 @@ extension CourseView {
                         .padding(.trailing, 22)
                         .background(RoundedRectangle(cornerRadius: 50)
                             .fill((
-                                idx == 0 && vm.isOnlyOngoing ||
-                                idx == 1 && !vm.isOnlyOngoing) ?
+                                idx == 0 && vm.isChallengeSelected ||
+                                idx == 1 && !vm.isChallengeSelected) ?
                                   highlightedColor : .clear))
                     }
                 }

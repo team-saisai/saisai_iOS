@@ -37,11 +37,11 @@ struct CourseTitleChip: View {
 // MARK: - Init + Computed Property
 extension CourseTitleChip {
     
-    init(isEvent: Bool = false, challengeStatus: ChallengeStatus, endedAt: String) {
+    init(isEvent: Bool = false, challengeStatus: ChallengeStatus, endedAt: String?) {
         if isEvent {
             titleChip = .event
         } else {
-            titleChip = (challengeStatus == .ended ? .ended : .ongoing(endedAt: endedAt))
+            titleChip = (challengeStatus == .ended ? .ended : .ongoing(endedAt: endedAt ?? ""))
         }
     }
     

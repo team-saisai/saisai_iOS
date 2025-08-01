@@ -9,8 +9,10 @@ import Foundation
 import Moya
 
 enum CourseAPI {
-    case getCoursesList(page: Int? = nil, status: ChallengeStatus? = nil)
+    case getCoursesList(page: Int? = nil, isChallenge: Bool = true, sort: CourseSortOption = .levelAsc)
     case getCourseDetail(courseId: Int)
+    case saveBookmark(courseId: Int)
+    case deleteBookmark(courseId: Int)
 }
 
 extension CourseAPI: TargetType {
@@ -21,12 +23,18 @@ extension CourseAPI: TargetType {
             return "api/courses"
         case .getCourseDetail(let courseId):
             return "api/courses/\(courseId)"
+        case .saveBookmark(let courseId), .deleteBookmark(let courseId):
+            return "api/courses/\(courseId)/bookmarks"
         }
     }
     
     var method: Moya.Method {
         switch self {
         case .getCoursesList, .getCourseDetail: .get
+        case .saveBookmark:
+            .post
+        case .deleteBookmark:
+            .delete
         }
     }
     
@@ -38,6 +46,13 @@ extension CourseAPI: TargetType {
             }
             
             return [HTTPHeaderField.authorization.rawValue: accessToken]
+        case .saveBookmark, .deleteBookmark:
+            guard let accessToken = KeychainManagerImpl().retrieveToken(forKey: HTTPHeaderField.accessToken.rawValue) else { return nil }
+            return [
+                HTTPHeaderField.authorization.rawValue: accessToken,
+                HTTPHeaderField.contentType.rawValue:
+                    ContentType.json.rawValue
+            ]
         }
     }
     
@@ -49,17 +64,18 @@ extension CourseAPI: TargetType {
 extension CourseAPI {
     var task: Moya.Task {
         switch self {
-        case .getCoursesList(let page, let status):
-            var params: [String: Any] = [:]
+        case .getCoursesList(let page, let isChallenge, let sort):
+            let courseType = isChallenge ? "challenge" : "general"
+            var params: [String: Any] = [
+                "type": courseType,
+                "sort": sort.rawValue
+            ]
             if let page = page {
                 params["page"] = page
             }
-            if let status = status {
-                params["challengeStatus"] = status.rawValue
-            }
             return .requestParameters(parameters: params,
                                       encoding: URLEncoding.queryString)
-        case .getCourseDetail:
+        case .getCourseDetail, .saveBookmark, .deleteBookmark:
             return .requestPlain
         }
     }

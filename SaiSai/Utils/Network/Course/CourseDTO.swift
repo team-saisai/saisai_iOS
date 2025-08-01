@@ -46,6 +46,16 @@ struct CourseDetailResponseDTO: Decodable {
     let data: CourseDetailInfo
 }
 
+struct BookmarkResponseDTO: Decodable {
+    let code: String
+    let message: String
+    let data: DataInfo
+    
+    struct DataInfo: Decodable {
+        let isCourseBookmarked: Bool
+    }
+}
+
 // MARK: - DataInfo
 struct CourseContentInfo: Decodable {
     let courseId: Int
@@ -55,19 +65,18 @@ struct CourseContentInfo: Decodable {
     let estimatedTime: Double
     let sigun: String
     let imageUrl: String?
-    let courseChallengerCount: Int
-    let courseFinisherCount: Int
-    let challengeStatus: String
-    let challengeEndedAt: String
-    let isEventActive: Bool
-    let reward: Int
+    let participantsCount: Int?
+    var isBookmarked: Bool
+    let challengeStatus: String?
+    let challengeEndedAt: String?
+    let isEventActive: Bool?
+    let reward: Int?
     
-    var challengeStatusCase: ChallengeStatus {
-        if let challengeStatus = ChallengeStatus(rawValue: challengeStatus) {
-            return challengeStatus
+    var challengeStatusCase: ChallengeStatus? {
+        if let challengeStatus = challengeStatus, let status = ChallengeStatus(rawValue: challengeStatus) {
+            return status
         } else {
-            print("received wrong challengeStatus: \(challengeStatus)")
-            return .ongoing
+            return nil
         }
     }
 }
@@ -92,7 +101,7 @@ struct CourseDetailInfo: Decodable {
     let rideId: Int?
     let challengeStatus: String?
     let challengeEndedAt: String?
-    let isEventActive: Bool
+    let isEventActive: Bool?
     let gpxPoints: [GpxPointInfo]
     
     var estimatedHour: Int {
@@ -105,12 +114,11 @@ struct CourseDetailInfo: Decodable {
         return totalTime % 60
     }
     
-    var challengeStatusCase: ChallengeStatus {
+    var challengeStatusCase: ChallengeStatus? {
         if let challengeStatus = challengeStatus, let status = ChallengeStatus(rawValue: challengeStatus) {
             return status
         } else {
-            print("received wrong challengeStatus")
-            return .ongoing
+            return nil
         }
     }
     

@@ -28,9 +28,10 @@ struct SingleVerticalCourseView: View {
                             .padding(.bottom, 4)
                         Spacer()
                         Button {
-                            
+                            // TODO: - 북마크 지정 해제 API 추가
                         } label: {
-                            Image(systemName: "bookmark") // TODO: - API 추가되면 이 바인딩 필요
+//                            Image(systemName: courseInfo.isBookmarked ? "boomark.fill" : "bookmark")
+                            Image(systemName: "bookmark")
                                 .resizable()
                                 .frame(width: 10.5, height: 13.5)
                         }
@@ -53,9 +54,11 @@ struct SingleVerticalCourseView: View {
             // MARK: - Title Chip
             VStack(spacing: 0) {
                 HStack(spacing: 4) {
-                    CourseTitleChip(challengeStatus: courseInfo.challengeStatusCase,
-                                    endedAt: courseInfo.endedAt)
-                    if courseInfo.isEventActive {
+                    if let status = courseInfo.challengeStatusCase {
+                        CourseTitleChip(challengeStatus: status,
+                                        endedAt: courseInfo.endedAt)
+                    }
+                    if let isEventActive = courseInfo.isEventActive, isEventActive {
                         CourseTitleChip(isEvent: true, challengeStatus: .ended, endedAt: "")
                     }
                     Spacer()
@@ -79,13 +82,13 @@ extension SingleVerticalCourseView {
                 Image(.icThunderIcon)
                     .resizable()
                     .frame(width: 10, height: 14)
-                Text("\(courseInfo.challengerCount)명")
+                Text("\(courseInfo.challengerCount ?? 0)명")
             }
-            if courseInfo.reward != 0 {
+            if let reward = courseInfo.reward, reward != 0 {
                 HStack(spacing: 2) {
                     Image(.icStarIcon)
                         .frame(width: 12.5, height: 12)
-                    Text("\(courseInfo.reward.commaDecimal)p")
+                    Text("\(reward.commaDecimal)p")
                 }
             }
         }
