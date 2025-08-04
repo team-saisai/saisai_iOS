@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SingleHorizontalCourseView: View {
     
-    var index: Int
+    let index: Int
     @ObservedObject var vm: CourseViewModel
     
     var body: some View {
@@ -36,7 +36,6 @@ struct SingleHorizontalCourseView: View {
                                     index: index,
                                     pastValue: vm.contentInfoList[index].isBookmarked
                                 )
-                                // TODO: - 북마크 지정 / 해제 API 추가
                             } label: {
                                 Image(systemName: vm.contentInfoList[index].isBookmarked ? "bookmark.fill" : "bookmark")
                                     .resizable()

@@ -13,21 +13,32 @@ struct HomeView: View {
     
     var body: some View {
         ScrollView(showsIndicators: false) {
-            LazyVStack(spacing: 40) {
-                HomeHeaderView(vm: vm)
-
-                if vm.isLoading {
-                    ProgressView()
-                } else {
-                    if vm.isRecentRideExists { RecentCourseView(vm: vm) }
+            ZStack {
+                LazyVStack(spacing: 40) {
+                    HomeHeaderView(vm: vm)
                     
-                    PopularChallengesView(vm: vm)
-                    
-                    BadgeCollectionView(vm: vm)
+                    if vm.isLoading {
+                        ProgressView()
+                    } else {
+                        if vm.isRecentRideExists { RecentCourseView(vm: vm) }
+                        
+                        PopularChallengesView(vm: vm)
+                        
+                        BadgeCollectionView(vm: vm)
+                    }
+                }
+                .padding(.vertical, 20)
+                .padding(.horizontal, 20)
+                
+                if vm.isRequestingBookmarks {
+                    VStack {
+                        ProgressView()
+                            .opacity(0.7)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.gray5.opacity(0.05))
                 }
             }
-            .padding(.vertical, 20)
-            .padding(.horizontal, 20)
         }
         .padding(.top, 1)
         .background(.gray90)

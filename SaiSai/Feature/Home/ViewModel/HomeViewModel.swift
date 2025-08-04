@@ -15,6 +15,7 @@ final class HomeViewModel: ObservableObject {
     @Published var recentRide: RecentRideInfo? = nil
     @Published var popularChallenges: [CourseInfo] = []
     @Published var badges: [BadgeInfo] = []
+    @Published var isRequestingBookmarks: Bool = false
     var eightBadgesList: [[BadgeInfo]] {
         stride(from: 0, to: badges.count, by: 8).map { index in
             Array(badges[index..<min(index + 8, badges.count)])
@@ -24,6 +25,7 @@ final class HomeViewModel: ObservableObject {
     let challengeService = NetworkService<ChallengeAPI>()
     let myService = NetworkService<MyAPI>()
     let badgeService = NetworkService<BadgeAPI>()
+    let courseService = NetworkService<CourseAPI>()
     
     func fetchData() {
         Task { [weak self] in
@@ -48,6 +50,32 @@ final class HomeViewModel: ObservableObject {
                 await toggleIsLoading(false)
             } catch {
                 print("홈 정보 제공 실패 😭")
+                print(error)
+            }
+        }
+    }
+    
+    func requestBookmark(courseId: Int, index: Int, pastValue: Bool) {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                await setIsRequestingBookmarks(true)
+                if pastValue { // 북마크 해제 요청
+                    let response = try await courseService.request(
+                        .deleteBookmark(courseId: courseId),
+                        responseDTO: BookmarkResponseDTO.self
+                    )
+                    await toggleBookmarkState(index, response.data.isCourseBookmarked)
+                } else {
+                    let response = try await courseService.request(
+                        .saveBookmark(courseId: courseId),
+                        responseDTO: BookmarkResponseDTO.self)
+                    await toggleBookmarkState(index, response.data.isCourseBookmarked)
+                }
+                await setIsRequestingBookmarks(false)
+            } catch {
+                await setIsRequestingBookmarks(false)
+                print("북마크 상태 변경 실패 🥲")
             }
         }
     }
@@ -93,5 +121,16 @@ extension HomeViewModel {
     func requestLocationPermission() {
         let locationManager = LocationPermissionManager()
         locationManager.locationManagerDidChangeAuthorization(locationManager.manager)
+    }
+    
+    @MainActor
+    func setIsRequestingBookmarks(_ isRequestingBookmarks: Bool) {
+        self.isRequestingBookmarks = isRequestingBookmarks
+    }
+    
+    @MainActor
+    func toggleBookmarkState(_ index: Int, _ isBookmarked: Bool) {
+        if popularChallenges.count <= index { return }
+        self.popularChallenges[index].isBookmarked = isBookmarked
     }
 }

@@ -27,7 +27,7 @@ struct PopularChallengesView: View {
                         NavigationLink {
                             CourseDetailView(vm: CourseDetailViewModel(courseId: vm.popularChallenges[idx].courseId))
                         } label: {
-                            SingleVerticalCourseView(courseInfo: vm.popularChallenges[idx])
+                            SingleVerticalCourseView(index: idx, vm: vm)
                         }
 
                     }
