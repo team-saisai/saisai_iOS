@@ -65,13 +65,13 @@ extension NetworkService {
                         let _ = KeychainManagerImpl().save(
                             token: response.data.refreshToken,
                             forKey: HTTPHeaderField.refreshToken.rawValue)
-                        print("REISUE SUCCESS!")
+                        print("REISSUE SUCCESS!")
                         continuation.resume()
                     } catch {
                         continuation.resume()
                     }
                 case .failure:
-                    continuation.resume(throwing: NetworkError.unauthroized)
+                    continuation.resume(throwing: NetworkError.unauthorized)
                 }
             }
         }

@@ -8,25 +8,29 @@
 import Foundation
 
 final class HomeViewModel: ObservableObject {
-    @Published var name: String = "델라"
+    @Published var name: String = ""
+    @Published var isLoading: Bool = true
     @Published var isRecentRideExists: Bool = false
     @Published var isRecentRideDone: Bool = false
     @Published var recentRide: RecentRideInfo? = nil
     @Published var popularChallenges: [CourseInfo] = []
     @Published var badges: [BadgeInfo] = []
+    @Published var isRequestingBookmarks: Bool = false
     var eightBadgesList: [[BadgeInfo]] {
         stride(from: 0, to: badges.count, by: 8).map { index in
             Array(badges[index..<min(index + 8, badges.count)])
         }
     }
     
+    let challengeService = NetworkService<ChallengeAPI>()
+    let myService = NetworkService<MyAPI>()
+    let badgeService = NetworkService<BadgeAPI>()
+    let courseService = NetworkService<CourseAPI>()
+    
     func fetchData() {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let courseService = NetworkService<ChallengeAPI>()
-                let myService = NetworkService<MyAPI>()
-                let badgeService = NetworkService<BadgeAPI>()
                 
                 let myInfoResponse = try await myService.request(.getMyInfo, responseDTO: MyInfoDTO.self)
                 await setName(myInfoResponse.data.nickname)
@@ -35,15 +39,43 @@ final class HomeViewModel: ObservableObject {
                 let recent = recentResponse.data
                 await setRecentRides(recent)
                 
-                let popularResponse = try await courseService.request(.getPopularChallenges, responseDTO: PopularChallengeResponseDTO.self)
+                let popularResponse = try await challengeService.request(.getPopularChallenges, responseDTO: PopularChallengeResponseDTO.self)
                 let populars = popularResponse.data
                 await setPopularChallenges(populars)
                 
                 let badgeResponse = try await badgeService.request(.getBadgesList, responseDTO: MyBadgesListResponseDTO.self)
                 let badges = badgeResponse.data
                 await setBadges(badges)
-            } catch let error {
+                
+                await toggleIsLoading(false)
+            } catch {
                 print("홈 정보 제공 실패 😭")
+                print(error)
+            }
+        }
+    }
+    
+    func requestBookmark(courseId: Int, index: Int, pastValue: Bool) {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                await setIsRequestingBookmarks(true)
+                if pastValue { // 북마크 해제 요청
+                    let response = try await courseService.request(
+                        .deleteBookmark(courseId: courseId),
+                        responseDTO: BookmarkResponseDTO.self
+                    )
+                    await toggleBookmarkState(index, response.data.isCourseBookmarked)
+                } else {
+                    let response = try await courseService.request(
+                        .saveBookmark(courseId: courseId),
+                        responseDTO: BookmarkResponseDTO.self)
+                    await toggleBookmarkState(index, response.data.isCourseBookmarked)
+                }
+                await setIsRequestingBookmarks(false)
+            } catch {
+                await setIsRequestingBookmarks(false)
+                print("북마크 상태 변경 실패 🥲")
             }
         }
     }
@@ -61,7 +93,7 @@ extension HomeViewModel {
         self.recentRide = recentRide
         if let recentRide = recentRide {
             self.isRecentRideExists = true
-            self.isRecentRideDone = (recentRide.progressRate == 100 ? true : false)
+            self.isRecentRideDone = recentRide.progressDone
         }
     }
     
@@ -78,5 +110,27 @@ extension HomeViewModel {
             badgesToAdd.append(.init(userBadgeId: 0, badgeName: "", badgeImageUrl: ""))
         }
         self.badges = badges + badgesToAdd
+    }
+    
+    @MainActor
+    private func toggleIsLoading(_ isLoading: Bool) {
+        self.isLoading = isLoading
+    }
+    
+    @MainActor
+    func requestLocationPermission() {
+        let locationManager = LocationPermissionManager()
+        locationManager.locationManagerDidChangeAuthorization(locationManager.manager)
+    }
+    
+    @MainActor
+    func setIsRequestingBookmarks(_ isRequestingBookmarks: Bool) {
+        self.isRequestingBookmarks = isRequestingBookmarks
+    }
+    
+    @MainActor
+    func toggleBookmarkState(_ index: Int, _ isBookmarked: Bool) {
+        if popularChallenges.count <= index { return }
+        self.popularChallenges[index].isBookmarked = isBookmarked
     }
 }

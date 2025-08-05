@@ -11,34 +11,40 @@ struct RoundedButton: View {
 
     let radius: CGFloat
     let bgColor: Color
+    let horizontalPadding: CGFloat
+    let verticalPadding: CGFloat
+    let font: Font
     let text: String
+    let hasFireImage: Bool
     let action: @MainActor () -> Void
     
     init(radius: CGFloat,
          bgColor: Color,
+         horizontalPadding: CGFloat = 9,
+         verticalPadding: CGFloat = 6,
          text: String,
+         font: Font = .pretendard(.medium, size: 12),
+         hasFireImage: Bool = false,
          action: @escaping @MainActor () -> Void) {
         self.radius = radius
         self.bgColor = bgColor
+        self.horizontalPadding = horizontalPadding
+        self.verticalPadding = verticalPadding
         self.text = text
+        self.font = font
+        self.hasFireImage = hasFireImage
         self.action = action
     }
     
     var body: some View {
         Button(action: action, label: {
-            HStack(spacing: 3.5) {
-                if bgColor == .titleChipRed {
-                    Image("fireIcon")
-                        .resizable()
-                        .frame(width: 12.5, height: 14)
-                }
-                Text(text)
-                    .foregroundStyle(.white)
-                    .font(.pretendard(.medium, size: 12))
-            }
+            CustomRoundedRectangle(radius: radius,
+                                   bgColor: bgColor,
+                                   horizontalPadding: horizontalPadding,
+                                   verticalPadding: verticalPadding,
+                                   text: text,
+                                   font: font,
+                                   hasFireImage: hasFireImage)
         })
-        .padding(.horizontal, 9)
-        .padding(.vertical, 6)
-        .background(RoundedRectangle(cornerRadius: radius).fill(bgColor))
     }
 }

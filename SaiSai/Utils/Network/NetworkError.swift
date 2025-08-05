@@ -16,5 +16,5 @@ enum NetworkError: Error {
     case tokenError
     case reissue
     case versionUpdate
-    case unauthroized
+    case unauthorized
 }

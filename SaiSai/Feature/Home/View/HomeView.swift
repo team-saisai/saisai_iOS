@@ -12,23 +12,39 @@ struct HomeView: View {
     @StateObject var vm: HomeViewModel = .init()
     
     var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 40) {
-                HomeHeaderView(vm: vm)
-
-                if vm.isRecentRideExists { RecentCourseView(vm: vm) }
-
-                PopularChallengesView(vm: vm)
+        ScrollView(showsIndicators: false) {
+            ZStack {
+                LazyVStack(spacing: 40) {
+                    HomeHeaderView(vm: vm)
+                    
+                    if vm.isLoading {
+                        ProgressView()
+                    } else {
+                        if vm.isRecentRideExists { RecentCourseView(vm: vm) }
+                        
+                        PopularChallengesView(vm: vm)
+                        
+                        BadgeCollectionView(vm: vm)
+                    }
+                }
+                .padding(.vertical, 20)
+                .padding(.horizontal, 20)
                 
-                BadgeCollectionView(vm: vm)
+                if vm.isRequestingBookmarks {
+                    VStack {
+                        ProgressView()
+                            .opacity(0.7)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.gray5.opacity(0.05))
+                }
             }
-            .padding(.vertical, 20)
-            .padding(.horizontal, 20)
         }
         .padding(.top, 1)
         .background(.gray90)
         .onAppear {
             vm.fetchData()
+            vm.requestLocationPermission()
         }
     }
 }

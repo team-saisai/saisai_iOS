@@ -9,26 +9,42 @@ import SwiftUI
 
 struct SingleVerticalCourseView: View {
     
-    @State var courseInfo: CourseInfo
+    let index: Int
+    @ObservedObject var vm: HomeViewModel
     
     var body: some View {
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
                 
-                Image("icMapEx") /// ImageUrl 로 수정 필요
+                Image(.icMapEx) /// ImageUrl 로 수정 필요
                     .resizable()
-                    .scaledToFit()
+                    .frame(height: 160)
+                    .frame(maxWidth: .infinity)
                 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("\(courseInfo.courseName)")
-                        .foregroundStyle(.white)
-                        .font(.pretendard(.medium, size: 16))
-                        .padding(.bottom, 4)
+                    HStack {
+                        Text("\(vm.popularChallenges[index].courseName)")
+                            .font(.pretendard(.medium, size: 16))
+                            .padding(.bottom, 4)
+                        Spacer()
+                        Button {
+                            vm.requestBookmark(
+                                courseId: vm.popularChallenges[index].courseId,
+                                index: index,
+                                pastValue: vm.popularChallenges[index].isBookmarked
+                            )
+                        } label: {
+                            Image(systemName: vm.popularChallenges[index].isBookmarked ? "bookmark.fill" : "bookmark")
+                                .resizable()
+                                .frame(width: 10.5, height: 13.5)
+                        }
+                    }
+                    .foregroundStyle(.white)
                     
                     HStack(spacing: 5) {
-                        Text("\(String(format:"%.1f", courseInfo.distance))km")
+                        Text("\(String(format:"%.1f", vm.popularChallenges[index].distance))km")
                         Text("·")
-                        LevelView()
+                        LevelView(level: vm.popularChallenges[index].level)
                     }
                     .padding(.bottom, 10)
                     .font(.pretendard(.medium, size: 12))
@@ -42,9 +58,11 @@ struct SingleVerticalCourseView: View {
             // MARK: - Title Chip
             VStack(spacing: 0) {
                 HStack(spacing: 4) {
-                    CourseTitleChip(challengeStatus: courseInfo.challengeStatusCase,
-                                    endedAt: courseInfo.endedAt)
-                    if courseInfo.isEventActive {
+                    if let status = vm.popularChallenges[index].challengeStatusCase {
+                        CourseTitleChip(challengeStatus: status,
+                                        endedAt: vm.popularChallenges[index].endedAt)
+                    }
+                    if let isEventActive = vm.popularChallenges[index].isEventActive, isEventActive {
                         CourseTitleChip(isEvent: true, challengeStatus: .ended, endedAt: "")
                     }
                     Spacer()
@@ -55,43 +73,27 @@ struct SingleVerticalCourseView: View {
         }
         .background(.main)
         .clipShape(RoundedRectangle(cornerRadius: 12))
+        .frame(width: 200)
     }
 }
 
-// MARK: - LevelView, FooterView
+// MARK: - FooterView
 extension SingleVerticalCourseView {
-    
-    private func LevelView() -> some View {
-        HStack(spacing: 2) {
-            Text("난이도 ")
-            switch courseInfo.level {
-            case 1:
-                Text("하")
-                    .foregroundStyle(.levelLow)
-            case 2:
-                Text("중")
-                    .foregroundStyle(.levelMiddle)
-            case 3:
-                Text("상")
-                    .foregroundStyle(.levelHigh)
-            default:
-                Text("")
-            }
-        }
-    }
     
     private func FooterView() -> some View {
         HStack(spacing: 8) {
             HStack(spacing: 2) {
-                Image("thunderIcon")
+                Image(.icThunderIcon)
                     .resizable()
                     .frame(width: 10, height: 14)
-                Text("\(courseInfo.challengerCount)명")
+                Text("\(vm.popularChallenges[index].challengerCount ?? 0)명")
             }
-            HStack(spacing: 2) {
-                Image("starIcon")
-                    .frame(width: 12.5, height: 12)
-                Text("\(courseInfo.reward.commaDecimal)p")
+            if let reward = vm.popularChallenges[index].reward, reward != 0 {
+                HStack(spacing: 2) {
+                    Image(.icStarIcon)
+                        .frame(width: 12.5, height: 12)
+                    Text("\(reward.commaDecimal)p")
+                }
             }
         }
         .font(.pretendard(.regular, size: 12))

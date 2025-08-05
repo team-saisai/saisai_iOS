@@ -12,17 +12,20 @@ final class LoginViewModel: ObservableObject {
     @Published var emailText: String = ""
     @Published var passwordText: String = ""
     
+    let service = NetworkService<AuthAPI>()
+    let keychainManager = KeychainManagerImpl()
+    
     weak var delegate: LoginViewModelDelegate?
     
     init(delegate: LoginViewModelDelegate) {
         self.delegate = delegate
     }
     
+    
     func requestLogin() {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let service = NetworkService<AuthAPI>()
                 let response = try await service.request(
                     .login(email: emailText, password: passwordText),
                     responseDTO: LoginResponseDTO.self)
@@ -40,7 +43,6 @@ final class LoginViewModel: ObservableObject {
     }
     
     private func saveTokens(accessToken: String, refreshToken: String) {
-        let keychainManager = KeychainManagerImpl()
         let _ = keychainManager.save(token: accessToken, forKey: HTTPHeaderField.accessToken.rawValue)
         let _ = keychainManager.save(token: refreshToken, forKey: HTTPHeaderField.refreshToken.rawValue)
     }
