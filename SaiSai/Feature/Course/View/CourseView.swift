@@ -26,7 +26,7 @@ struct CourseView: View {
                 HStack {
                     ChallengeFilter()
                     Spacer()
-                    // TODO: - 드롭다운 추가
+                    CustomDropDown(optionPublisher: vm.optionPublisher)
                 }
                 .padding(.bottom, 24)
                 .padding(.horizontal, 20)
@@ -73,6 +73,9 @@ struct CourseView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.gray5.opacity(0.05))
             }
+        }
+        .onReceive(vm.optionPublisher) { option in
+            vm.setSortOption(option)
         }
     }
 }

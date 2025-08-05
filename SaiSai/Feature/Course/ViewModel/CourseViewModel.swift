@@ -12,8 +12,9 @@ final class CourseViewModel: ObservableObject {
     @Published var hasReachedSinglePageLast: Bool = true
     @Published var isChallengeSelected: Bool = true
     @Published var contentInfoList: [CourseContentInfo] = []
-    @Published var selectedFilter: CourseSortOption = .levelAsc
     @Published var isRequestingBookmarks: Bool = false
+    let optionPublisher: PassthroughSubject<CourseSortOption, Never> = .init()
+    var selectedOption: CourseSortOption = .levelAsc
     var currentPage: Int = 1
     
     let courseService = NetworkService<CourseAPI>()
@@ -27,7 +28,7 @@ final class CourseViewModel: ObservableObject {
                     .getCoursesList(
                         page: currentPage,
                         isChallenge: isChallengeSelected,
-                        sort: selectedFilter
+                        sort: selectedOption
                     ),
                     responseDTO: AllCourseListResponse.self)
                 currentPage += 1
@@ -66,9 +67,21 @@ final class CourseViewModel: ObservableObject {
     }
     
     func setOnlyOngoing(_ isOnlyOngoing: Bool) {
-        Task {
+        Task { [weak self] in
+            guard let self = self else { return }
             await initCurrentPage()
             await setOnlyOngoingFilterStatus(isOnlyOngoing)
+            await toggleIsLoading(true)
+            await removeAllCoursesFromList()
+            fetchData()
+        }
+    }
+    
+    func setSortOption(_ selectedOption: CourseSortOption) {
+        Task { [weak self] in
+            guard let self = self else { return }
+            await initCurrentPage()
+            await setSelectedOption(selectedOption)
             await toggleIsLoading(true)
             await removeAllCoursesFromList()
             fetchData()
@@ -109,5 +122,10 @@ final class CourseViewModel: ObservableObject {
     @MainActor
     func setIsRequestingBookmarks(_ isRequestingBookmarks: Bool) {
         self.isRequestingBookmarks = isRequestingBookmarks
+    }
+    
+    @MainActor
+    func setSelectedOption(_ selectedOption: CourseSortOption) {
+        self.selectedOption = selectedOption
     }
 }

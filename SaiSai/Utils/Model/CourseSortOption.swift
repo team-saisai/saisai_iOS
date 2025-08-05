@@ -7,9 +7,18 @@
 
 import Foundation
 
-enum CourseSortOption: String {
+enum CourseSortOption: String, CaseIterable {
     case levelAsc = "levelAsc"
     case levelDesc = "levelDesc"
     case participantsDesc = "participantsDesc"
     case endSoon = "endSoon"
+    
+    var dropDownText: String {
+        switch self {
+        case .levelAsc: "난이도 낮은 순"
+        case .levelDesc: "난이도 높은 순"
+        case .participantsDesc: "참가자 순"
+        case .endSoon: "종료일 순"
+        }
+    }
 }
