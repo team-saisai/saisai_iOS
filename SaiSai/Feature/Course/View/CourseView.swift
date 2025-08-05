@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CourseView: View {
     
+    @State var isMenuFolded: Bool = true
     @StateObject var vm: CourseViewModel = .init()
     
     var body: some View {
@@ -26,7 +27,6 @@ struct CourseView: View {
                 HStack {
                     ChallengeFilter()
                     Spacer()
-                    CustomDropDown(optionPublisher: vm.optionPublisher)
                 }
                 .padding(.bottom, 24)
                 .padding(.horizontal, 20)
@@ -64,6 +64,32 @@ struct CourseView: View {
                 }
             }
             .background(.gray90)
+            
+            if !isMenuFolded {
+                Color.black.opacity(0.001)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation {
+                            isMenuFolded = true
+                        }
+                    }
+            }
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    CustomDropDown(
+                        isFolded: $isMenuFolded,
+                        optionPublisher: vm.optionPublisher,
+                        tappedOutsidePublisher: vm.tappedoutsidePublisher
+                    )
+                }
+                .padding(.horizontal, 18)
+                Spacer()
+            }
+            .padding(.top, 63)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .zIndex(1)
             
             if vm.isRequestingBookmarks {
                 VStack {

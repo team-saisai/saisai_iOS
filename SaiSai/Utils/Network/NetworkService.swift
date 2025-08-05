@@ -71,7 +71,7 @@ extension NetworkService {
                         continuation.resume()
                     }
                 case .failure:
-                    continuation.resume(throwing: NetworkError.unauthroized)
+                    continuation.resume(throwing: NetworkError.unauthorized)
                 }
             }
         }

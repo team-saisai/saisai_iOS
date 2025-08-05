@@ -10,10 +10,11 @@ import Combine
 
 struct CustomDropDown: View {
 
-    @State var isFolded: Bool = true
+    @Binding var isFolded: Bool
     @State var selectedOption: CourseSortOption = .levelAsc
     
     let optionPublisher: PassthroughSubject<CourseSortOption, Never>
+    let tappedOutsidePublisher: PassthroughSubject<Void, Never>
     
     var body: some View {
         VStack(spacing: 4) {
@@ -60,5 +61,8 @@ struct CustomDropDown: View {
             }
         }
         .font(.pretendard(.regular, size: 13))
+        .onReceive(tappedOutsidePublisher) {
+            isFolded = true
+        }
     }
 }

@@ -14,6 +14,7 @@ final class CourseViewModel: ObservableObject {
     @Published var contentInfoList: [CourseContentInfo] = []
     @Published var isRequestingBookmarks: Bool = false
     let optionPublisher: PassthroughSubject<CourseSortOption, Never> = .init()
+    let tappedoutsidePublisher: PassthroughSubject<Void, Never> = .init()
     var selectedOption: CourseSortOption = .levelAsc
     var currentPage: Int = 1
     
