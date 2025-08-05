@@ -10,8 +10,8 @@ import Combine
 
 struct CustomDropDown: View {
 
-    @Binding var isFolded: Bool
     @State var selectedOption: CourseSortOption = .levelAsc
+    @Binding var isFolded: Bool
     
     let optionPublisher: PassthroughSubject<CourseSortOption, Never>
     let tappedOutsidePublisher: PassthroughSubject<Void, Never>
