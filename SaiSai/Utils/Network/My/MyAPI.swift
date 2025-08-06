@@ -11,6 +11,7 @@ import Moya
 enum MyAPI {
     case getMyInfo
     case getRecentMyRides
+    case getMyProfile
 }
 
 extension MyAPI: TargetType {
@@ -21,11 +22,13 @@ extension MyAPI: TargetType {
             return "/api/my"
         case .getRecentMyRides:
             return "/api/my/rides"
+        case .getMyProfile:
+            return "/api/my/profile"
         }
     }
     var method: Moya.Method {
         switch self {
-        case .getMyInfo, .getRecentMyRides: .get
+        case .getMyInfo, .getRecentMyRides, .getMyProfile: .get
         }
     }
     
@@ -45,7 +48,7 @@ extension MyAPI: TargetType {
 extension MyAPI {
     var task: Moya.Task {
         switch self {
-        case .getMyInfo, .getRecentMyRides:
+        case .getMyInfo, .getRecentMyRides, .getMyProfile:
             return .requestPlain
         }
     }

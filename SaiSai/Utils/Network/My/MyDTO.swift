@@ -8,6 +8,8 @@
 import Foundation
 
 // MARK: - Request DTO
+
+// MARK: - Response DTO
 struct MyInfoDTO: Decodable {
     let code: String
     let message: String
@@ -24,7 +26,11 @@ struct MyRecentRidesResponseDTO: Decodable {
     let data: RecentRideInfo?
 }
 
-// MARK: - Response DTO
+struct MyProfileResponseDTO: Decodable {
+    let code: String
+    let message: String
+    let data: ProfileInfo
+}
 
 // MARK: - DataInfo
 struct RecentRideInfo: Decodable {
@@ -38,5 +44,25 @@ struct RecentRideInfo: Decodable {
     
     var progressDone: Bool {
         progressRate == 100 ? true : false
+    }
+}
+
+struct ProfileInfo: Decodable {
+    let imageUrl: String?
+    let nickname: String
+    let email: String
+    let rideCount: Int
+    let bookmarkCount: Int
+    let reward: Int
+    let badgeCount: Int
+    
+    init() {
+        self.imageUrl = nil
+        self.nickname = ""
+        self.email = ""
+        self.rideCount = 0
+        self.bookmarkCount = 0
+        self.reward = 0
+        self.badgeCount = 0
     }
 }

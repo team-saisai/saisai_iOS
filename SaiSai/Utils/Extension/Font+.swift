@@ -1,5 +1,5 @@
 //
-//  Fonts+.swift
+//  Font+.swift
 //  SaiSai
 //
 //  Created by yeosong on 7/5/25.
