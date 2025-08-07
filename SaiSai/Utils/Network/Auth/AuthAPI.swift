@@ -32,11 +32,11 @@ extension AuthAPI: TargetType {
     var path: String {
         switch self {
         case .login:
-            return "/api/auth/login"
+            return "/auth/login"
         case .register:
-            return "/api/auth/register"
+            return "/auth/register"
         case .reissue:
-            return "/api/auth/reissue"
+            return "/auth/reissue"
         }
     }
     

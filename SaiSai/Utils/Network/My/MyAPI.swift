@@ -19,11 +19,11 @@ extension MyAPI: TargetType {
     var path: String {
         switch self {
         case .getMyInfo:
-            return "/api/my"
+            return "/my"
         case .getRecentMyRides:
-            return "/api/my/rides"
+            return "/my/rides"
         case .getMyProfile:
-            return "/api/my/profile"
+            return "/my/profile"
         }
     }
     var method: Moya.Method {

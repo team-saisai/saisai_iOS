@@ -18,9 +18,9 @@ extension BadgeAPI: TargetType {
     var path: String {
         switch self {
         case .getBadgesList:
-            "api/badges/me"
+            "badges/me"
         case .getBadgeDetail(let badgeId):
-            "api/badges/me/\(badgeId)"
+            "badges/me/\(badgeId)"
         }
     }
     

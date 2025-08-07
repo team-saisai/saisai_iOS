@@ -17,7 +17,7 @@ extension ChallengeAPI: TargetType {
     var path: String {
         switch self {
         case .getPopularChallenges:
-            return "/api/challenges/popular"
+            return "/challenges/popular"
         }
     }
     
