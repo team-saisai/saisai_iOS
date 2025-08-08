@@ -37,7 +37,15 @@ final class HomeViewModel: ObservableObject {
                 
                 let recentResponse = try await myService.request(.getRecentMyRides, responseDTO: MyRecentRidesResponseDTO.self)
                 let recent = recentResponse.data
-                await setRecentRides(recent)
+                var isCompleted: Bool? = nil
+                
+                if let _ = recent {
+                    let detailResponse = try await courseService.request(
+                        .getCourseDetail(courseId: recent!.courseId),
+                        responseDTO: CourseDetailResponseDTO.self)
+                    isCompleted = detailResponse.data.isCompleted
+                }
+                await setRecentRides(recent, isCompleted)
                 
                 let popularResponse = try await challengeService.request(.getPopularChallenges, responseDTO: PopularChallengeResponseDTO.self)
                 let populars = popularResponse.data
@@ -89,11 +97,13 @@ extension HomeViewModel {
     }
     
     @MainActor
-    private func setRecentRides(_ recentRide: RecentRideInfo?) {
+    private func setRecentRides(_ recentRide: RecentRideInfo?, _ isCompleted: Bool?) {
         self.recentRide = recentRide
         if let recentRide = recentRide {
             self.isRecentRideExists = true
-            self.isRecentRideDone = recentRide.progressDone
+            if let isCompleted = isCompleted {
+                self.isRecentRideDone = isCompleted
+            }
         }
     }
     

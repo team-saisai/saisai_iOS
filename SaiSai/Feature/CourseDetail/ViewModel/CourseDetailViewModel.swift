@@ -21,7 +21,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     @Published var totalDistance: Double = 0.0
     @Published var currentDistance: Double = 0.0
     @Published var heading: CLLocationDirection? = nil
-    @Published var isRideCompleted: Bool = false
+    @Published var isRideCompleted: Bool = true
     var progressPercentage: Double {
         if totalDistance <= 0 {
             return 0
@@ -33,9 +33,6 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         locationManager.startUpdatingHeading()
         return locationManager
     }()
-    var hasUncompletedRide: Bool {
-        rideId == nil ? false : true
-    }
     private var startTime: Date? = nil
     private var timer: Timer? = nil
     private var baseSeconds: Int = 0
@@ -68,7 +65,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     responseDTO: CourseDetailResponseDTO.self)
                 await setCourseDetail(response.data)
                 await setRideId(response.data.rideId)
-                if let _ = response.data.rideId {
+                if let _ = response.data.rideId, !isRideCompleted {
                     requestResumeRiding()
                 }
             } catch {
@@ -174,10 +171,11 @@ extension CourseDetailViewModel {
         startTime = Date()
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerPerSecond), userInfo: nil, repeats: true)
         if let timer = timer {
-            RunLoop.main.add(timer, forMode: .default)
+            RunLoop.main.add(timer, forMode: .common)
         }
     }
     
+    @MainActor
     @objc func updateTimerPerSecond() {
         guard let startTime = startTime else { return }
         let timeElapsed = Int(Date().timeIntervalSince(startTime))
@@ -198,6 +196,7 @@ extension CourseDetailViewModel {
     @MainActor
     private func setCourseDetail(_ courseDetail: CourseDetailInfo) {
         self.courseDetail = courseDetail
+        self.isRideCompleted = courseDetail.isCompleted
     }
     
     @MainActor

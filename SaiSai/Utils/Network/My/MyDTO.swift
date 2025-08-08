@@ -41,10 +41,6 @@ struct RecentRideInfo: Decodable {
     let distance: Float
     let progressRate: Int
     let recentRideAt: String
-    
-    var progressDone: Bool {
-        progressRate == 100 ? true : false
-    }
 }
 
 struct ProfileInfo: Decodable {
