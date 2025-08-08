@@ -19,7 +19,7 @@ struct CourseDetailView: View {
             }
             
             VStack(spacing: 8) {
-                if !vm.isRideCompleted {
+                if vm.hasUncompletedRide {
                     VStack {
                         TimerView(vm: vm)
                     }
@@ -28,7 +28,7 @@ struct CourseDetailView: View {
                 
                 Spacer()
                 
-                if !vm.isRideCompleted {
+                if vm.hasUncompletedRide {
                     RidingStatusBottomItem(vm: vm)
                 } else {
                     CourseTitleChipsView()
@@ -41,6 +41,9 @@ struct CourseDetailView: View {
         }
         .onAppear {
             vm.fetchData()
+        }
+        .onDisappear() {
+            vm.exitTimer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.gray20)

@@ -21,7 +21,8 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     @Published var totalDistance: Double = 0.0
     @Published var currentDistance: Double = 0.0
     @Published var heading: CLLocationDirection? = nil
-    @Published var isRideCompleted: Bool = true
+    @Published var hasUncompletedRide: Bool = false
+    @Published var isCompleted: Bool = false
     var progressPercentage: Double {
         if totalDistance <= 0 {
             return 0
@@ -34,7 +35,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         return locationManager
     }()
     private var startTime: Date? = nil
-    private var timer: Timer? = nil
+    private weak var timer: Timer? = nil
     private var baseSeconds: Int = 0
     
     let courseService = NetworkService<CourseAPI>()
@@ -65,7 +66,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     responseDTO: CourseDetailResponseDTO.self)
                 await setCourseDetail(response.data)
                 await setRideId(response.data.rideId)
-                if let _ = response.data.rideId, !isRideCompleted {
+                if let _ = response.data.rideId, hasUncompletedRide {
                     requestResumeRiding()
                 }
             } catch {
@@ -82,7 +83,9 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                 let response = try await ridesService.request(.startRides(courseId: courseId), responseDTO: StartRidesResponseDTO.self)
                 startTimer()
                 await setRideId(response.data.rideId)
-                await setTotalDistance(totalDistance)
+                print(response.data.rideId)
+                await setIsRideCompleted(false)
+                await setTotalDistance(response.data.distance)
             } catch {
                 print(error)
                 print("라이딩 시작 실패")
@@ -168,22 +171,27 @@ extension CourseDetailViewModel: CLLocationManagerDelegate {
 // MARK: - Timer Methods
 extension CourseDetailViewModel {
     func startTimer() {
-        startTime = Date()
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerPerSecond), userInfo: nil, repeats: true)
-        if let timer = timer {
-            RunLoop.main.add(timer, forMode: .common)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            startTime = Date()
+            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerPerSecond), userInfo: nil, repeats: true)
+            if let timer = timer {
+                RunLoop.main.add(timer, forMode: .common)
+            }
         }
     }
     
-    @MainActor
     @objc func updateTimerPerSecond() {
         guard let startTime = startTime else { return }
         let timeElapsed = Int(Date().timeIntervalSince(startTime))
-        spentSeconds = timeElapsed + baseSeconds
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            spentSeconds = timeElapsed + baseSeconds
+        }
         print(spentSeconds)
     }
     
-    private func exitTimer() {
+    func exitTimer() {
         timer?.invalidate()
         timer = nil
         print("EXIT TIMER")
@@ -196,7 +204,7 @@ extension CourseDetailViewModel {
     @MainActor
     private func setCourseDetail(_ courseDetail: CourseDetailInfo) {
         self.courseDetail = courseDetail
-        self.isRideCompleted = courseDetail.isCompleted
+//        self.hasUncompletedRide = courseDetail.isCompleted // TODO: - DTO 수정 예정
     }
     
     @MainActor
@@ -207,6 +215,9 @@ extension CourseDetailViewModel {
     @MainActor
     func setRideId(_ rideId: Int?) {
         self.rideId = rideId
+        if rideId == nil {
+            hasUncompletedRide = false
+        }
     }
     
     @MainActor
@@ -227,11 +238,6 @@ extension CourseDetailViewModel {
     }
     
     @MainActor
-    func setRideId(_ rideId: Int) {
-        self.rideId = rideId
-    }
-    
-    @MainActor
     func setTotalDistance(_ totalDistance: Double) {
         self.totalDistance = totalDistance
     }
@@ -239,5 +245,10 @@ extension CourseDetailViewModel {
     @MainActor
     func setCurrentDistance(_ currentDistance: Double) {
         self.currentDistance = currentDistance
+    }
+    
+    @MainActor
+    func setIsRideCompleted(_ isRideCompleted: Bool) {
+        self.hasUncompletedRide = isRideCompleted
     }
 }
