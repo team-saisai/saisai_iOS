@@ -14,7 +14,10 @@ struct CoreView: View {
     var body: some View {
         ZStack {
             if vm.isSplashRepresented {
-                SplashView()
+                Image(.icSplashImg)
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea()
             } else {
                 if vm.isLoggedIn {
                     MainView()
