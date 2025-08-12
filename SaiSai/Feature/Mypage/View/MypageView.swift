@@ -66,11 +66,11 @@ extension MypageView {
         NavigationLink {
             
         } label: {
-            HStack(spacing: 14) {
+            HStack(spacing: 7) {
                 Text("\(vm.profile.nickname)")
-                Image(systemName: "chevron.right")
+                Image(.icPencilIcon)
                     .resizable()
-                    .frame(width: 5, height: 10)
+                    .frame(width: 14, height: 14)
             }
             .foregroundStyle(.white)
             .font(.pretendard(.medium, size: 24))
@@ -141,20 +141,6 @@ extension MypageView {
     @ViewBuilder
     private func MypageMenuView() -> some View {
         VStack(spacing: 0) {
-            Divider()
-            NavigationLink {
-                
-            } label: {
-                HStack {
-                    Text("APP 설정")
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .resizable()
-                        .frame(width: 6, height: 12)
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 23)
-            }
             Divider()
             NavigationLink {
                 
