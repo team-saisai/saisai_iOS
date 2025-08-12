@@ -13,7 +13,11 @@ import Foundation
 struct MyBadgesListResponseDTO: Decodable {
     let code: String
     let message: String
-    let data: [BadgeInfo]
+    let data: DataInfo
+    
+    struct DataInfo: Decodable {
+        let userBadgeIds: [Int]
+    }
 }
 
 struct BadgeDetailResponseDTO: Decodable {
@@ -27,11 +31,4 @@ struct BadgeDetailResponseDTO: Decodable {
         let badgeImage: String
         let acquiredAt: String
     }
-}
-
-// MARK: - DataInfo
-struct BadgeInfo: Decodable {
-    let userBadgeId: Int
-    let badgeName: String
-    let badgeImageUrl: String
 }

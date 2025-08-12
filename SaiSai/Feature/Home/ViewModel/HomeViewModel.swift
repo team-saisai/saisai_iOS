@@ -14,13 +14,8 @@ final class HomeViewModel: ObservableObject {
     @Published var isRecentRideDone: Bool = false
     @Published var recentRide: RecentRideInfo? = nil
     @Published var popularChallenges: [CourseInfo] = []
-    @Published var badges: [BadgeInfo] = []
+    @Published var badgeIds: [Int] = []
     @Published var isRequestingBookmarks: Bool = false
-    var eightBadgesList: [[BadgeInfo]] {
-        stride(from: 0, to: badges.count, by: 8).map { index in
-            Array(badges[index..<min(index + 8, badges.count)])
-        }
-    }
     
     let challengeService = NetworkService<ChallengeAPI>()
     let myService = NetworkService<MyAPI>()
@@ -37,14 +32,22 @@ final class HomeViewModel: ObservableObject {
                 
                 let recentResponse = try await myService.request(.getRecentMyRides, responseDTO: MyRecentRidesResponseDTO.self)
                 let recent = recentResponse.data
-                await setRecentRides(recent)
+                var isCompleted: Bool? = nil
+                
+                if let _ = recent {
+                    let detailResponse = try await courseService.request(
+                        .getCourseDetail(courseId: recent!.courseId),
+                        responseDTO: CourseDetailResponseDTO.self)
+                    isCompleted = detailResponse.data.isCompleted
+                }
+                await setRecentRides(recent, isCompleted)
                 
                 let popularResponse = try await challengeService.request(.getPopularChallenges, responseDTO: PopularChallengeResponseDTO.self)
                 let populars = popularResponse.data
                 await setPopularChallenges(populars)
                 
                 let badgeResponse = try await badgeService.request(.getBadgesList, responseDTO: MyBadgesListResponseDTO.self)
-                let badges = badgeResponse.data
+                let badges = badgeResponse.data.userBadgeIds
                 await setBadges(badges)
                 
                 await toggleIsLoading(false)
@@ -89,11 +92,13 @@ extension HomeViewModel {
     }
     
     @MainActor
-    private func setRecentRides(_ recentRide: RecentRideInfo?) {
+    private func setRecentRides(_ recentRide: RecentRideInfo?, _ isCompleted: Bool?) {
         self.recentRide = recentRide
-        if let recentRide = recentRide {
+        if let _ = recentRide {
             self.isRecentRideExists = true
-            self.isRecentRideDone = recentRide.progressDone
+            if let isCompleted = isCompleted {
+                self.isRecentRideDone = isCompleted
+            }
         }
     }
     
@@ -103,13 +108,13 @@ extension HomeViewModel {
     }
     
     @MainActor
-    private func setBadges(_ badges: [BadgeInfo]) {
-        let numOfBadgeToAdd = 8 - badges.count % 8
-        var badgesToAdd: [BadgeInfo] = []
+    private func setBadges(_ badges: [Int]) {
+        let numOfBadgeToAdd = 8 - badges.count
+        var badgesToAdd: [Int] = []
         for _ in 0..<numOfBadgeToAdd {
-            badgesToAdd.append(.init(userBadgeId: 0, badgeName: "", badgeImageUrl: ""))
+            badgesToAdd.append(-1)
         }
-        self.badges = badges + badgesToAdd
+        self.badgeIds = badges + badgesToAdd
     }
     
     @MainActor

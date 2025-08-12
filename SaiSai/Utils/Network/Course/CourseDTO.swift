@@ -98,6 +98,7 @@ struct CourseDetailInfo: Decodable {
     let imageUrl: String?
     let challengerCount: Int
     let finisherCount: Int
+    let isCompleted: Bool
     let rideId: Int?
     let challengeStatus: String?
     let challengeEndedAt: String?

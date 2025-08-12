@@ -19,13 +19,13 @@ extension RidesAPI: TargetType {
     var path: String {
         switch self {
         case .startRides(let courseId):
-            "/api/courses/\(courseId)/rides"
+            "/courses/\(courseId)/rides"
         case .pauseRides(let rideId, _, _):
-            "/api/rides/\(rideId)/pause"
+            "/rides/\(rideId)/pause"
         case .resumeRides(let rideId):
-            "/api/rides/\(rideId)/resume"
+            "/rides/\(rideId)/resume"
         case .completeRides(let rideId, _, _):
-            "/api/rides/\(rideId)/complete"
+            "/rides/\(rideId)/complete"
         }
     }
     

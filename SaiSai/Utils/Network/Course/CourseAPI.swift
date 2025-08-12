@@ -20,11 +20,11 @@ extension CourseAPI: TargetType {
     var path: String {
         switch self {
         case .getCoursesList:
-            return "api/courses"
+            return "courses"
         case .getCourseDetail(let courseId):
-            return "api/courses/\(courseId)"
+            return "courses/\(courseId)"
         case .saveBookmark(let courseId), .deleteBookmark(let courseId):
-            return "api/courses/\(courseId)/bookmarks"
+            return "courses/\(courseId)/bookmarks"
         }
     }
     

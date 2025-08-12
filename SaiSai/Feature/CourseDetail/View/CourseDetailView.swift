@@ -42,6 +42,9 @@ struct CourseDetailView: View {
         .onAppear {
             vm.fetchData()
         }
+        .onDisappear() {
+            vm.exitTimer()
+        }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.gray20)
         .navigationTitle(vm.courseDetail?.courseName ?? "")
