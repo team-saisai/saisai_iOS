@@ -9,8 +9,8 @@ import Foundation
 import Combine
 
 final class LoginViewModel: ObservableObject {
-    @Published var emailText: String = ""
-    @Published var passwordText: String = ""
+    @Published var emailText: String = "email"
+    @Published var passwordText: String = "password"
     
     let service = NetworkService<AuthAPI>()
     let keychainManager = KeychainManagerImpl()
