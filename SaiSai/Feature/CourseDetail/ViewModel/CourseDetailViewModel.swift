@@ -66,7 +66,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     responseDTO: CourseDetailResponseDTO.self)
                 await setCourseDetail(response.data)
                 await setRideId(response.data.rideId)
-                if let _ = response.data.rideId, hasUncompletedRide {
+                if let _ = response.data.rideId {
                     requestResumeRiding()
                 }
             } catch {
@@ -204,7 +204,6 @@ extension CourseDetailViewModel {
     @MainActor
     private func setCourseDetail(_ courseDetail: CourseDetailInfo) {
         self.courseDetail = courseDetail
-//        self.hasUncompletedRide = courseDetail.isCompleted // TODO: - DTO 수정 예정
     }
     
     @MainActor
