@@ -7,6 +7,8 @@
 
 import Foundation
 import Combine
+import KakaoSDKUser
+import KakaoSDKCommon
 
 final class LoginViewModel: ObservableObject {
     @Published var emailText: String = "email"
@@ -38,6 +40,47 @@ final class LoginViewModel: ObservableObject {
             } catch {
                 // TODO: - Alert logic 추가
                 print("로그인 실패😣")
+            }
+        }
+    }
+    
+    func requestKakaoLogin() {
+        if UserApi.isKakaoTalkLoginAvailable() {
+            print("A")
+            UserApi.shared.loginWithKakaoTalk { [weak self] (oauthToken, error) in
+                print("C")
+                guard let self = self else { return }
+                if let error = error {
+                    print(error)
+                } else {
+                    print("카카오 인증 요청 성공")
+                    requestKakaoLoginToBackend(oauthToken)
+                }
+            }
+        } else {
+            UserApi.shared.loginWithKakaoAccount { [weak self] (oauthToken, error) in
+                print("B")
+                guard let self = self else { return }
+                if let error = error {
+                    print(error)
+                } else {
+                    print("카카오 인증 요청 성공")
+                    requestKakaoLoginToBackend(oauthToken)
+                }
+            }
+        }
+    }
+    
+    private func requestKakaoLoginToBackend(_ oauthToken: Any?) {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                await delegate?.isLoggedIn(true)
+                print("TOKEN: \(oauthToken)")
+                print("카카오 로그인 성공")
+            } catch {
+                print("카카오 로그인 실패😣")
+                print(error)
             }
         }
     }

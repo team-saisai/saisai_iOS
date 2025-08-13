@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import KakaoSDKUser
+import KakaoSDKCommon
 
 struct LoginView: View {
     
@@ -65,7 +67,7 @@ struct LoginView: View {
                 }
                 
                 Button {
-                    
+                    vm.requestKakaoLogin()
                 } label: {
                     Image(.icKakaoLogo)
                         .resizable()
