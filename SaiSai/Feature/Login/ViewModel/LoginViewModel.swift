@@ -46,9 +46,7 @@ final class LoginViewModel: ObservableObject {
     
     func requestKakaoLogin() {
         if UserApi.isKakaoTalkLoginAvailable() {
-            print("A")
             UserApi.shared.loginWithKakaoTalk { [weak self] (oauthToken, error) in
-                print("C")
                 guard let self = self else { return }
                 if let error = error {
                     print(error)
@@ -59,7 +57,6 @@ final class LoginViewModel: ObservableObject {
             }
         } else {
             UserApi.shared.loginWithKakaoAccount { [weak self] (oauthToken, error) in
-                print("B")
                 guard let self = self else { return }
                 if let error = error {
                     print(error)
