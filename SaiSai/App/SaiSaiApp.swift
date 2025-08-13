@@ -20,11 +20,13 @@ struct SaiSaiApp: App {
     
     var body: some Scene {
         WindowGroup {
-            CoreView().onOpenURL { url in
-                if AuthApi.isKakaoTalkLoginUrl(url) {
-                    let _ = AuthController.handleOpenUrl(url: url)
+            CoreView()
+                .onOpenURL {
+                    url in
+                    if AuthApi.isKakaoTalkLoginUrl(url) {
+                        _ = AuthController.handleOpenUrl(url: url)
+                    }
                 }
-            }
         }
     }
 }

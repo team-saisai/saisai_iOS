@@ -52,7 +52,8 @@ final class LoginViewModel: ObservableObject {
                     print(error)
                 } else {
                     print("카카오 인증 요청 성공")
-                    requestKakaoLoginToBackend(oauthToken)
+                    print(oauthToken)
+//                    requestKakaoLoginToBackend(oauthToken)
                 }
             }
         } else {
@@ -62,7 +63,8 @@ final class LoginViewModel: ObservableObject {
                     print(error)
                 } else {
                     print("카카오 인증 요청 성공")
-                    requestKakaoLoginToBackend(oauthToken)
+                    print(oauthToken)
+//                    requestKakaoLoginToBackend(oauthToken)
                 }
             }
         }
