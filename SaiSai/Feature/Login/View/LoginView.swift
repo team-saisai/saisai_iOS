@@ -51,7 +51,7 @@ struct LoginView: View {
             
             HStack(spacing: 20) {
                 Button {
-                    
+                    vm.requestAppleLogin()
                 } label: {
                     Image(.icAppleLogo)
                         .resizable()

@@ -11,11 +11,13 @@ import KakaoSDKUser
 import KakaoSDKCommon
 import GoogleSignIn
 import GoogleSignInSwift
+import AuthenticationServices
 
-final class LoginViewModel: ObservableObject {
+final class LoginViewModel: NSObject, ObservableObject {
     @Published var emailText: String = "email"
     @Published var passwordText: String = "password"
     
+    var appleOAuthUserData: AppleOAuthUserData = .init()
     var googleOAuthUserData: GoogleOAuthUserData = .init()
     
     let service = NetworkService<AuthAPI>()
@@ -47,7 +49,19 @@ final class LoginViewModel: ObservableObject {
             }
         }
     }
+    // MARK: - Apple Login
+    func requestAppleLogin() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+    }
     
+    // MARK: - Kakao Login
     func requestKakaoLogin() {
         if UserApi.isKakaoTalkLoginAvailable() {
             UserApi.shared.loginWithKakaoTalk { [weak self] (oauthToken, error) in
@@ -88,6 +102,7 @@ final class LoginViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Google Login
     func requestGoogleLogin() {
         guard let presentingViewController = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else { return }
         
@@ -117,6 +132,31 @@ final class LoginViewModel: ObservableObject {
     private func saveTokens(accessToken: String, refreshToken: String) {
         let _ = keychainManager.save(token: accessToken, forKey: HTTPHeaderField.accessToken.rawValue)
         let _ = keychainManager.save(token: refreshToken, forKey: HTTPHeaderField.refreshToken.rawValue)
+    }
+}
+
+extension LoginViewModel: ASAuthorizationControllerPresentationContextProviding, ASAuthorizationControllerDelegate {
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        guard let window = UIApplication.shared.windows.first else { // 현재 애플리케이션에서 활성화된 첫 번째 윈도우
+            fatalError("No window found")
+        }
+        return window
+    }
+    
+    func authorizationController(controller _: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        switch authorization.credential { // 인증 정보에 따라 다르게 처리
+        case let appleIDCredential as ASAuthorizationAppleIDCredential://Apple ID 자격 증명을 처리
+             
+            let userIdentifier = appleIDCredential.user //사용자 식별자
+            let nameComponents = appleIDCredential.fullName // 전체 이름
+            let idToken = appleIDCredential.identityToken! // idToken
+            
+            appleOAuthUserData.oauthId = userIdentifier
+            appleOAuthUserData.idToken = String(data: idToken, encoding: .utf8) ?? ""
+            
+        default:
+            break
+        }
     }
 }
 
