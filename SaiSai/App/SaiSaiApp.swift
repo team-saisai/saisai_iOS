@@ -8,6 +8,8 @@
 import SwiftUI
 import KakaoSDKCommon
 import KakaoSDKAuth
+import GoogleSignIn
+import GoogleSignInSwift
 
 @main
 struct SaiSaiApp: App {
@@ -26,7 +28,13 @@ struct SaiSaiApp: App {
                     if AuthApi.isKakaoTalkLoginUrl(url) {
                         _ = AuthController.handleOpenUrl(url: url)
                     }
+                    GIDSignIn.sharedInstance.handle(url)
                 }
+//                .onAppear {
+//                    GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+//                        // Check if `user` exists; otherwise, do something with `error`
+//                    }
+//                }
         }
     }
 }

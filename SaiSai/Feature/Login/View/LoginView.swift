@@ -59,7 +59,7 @@ struct LoginView: View {
                 }
                 
                 Button {
-                    
+                    vm.requestGoogleLogin()
                 } label: {
                     Image(.icGoogleLogo)
                         .resizable()

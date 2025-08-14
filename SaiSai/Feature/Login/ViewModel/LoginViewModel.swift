@@ -9,10 +9,14 @@ import Foundation
 import Combine
 import KakaoSDKUser
 import KakaoSDKCommon
+import GoogleSignIn
+import GoogleSignInSwift
 
 final class LoginViewModel: ObservableObject {
     @Published var emailText: String = "email"
     @Published var passwordText: String = "password"
+    
+    var googleOAuthUserData: GoogleOAuthUserData = .init()
     
     let service = NetworkService<AuthAPI>()
     let keychainManager = KeychainManagerImpl()
@@ -81,6 +85,32 @@ final class LoginViewModel: ObservableObject {
                 print("카카오 로그인 실패😣")
                 print(error)
             }
+        }
+    }
+    
+    func requestGoogleLogin() {
+        guard let presentingViewController = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else { return }
+        
+        GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewController) { [weak self] _, error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print(error)
+            }
+            
+            checkGoogleUserInfo()
+            
+            print("DEBUG : \(googleOAuthUserData)")
+        }
+    }
+    
+    private func checkGoogleUserInfo() {
+        if GIDSignIn.sharedInstance.currentUser != nil {
+            let user = GIDSignIn.sharedInstance.currentUser
+            guard let user = user else { return }
+            googleOAuthUserData.givenName = user.profile?.givenName ?? ""
+            googleOAuthUserData.oauthId = user.userID ?? ""
+            googleOAuthUserData.idToken = user.idToken?.tokenString ?? ""
         }
     }
     
