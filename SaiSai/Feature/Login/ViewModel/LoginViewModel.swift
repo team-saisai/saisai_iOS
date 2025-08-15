@@ -45,6 +45,7 @@ final class LoginViewModel: NSObject, ObservableObject {
             } catch {
                 // TODO: - Alert logic 추가
                 print("로그인 실패😣")
+                print(error)
             }
         }
     }

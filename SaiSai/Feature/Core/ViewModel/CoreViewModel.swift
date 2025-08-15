@@ -12,25 +12,26 @@ final class CoreViewModel: ObservableObject {
     @Published var isSplashRepresented: Bool = true
     
     let myInfoService = NetworkService<MyAPI>()
+    let keychainManager = KeychainManagerImpl()
     
     func validateToken() {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                KeychainManagerImpl().deleteToken(forKey: HTTPHeaderField.accessToken.rawValue)
-                KeychainManagerImpl().deleteToken(forKey: HTTPHeaderField.refreshToken.rawValue)
+//                KeychainManagerImpl().deleteToken(forKey: HTTPHeaderField.accessToken.rawValue)
+//                KeychainManagerImpl().deleteToken(forKey: HTTPHeaderField.refreshToken.rawValue)
                 
                 let _ = try await myInfoService.request(.getMyInfo, responseDTO: MyInfoDTO.self)
                 await viewTransitionWithDelay(isLoggedIn: true)
 
-                /// For Debug
-                let access = KeychainManagerImpl().retrieveToken(forKey: HTTPHeaderField.accessToken.rawValue)
-                let refresh = KeychainManagerImpl().retrieveToken(forKey: HTTPHeaderField.refreshToken.rawValue)
+                /// For Debuging
+                let access = keychainManager.retrieveToken(forKey: HTTPHeaderField.accessToken.rawValue)
+                let refresh = keychainManager.retrieveToken(forKey: HTTPHeaderField.refreshToken.rawValue)
                 
                 print("---accessToken---")
-                print(access)
+                print(access ?? "")
                 print("---refreshToken---")
-                print(refresh)
+                print(refresh ?? "")
             } catch {
                 await viewTransitionWithDelay()
             }
