@@ -30,7 +30,7 @@ final class HomeViewModel: ObservableObject {
                 let myInfoResponse = try await myService.request(.getMyInfo, responseDTO: MyInfoDTO.self)
                 await setName(myInfoResponse.data.nickname)
                 
-                let recentResponse = try await myService.request(.getRecentMyRides, responseDTO: MyRecentRidesResponseDTO.self)
+                let recentResponse = try await myService.request(.getMyRecentRide, responseDTO: MyRecentRidesResponseDTO.self)
                 let recent = recentResponse.data
                 var isCompleted: Bool? = nil
                 

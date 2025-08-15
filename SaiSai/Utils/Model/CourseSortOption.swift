@@ -22,3 +22,8 @@ enum CourseSortOption: String, CaseIterable {
         }
     }
 }
+
+enum CourseHistorySortOption: String, CaseIterable {
+    case newest = "newest"
+    case oldest = "oldest"
+}
