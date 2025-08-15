@@ -13,6 +13,10 @@ struct LoginRequestDTO: Codable {
     let password: String
 }
 
+struct OAuthLoginRequestDTO: Codable {
+    let token: String
+}
+
 struct RegisterRequestDTO: Codable {
     let email: String
     let nickname: String
@@ -34,6 +38,12 @@ struct RegisterResponseDTO: Decodable {
 }
 
 struct ReissueResponseDTO: Decodable {
+    let code: String
+    let message: String
+    let data: TokenInfo
+}
+
+struct OAuthLoginResponseDTO: Decodable {
     let code: String
     let message: String
     let data: TokenInfo

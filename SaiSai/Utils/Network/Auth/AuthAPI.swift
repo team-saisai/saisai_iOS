@@ -17,6 +17,12 @@ enum AuthAPI {
     case login(email: String,
                password: String)
     
+    case appleLogin(token: String)
+    
+    case googleLogin(token: String)
+    
+    case kakaoLogin(token: String)
+    
     case register(
         email: String,
         nickname: String,
@@ -33,6 +39,12 @@ extension AuthAPI: TargetType {
         switch self {
         case .login:
             return "/auth/login"
+        case .appleLogin:
+            return "/auth/login/apple"
+        case .googleLogin:
+            return "/auth/login/google/ios"
+        case .kakaoLogin:
+            return "/auth/login/kakao"
         case .register:
             return "/auth/register"
         case .reissue:
@@ -70,6 +82,10 @@ extension AuthAPI {
         case .login(let email, let password):
             return .requestJSONEncodable(LoginRequestDTO(
                 email: email, password: password))
+            
+        case .appleLogin(let idToken), .googleLogin(let idToken), .kakaoLogin(let idToken):
+            return .requestJSONEncodable(OAuthLoginRequestDTO(token: idToken))
+        
         case .register(let email, let nickname,
                        let password, let role):
             return .requestJSONEncodable(RegisterRequestDTO(
