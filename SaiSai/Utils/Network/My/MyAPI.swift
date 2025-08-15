@@ -21,7 +21,7 @@ extension MyAPI: TargetType {
         case .getMyInfo:
             return "/my"
         case .getRecentMyRides:
-            return "/my/rides"
+            return "/my/rides/recent"
         case .getMyProfile:
             return "/my/profile"
         }
