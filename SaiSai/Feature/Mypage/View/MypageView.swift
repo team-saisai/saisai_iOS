@@ -146,6 +146,20 @@ extension MypageView {
                 
             } label: {
                 HStack {
+                    Text("APP 설정")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .resizable()
+                        .frame(width: 6, height: 12)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 23)
+            }
+            Divider()
+            NavigationLink {
+                
+            } label: {
+                HStack {
                     Text("서비스 이용 약관")
                     Spacer()
                     Image(systemName: "chevron.right")
