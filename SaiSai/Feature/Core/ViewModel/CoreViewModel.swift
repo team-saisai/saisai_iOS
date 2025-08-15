@@ -17,6 +17,9 @@ final class CoreViewModel: ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
+                KeychainManagerImpl().deleteToken(forKey: HTTPHeaderField.accessToken.rawValue)
+                KeychainManagerImpl().deleteToken(forKey: HTTPHeaderField.refreshToken.rawValue)
+                
                 let _ = try await myInfoService.request(.getMyInfo, responseDTO: MyInfoDTO.self)
                 await viewTransitionWithDelay(isLoggedIn: true)
 

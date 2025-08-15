@@ -64,7 +64,7 @@ extension MypageView {
         .padding(.bottom, 22)
         
         NavigationLink {
-            
+            NicknameChangeView(vm: NicknameChangeViewModel(nickname: vm.profile.nickname))
         } label: {
             HStack(spacing: 7) {
                 Text("\(vm.profile.nickname)")

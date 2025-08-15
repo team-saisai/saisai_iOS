@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import KakaoSDKUser
+import KakaoSDKCommon
 
 struct LoginView: View {
     
@@ -15,15 +17,25 @@ struct LoginView: View {
         VStack(spacing: 30) {
             Spacer()
             
-            TextField("이메일", text: $vm.emailText)
+            TextField("이메일",
+                      text: $vm.emailText,
+                      prompt: Text("\(vm.emailText)").foregroundStyle(.white)
+            )
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
                 .textContentType(.emailAddress)
+                .padding(.all, 8)
+                .background(RoundedRectangle(cornerRadius: 6).fill(.gray60))
             
-            SecureField("패스워드", text: $vm.passwordText)
+            SecureField("패스워드",
+                        text: $vm.passwordText,
+                        prompt: Text("\(vm.passwordText)").foregroundStyle(.white)
+            )
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
                 .textContentType(.password)
+                .padding(.all, 8)
+                .background(RoundedRectangle(cornerRadius: 6).fill(.gray60))
             
             Button {
                 vm.requestLogin()
@@ -37,9 +49,36 @@ struct LoginView: View {
                     .cornerRadius(12)
             }
             
+            HStack(spacing: 20) {
+                Button {
+                    vm.requestAppleLogin()
+                } label: {
+                    Image(.icAppleLogo)
+                        .resizable()
+                        .frame(width: 48, height: 48)
+                }
+                
+                Button {
+                    vm.requestGoogleLogin()
+                } label: {
+                    Image(.icGoogleLogo)
+                        .resizable()
+                        .frame(width: 48, height: 48)
+                }
+                
+                Button {
+                    vm.requestKakaoLogin()
+                } label: {
+                    Image(.icKakaoLogo)
+                        .resizable()
+                        .frame(width: 48, height: 48)
+                }
+            }
+            
             Spacer()
         }
         .padding(.horizontal, 50)
+        .background(.clear)
         .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }

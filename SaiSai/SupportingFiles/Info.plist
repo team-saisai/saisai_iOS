@@ -4,11 +4,33 @@
 <dict>
 	<key>BASE_URL</key>
 	<string>$(BASE_URL)</string>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kakao${KAKAO_NATIVE_APP_KEY}</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>${GOOGLE_iOS_URL_SCHEME}</string>
+			</array>
+		</dict>
+	</array>
+	<key>GIDClientID</key>
+	<string>${GID_CLIENT_ID}</string>
+	<key>GID_SERVER_CLIENT_ID</key>
+	<string>${GID_SERVER_CLIENT_ID}</string>
+	<key>KAKAO_NATIVE_APP_KEY</key>
+	<string>${KAKAO_NATIVE_APP_KEY}</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakaokompassauth</string>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>HakgyoansimSamulham.otf</string>
