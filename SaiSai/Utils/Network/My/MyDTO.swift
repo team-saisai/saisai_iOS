@@ -51,12 +51,6 @@ struct MyRewardsResponseDTO: Decodable {
     struct DataInfo: Decodable {
         let totalReward: Int
         let rewardInfos: [RewardInfo]
-        
-        struct RewardInfo: Decodable {
-            let reward: Int
-            let acquiredAt: String // should check
-            let courseName: String
-        }
     }
 }
 
@@ -185,4 +179,10 @@ struct MyRidesInfo: Decodable {
             return nil
         }
     }
+}
+
+struct RewardInfo: Decodable {
+    let reward: Int
+    let acquiredAt: String
+    let courseName: String
 }

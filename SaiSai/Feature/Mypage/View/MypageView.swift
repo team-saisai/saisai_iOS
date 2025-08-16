@@ -129,6 +129,8 @@ extension MypageView {
                     case 1:
                         SavedCoursesView()
                             .environmentObject(tabState)
+                    case 2:
+                        MyRewardsView()
                     default:
                         let _ = 1
                     }
@@ -138,9 +140,13 @@ extension MypageView {
                         defaultText: defaultTexts[idx]
                     )
                 }
+                if idx != 3 {
+                    Spacer()
+                }
             }
         }
         .padding(.bottom, 24)
+        .padding(.horizontal, 36)
     }
 }
 
