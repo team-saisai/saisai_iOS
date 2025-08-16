@@ -38,7 +38,7 @@ struct CustomTwoButtonAlert: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             Text(buttonTitleText)
                 .font(.pretendard(.medium, size: 18))
                 .foregroundStyle(.white)

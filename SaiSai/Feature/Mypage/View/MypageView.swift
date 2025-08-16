@@ -143,7 +143,7 @@ extension MypageView {
         VStack(spacing: 0) {
             Divider()
             NavigationLink {
-                
+                AppConfigureView()
             } label: {
                 HStack {
                     Text("APP 설정")
