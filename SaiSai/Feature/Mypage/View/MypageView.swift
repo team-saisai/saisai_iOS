@@ -131,6 +131,8 @@ extension MypageView {
                             .environmentObject(tabState)
                     case 2:
                         MyRewardsView()
+                    case 3:
+                        MyBadgesView()
                     default:
                         let _ = 1
                     }
