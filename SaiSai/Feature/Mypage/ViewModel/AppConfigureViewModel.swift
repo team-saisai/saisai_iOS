@@ -15,13 +15,14 @@ final class AppConfigureViewModel: ObservableObject {
     func requestLogout() {
         Task { [weak self] in
             guard let self = self else { return }
+            // TODO: - 네트워크 요청
         }
     }
     
     func requestRemoveAccount() {
         Task { [weak self] in
             guard let self = self else { return }
-            
+            // TODO: - 네트워크 요청
         }
     }
 }
