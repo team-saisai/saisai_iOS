@@ -10,6 +10,8 @@ import Combine
 
 struct EmptyCourseListView: View {
     
+    let firstLineText: String
+    let secondLineText: String
     let moveToCourseButtonTappedPublisher: PassthroughSubject<Void, Never>
     
     var body: some View {
@@ -21,8 +23,8 @@ struct EmptyCourseListView: View {
                 .frame(width: 201, height: 132)
             
             VStack(spacing: 2) {
-                Text("저장한 코스가 없습니다.")
-                Text("코스를 탐색해 나의 취향을 발견해보세요.")
+                Text(firstLineText)
+                Text(secondLineText)
             }
             .font(.pretendard(.medium, size: 16))
             .foregroundStyle(.white)
