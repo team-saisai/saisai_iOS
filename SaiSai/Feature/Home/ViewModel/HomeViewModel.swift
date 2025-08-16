@@ -14,7 +14,7 @@ final class HomeViewModel: ObservableObject {
     @Published var isRecentRideDone: Bool = false
     @Published var recentRide: RecentRideInfo? = nil
     @Published var popularChallenges: [CourseInfo] = []
-//    @Published var badgeIds: [Int] = []
+    @Published var badges: [BadgeInfo] = []
     @Published var isRequestingBookmarks: Bool = false
     
     let challengeService = NetworkService<ChallengeAPI>()
@@ -46,9 +46,8 @@ final class HomeViewModel: ObservableObject {
                 let populars = popularResponse.data
                 await setPopularChallenges(populars)
                 
-//                let badgeResponse = try await badgeService.request(.getBadgesList, responseDTO: MyBadgesListResponseDTO.self)
-//                let badges = badgeResponse.data.userBadgeIds
-//                await setBadges(badges)
+                let badgeResponse = try await badgeService.request(.getBadgesList, responseDTO: MyBadgesListResponseDTO.self)
+                await setBadges(badgeResponse.data)
                 
                 await toggleIsLoading(false)
             } catch {
@@ -107,16 +106,6 @@ extension HomeViewModel {
         self.popularChallenges = popularChallenges
     }
     
-//    @MainActor
-//    private func setBadges(_ badges: [Int]) {
-//        let numOfBadgeToAdd = 8 - badges.count
-//        var badgesToAdd: [Int] = []
-//        for _ in 0..<numOfBadgeToAdd {
-//            badgesToAdd.append(-1)
-//        }
-//        self.badgeIds = badges + badgesToAdd
-//    }
-    
     @MainActor
     private func toggleIsLoading(_ isLoading: Bool) {
         self.isLoading = isLoading
@@ -137,5 +126,10 @@ extension HomeViewModel {
     func toggleBookmarkState(_ index: Int, _ isBookmarked: Bool) {
         if popularChallenges.count <= index { return }
         self.popularChallenges[index].isBookmarked = isBookmarked
+    }
+    
+    @MainActor
+    private func setBadges(_ badges: [BadgeInfo]) {
+        self.badges = badges
     }
 }

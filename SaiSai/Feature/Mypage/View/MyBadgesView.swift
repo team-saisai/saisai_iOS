@@ -36,9 +36,7 @@ struct MyBadgesView: View {
                 Color.gray30.opacity(0.1)
                     .ignoresSafeArea()
                     .onTapGesture {
-                        withAnimation(.easeInOut) {
-                            vm.setIsModalPresented(false)
-                        }
+                        vm.setIsModalPresented(false)
                     }
                 
                 BadgeDetailModalView()
@@ -154,14 +152,14 @@ extension MyBadgesView {
                 }
                 
                 Text("\(badge.name)")
-                    .lineLimit(3)
+                    .lineLimit(nil)
                     .font(.pretendard(size: 13))
                     .foregroundStyle(.white)
                     .padding(.top, 12)
                 
                 Spacer()
             }
-            .frame(width: 94, height: 145)
+            .frame(width: 94, height: 150)
         }
     }
 }
