@@ -24,7 +24,7 @@ struct HomeView: View {
                         
                         PopularChallengesView(vm: vm)
                         
-                        BadgeCollectionView(vm: vm)
+//                        BadgeCollectionView(vm: vm)
                     }
                 }
                 .padding(.vertical, 20)

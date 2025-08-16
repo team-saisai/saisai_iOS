@@ -117,8 +117,7 @@ struct NicknameDuplicateCheckResponseDTO: Decodable {
     let data: DataInfo?
     
     struct DataInfo: Decodable {
-        let code: String
-        let message: String
+        let nickname: String
     }
 }
 

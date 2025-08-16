@@ -32,3 +32,11 @@ struct BadgeDetailResponseDTO: Decodable {
         let acquiredAt: String
     }
 }
+
+struct BadgeInfo: Decodable {
+    let id: Int
+    let name: String
+    let image: String?
+    let description: String
+    let condition: String
+}
