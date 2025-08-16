@@ -124,7 +124,12 @@ extension MypageView {
         HStack {
             ForEach(0..<4) { idx in
                 NavigationLink {
-                    // switch idx
+                    switch idx {
+                    case 1:
+                        SavedCoursesView()
+                    default:
+                        let _ = 1
+                    }
                 } label: {
                     SingleMypageVerticalItem(
                         highlightedText: highlightedTexts[idx],
