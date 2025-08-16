@@ -11,9 +11,11 @@ import Combine
 struct SavedCoursesView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @EnvironmentObject var tabState: TabState
     @StateObject var vm: SavedCoursesViewModel = .init()
     let buttonTappedPublisher: PassthroughSubject<Bool, Never> = .init()
     let isEditingPublisher: PassthroughSubject<Bool, Never> = .init()
+    let moveToCourseButtonTappedPublisher: PassthroughSubject<Void, Never> = .init()
     
     var body: some View {
         ZStack {
@@ -125,6 +127,11 @@ struct SavedCoursesView: View {
                     buttonTappedPublisher: buttonTappedPublisher
                 )
             }
+            
+            if vm.contentInfoList.isEmpty {
+                EmptyCourseListView(moveToCourseButtonTappedPublisher: moveToCourseButtonTappedPublisher)
+                    .ignoresSafeArea(.all)
+            }
         }
         .onReceive(buttonTappedPublisher, perform: {
             if $0 {
@@ -133,6 +140,10 @@ struct SavedCoursesView: View {
             withAnimation(.easeInOut) {
                 vm.setIsAlertPresented(false)
             }
+        })
+        .onReceive(moveToCourseButtonTappedPublisher, perform: {
+            self.presentationMode.wrappedValue.dismiss()
+            tabState.selectedTab = 1
         })
         .onChange(of: vm.isEditing, { _, newValue in
             isEditingPublisher.send(newValue)
@@ -157,17 +168,19 @@ struct SavedCoursesView: View {
             }
             
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    withAnimation(.easeInOut) {
-                        if vm.isEditing {
-                            vm.resetIndexToRemove()
+                if !vm.contentInfoList.isEmpty {
+                    Button {
+                        withAnimation(.easeInOut) {
+                            if vm.isEditing {
+                                vm.resetIndexToRemove()
+                            }
+                            vm.toggleIsEditing()
                         }
-                        vm.toggleIsEditing()
+                    } label: {
+                        Text(vm.isEditing ? "완료" : "편집")
+                            .font(.pretendard(size: 14))
+                            .foregroundStyle(.white)
                     }
-                } label: {
-                    Text(vm.isEditing ? "완료" : "편집")
-                        .font(.pretendard(size: 14))
-                        .foregroundStyle(.white)
                 }
             }
         }

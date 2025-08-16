@@ -144,7 +144,6 @@ final class LoginViewModel: NSObject, ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                print(token)
                 let response = try await authService.request(
                     .googleLogin(token: token),
                     responseDTO: OAuthLoginResponseDTO.self

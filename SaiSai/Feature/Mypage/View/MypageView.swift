@@ -10,6 +10,7 @@ import Kingfisher
 
 struct MypageView: View {
     
+    @EnvironmentObject var tabState: TabState
     @StateObject var vm: MypageViewModel = .init()
     
     var body: some View {
@@ -127,6 +128,7 @@ extension MypageView {
                     switch idx {
                     case 1:
                         SavedCoursesView()
+                            .environmentObject(tabState)
                     default:
                         let _ = 1
                     }
