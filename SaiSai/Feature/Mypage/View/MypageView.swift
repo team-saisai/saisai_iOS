@@ -45,16 +45,16 @@ extension MypageView {
         VStack(spacing: 0) {
             HStack {
                 KFImage(URL(string:vm.profile.imageUrl ?? ""))
-                    .resizable()
-                    .renderingMode(.template)
                     .placeholder {
                         Image(systemName: "person.fill")
                             .resizable()
+                            .renderingMode(.template)
                             .frame(width: 44, height: 44)
+                            .foregroundStyle(.gray70)
                     }
+                    .resizable()
                     .clipShape(Circle())
                     .scaledToFit()
-                    .foregroundStyle(.gray70)
                     .frame(width: 106, height: 106)
                     .overlay {
                         Circle()
