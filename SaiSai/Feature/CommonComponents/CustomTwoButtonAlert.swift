@@ -15,18 +15,20 @@ struct CustomTwoButtonAlert: View {
     private let buttonType: ButtonType
     private let buttonText: String
     
-    let buttonTappedPublisher: PassthroughSubject<Bool, Never> = .init()
+    let buttonTappedPublisher: PassthroughSubject<Bool, Never>
     
     init(
         buttonTitleText: String,
         buttonMessageText: String? = nil,
         buttonText: String,
         isAction: Bool = false,
-        isDestructive: Bool = false
+        isDestructive: Bool = false,
+        buttonTappedPublisher: PassthroughSubject<Bool, Never>
     ) {
         self.buttonTitleText = buttonTitleText
         self.buttonMessageText = buttonMessageText
         self.buttonText = buttonText
+        self.buttonTappedPublisher = buttonTappedPublisher
         
         var button: ButtonType = .normal
         if isAction { button = .action }
