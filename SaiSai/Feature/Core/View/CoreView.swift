@@ -13,13 +13,13 @@ struct CoreView: View {
     
     var body: some View {
         ZStack {
-            if vm.isSplashRepresented || !vm.isLoggedIn {
+            if !vm.isLoggedIn {
                 Image(.icSplashImg)
                     .resizable()
                     .scaledToFill()
                     .ignoresSafeArea()
                 
-                if !vm.isLoggedIn {
+                if !vm.isCheckingSavedTokens {
                     LoginView(vm: LoginViewModel(delegate: self.vm))
                 }
             } else {
