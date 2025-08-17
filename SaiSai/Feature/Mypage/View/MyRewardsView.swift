@@ -32,18 +32,21 @@ struct MyRewardsView: View {
                     .font(.pretendard(size: 22))
                     .padding(.bottom, 20)
             }
-            .padding(.horizontal, 22)
-            .padding(.vertical, 20)
             
             ForEach(vm.rewardsList.indices, id: \.self) {
                 SingleRewardView(vm.rewardsList[$0])
                 
                 Divider()
+                    .overlay {
+                        Rectangle().fill(Color.gray70)
+                    }
             }
         }
         .onAppear {
             vm.fetchData()
         }
+        .padding(.vertical, 20)
+        .padding(.horizontal, 22)
         .background(.gray90)
         .navigationTitle("리워드 포인트")
         .navigationBarTitleDisplayMode(.inline)
