@@ -126,6 +126,9 @@ extension MypageView {
             ForEach(0..<4) { idx in
                 NavigationLink {
                     switch idx {
+                    case 0:
+                        CourseHistoryView()
+                            .environmentObject(tabState)
                     case 1:
                         SavedCoursesView()
                             .environmentObject(tabState)

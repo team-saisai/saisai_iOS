@@ -53,6 +53,7 @@ final class SavedCoursesViewModel: ObservableObject {
             } catch {
                 await setIsRequesting(false)
                 print("북마크 상태 변경 실패 🥲")
+                print(error)
             }
         }
     }
@@ -79,6 +80,7 @@ final class SavedCoursesViewModel: ObservableObject {
             } catch {
                 await setIsRequesting(false)
                 print("복수 북마크 제거 실패 🥲")
+                print(error)
             }
         }
     }

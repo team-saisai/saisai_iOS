@@ -102,6 +102,16 @@ struct MyRidesResponseDTO: Decodable {
     
     struct DataInfo: Decodable {
         let content: [MyRidesInfo]
+        let pageable: PageInfo
+        let totalElements: Int
+        let totalPages: Int
+        let last: Bool
+        let size: Int
+        let number: Int
+        let sort: SortInfo
+        let numberOfElements: Int
+        let first: Bool
+        let empty: Bool
     }
 }
 
@@ -157,7 +167,7 @@ struct ProfileInfo: Decodable {
 }
 
 struct MyRidesInfo: Decodable {
-    let rideId: Int?
+    let rideId: Int
     let courseId: Int
     let courseName: String
     let sigun: String
@@ -169,7 +179,7 @@ struct MyRidesInfo: Decodable {
     let imageUrl: String?
     let isCompleted: Bool
     let challengeStatus: String? // ONGOING(진행), null
-    let challengedEndedAt: String? // 챌린지 기간 아니면 null
+    let challengeEndedAt: String? // 챌린지 기간 아니면 null
     let isEventActive: Bool? // 챌린지 아니면 null
     
     var challengeStatusCase: ChallengeStatus? {
