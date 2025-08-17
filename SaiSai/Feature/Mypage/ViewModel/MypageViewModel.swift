@@ -11,7 +11,14 @@ final class MypageViewModel: ObservableObject {
     @Published var profile: ProfileInfo = ProfileInfo()
     @Published var version: String = "0.0.0"
     
+    weak var delegate: AppConfigureViewModelDelegate?
+    
     let myService: NetworkService<MyAPI> = .init()
+    
+    init(delegate: AppConfigureViewModelDelegate?) {
+        self.delegate = delegate
+    }
+    
     
     func fetchData() {
         Task { [weak self] in

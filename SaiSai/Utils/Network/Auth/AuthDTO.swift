@@ -49,6 +49,14 @@ struct OAuthLoginResponseDTO: Decodable {
     let data: TokenInfo
 }
 
+struct LogoutResponseDTO: Decodable {
+    let code: String
+    let message: String
+    let data: EmptyData?
+    
+    struct EmptyData: Decodable {}
+}
+
 // MARK: - DataInfo
 struct TokenInfo: Decodable {
     let accessToken: String

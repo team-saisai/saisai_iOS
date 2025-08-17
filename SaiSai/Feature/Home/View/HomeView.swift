@@ -40,7 +40,6 @@ struct HomeView: View {
                 }
             }
         }
-        .padding(.top, 1)
         .background(.gray90)
         .onAppear {
             vm.fetchData()

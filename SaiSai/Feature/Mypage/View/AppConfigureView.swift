@@ -11,7 +11,7 @@ import Combine
 struct AppConfigureView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @StateObject var vm: AppConfigureViewModel = .init()
+    @StateObject var vm: AppConfigureViewModel
     let buttonTappedPublisher: PassthroughSubject<Bool, Never> = .init()
     
     var body: some View {
@@ -103,9 +103,16 @@ struct AppConfigureView: View {
             }
         }
         .onReceive(buttonTappedPublisher) {
-            $0 ? print("YES") : print("NO")
-            withAnimation {
-                vm.removeAlert()
+            if vm.isLogoutAlertPresented {
+                withAnimation {
+                    vm.removeAlert()
+                }
+                if $0 { vm.requestLogout() }
+            } else {
+                withAnimation {
+                    vm.removeAlert()
+                }
+                if $0 { vm.requestRemoveAccount() }
             }
         }
     }

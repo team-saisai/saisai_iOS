@@ -11,7 +11,7 @@ import Kingfisher
 struct MypageView: View {
     
     @EnvironmentObject var tabState: TabState
-    @StateObject var vm: MypageViewModel = .init()
+    @StateObject var vm: MypageViewModel
     
     var body: some View {
         VStack(spacing: 0) {
@@ -161,7 +161,7 @@ extension MypageView {
         VStack(spacing: 0) {
             Divider()
             NavigationLink {
-                AppConfigureView()
+                AppConfigureView(vm: AppConfigureViewModel(delegate: vm.delegate))
             } label: {
                 HStack {
                     Text("APP 설정")

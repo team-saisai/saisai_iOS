@@ -14,6 +14,7 @@ class TabState: ObservableObject {
 struct MainView: View {
     
     @StateObject var tabState = TabState()
+    let vm: MainViewModel
     
     var body: some View {
         NavigationStack {
@@ -39,7 +40,7 @@ struct MainView: View {
                         Text("기록")
                     }
                     .tag(2)
-                MypageView()
+                MypageView(vm: MypageViewModel(delegate: vm.delegate))
                     .tabItem {
                         Image(.icMypage)
                             .renderingMode(.template)
@@ -52,13 +53,11 @@ struct MainView: View {
         }
     }
     
-    init() {
+    init(vm: MainViewModel) {
         UITabBar.appearance().barTintColor = UIColor.main
         UITabBar.appearance().backgroundColor = UIColor.main
         UITabBar.appearance().unselectedItemTintColor = UIColor.gray50
+        
+        self.vm = vm
     }
-}
-
-#Preview {
-    MainView()
 }

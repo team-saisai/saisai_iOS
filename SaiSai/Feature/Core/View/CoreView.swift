@@ -23,7 +23,7 @@ struct CoreView: View {
                     LoginView(vm: LoginViewModel(delegate: self.vm))
                 }
             } else {
-                MainView()
+                MainView(vm: MainViewModel(delegate: self.vm))
             }
         }
         .onAppear {

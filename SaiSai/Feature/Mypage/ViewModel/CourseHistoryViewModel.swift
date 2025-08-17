@@ -15,7 +15,7 @@ final class CourseHistoryViewModel: ObservableObject {
     @Published var isRequesting: Bool = false
     @Published var indexSetToRemove = Set<Int>()
     @Published var isAlertPresented: Bool = false
-    @Published var isNotCompletedOnly: Bool = false
+    @Published var isNotCompletedOnly: Bool = true
     
     var currentPage: Int = 1
     
