@@ -17,7 +17,7 @@ struct HomeView: View {
                 HomeHeaderView()
                 
                 ScrollView(showsIndicators: false) {
-                    LazyVStack(spacing: 40) {
+                    VStack(spacing: 40) {
                         HStack(spacing: 0) {
                             VStack(alignment: .leading, spacing: 0) {
                                 Text("안녕하세요 \(vm.name)님!")

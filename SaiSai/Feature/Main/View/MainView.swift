@@ -58,6 +58,8 @@ struct MainView: View {
         UITabBar.appearance().backgroundColor = UIColor.main
         UITabBar.appearance().unselectedItemTintColor = UIColor.gray50
         
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.white]
+        
         self.vm = vm
     }
 }

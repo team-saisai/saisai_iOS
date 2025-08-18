@@ -133,7 +133,7 @@ struct NicknameChangeView: View {
                     HStack {
                         Image(systemName: "chevron.left")
                             .resizable()
-                            .frame(width: 6, height: 12)
+                            .frame(width: 9, height: 18)
                             .foregroundColor(.white)
                     }
                     .padding(.horizontal, 8)

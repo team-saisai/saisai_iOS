@@ -58,6 +58,7 @@ struct CourseDetailView: View {
                     HStack {
                         Image(systemName: "chevron.left")
                             .foregroundColor(.white)
+                            .frame(width: 10, height: 20)
                     }
                     .padding(.horizontal, 8)
                 }
