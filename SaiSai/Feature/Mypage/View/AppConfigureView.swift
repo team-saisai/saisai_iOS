@@ -84,7 +84,7 @@ struct AppConfigureView: View {
             }
         }
         .background(.gray90)
-        .navigationTitle("닉네임 수정")
+        .navigationTitle("APP 설정")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
