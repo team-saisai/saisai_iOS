@@ -33,13 +33,22 @@ struct MyRewardsView: View {
                     .padding(.bottom, 20)
             }
             
-            ForEach(vm.rewardsList.indices, id: \.self) {
-                SingleRewardView(vm.rewardsList[$0])
-                
-                Divider()
-                    .overlay {
-                        Rectangle().fill(Color.gray70)
-                    }
+            if !vm.rewardsList.isEmpty {
+                ForEach(vm.rewardsList.indices, id: \.self) {
+                    SingleRewardView(vm.rewardsList[$0])
+                    
+                    Divider()
+                        .overlay {
+                            Rectangle().fill(Color.gray70)
+                        }
+                }
+            } else {
+                VStack {
+                    Spacer()
+                    Text("리워드 내역이 없습니다.")
+                        .font(.pretendard(.medium, size: 16))
+                    Spacer()
+                }
             }
         }
         .onAppear {
@@ -59,7 +68,7 @@ struct MyRewardsView: View {
                     HStack {
                         Image(systemName: "chevron.left")
                             .resizable()
-                            .frame(width: 6, height: 12)
+                            .frame(width: 9, height: 18)
                             .foregroundColor(.white)
                     }
                     .padding(.horizontal, 8)
