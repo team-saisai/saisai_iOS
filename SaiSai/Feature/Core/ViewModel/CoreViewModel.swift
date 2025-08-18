@@ -19,6 +19,8 @@ final class CoreViewModel: ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
+                NetworkMonitor.shared.startMonitor()
+                
                 let _ = try await myInfoService.request(.getMyInfo, responseDTO: MyInfoDTO.self)
                 await viewTransitionWithDelay(isLoggedIn: true)
 
