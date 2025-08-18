@@ -20,7 +20,7 @@ struct SavedCoursesView: View {
     var body: some View {
         ZStack {
             ScrollView(.vertical, showsIndicators: true) {
-                LazyVStack {
+                VStack {
                     if !vm.contentInfoList.isEmpty {
                         ForEach(vm.contentInfoList.indices, id: \.self) { index in
                             NavigationLink {
@@ -163,7 +163,7 @@ struct SavedCoursesView: View {
                     HStack {
                         Image(systemName: "chevron.left")
                             .resizable()
-                            .frame(width: 6, height: 12)
+                            .frame(width: 9, height: 18)
                             .foregroundColor(.white)
                     }
                     .padding(.horizontal, 8)

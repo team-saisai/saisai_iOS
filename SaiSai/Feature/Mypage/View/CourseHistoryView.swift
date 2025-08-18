@@ -37,7 +37,7 @@ struct CourseHistoryView: View {
                 .padding(.leading, 25)
                 
                 ScrollView(.vertical, showsIndicators: true) {
-                    LazyVStack {
+                    VStack {
                         if !vm.myRideInfoList.isEmpty {
                             ForEach(vm.myRideInfoList.indices, id: \.self) { index in
                                 NavigationLink {
@@ -184,7 +184,7 @@ struct CourseHistoryView: View {
                     HStack {
                         Image(systemName: "chevron.left")
                             .resizable()
-                            .frame(width: 6, height: 12)
+                            .frame(width: 9, height: 18)
                             .foregroundColor(.white)
                     }
                     .padding(.horizontal, 8)
