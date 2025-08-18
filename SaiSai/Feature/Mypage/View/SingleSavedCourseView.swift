@@ -75,7 +75,6 @@ struct SingleSavedCourseView: View {
                                 endedAt: vm.contentInfoList[index].challengeEndedAt,
                                 isEditingPublisher: isEditingPublisher
                             )
-                            .background(vm.isEditing ? .gray60 : .clear)
                         }
                         if let isEventActive = vm.contentInfoList[index].isEventActive, isEventActive {
                             CourseTitleChip(isEvent: true,
@@ -83,7 +82,6 @@ struct SingleSavedCourseView: View {
                                             endedAt: "",
                                             isEditingPublisher: isEditingPublisher
                             )
-                            .background(vm.isEditing ? .gray60 : .clear)
                         }
                         Spacer()
                     }

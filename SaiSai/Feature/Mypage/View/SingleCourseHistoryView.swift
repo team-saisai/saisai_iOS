@@ -63,7 +63,6 @@ struct SingleCourseHistoryView: View {
                                 endedAt: vm.myRideInfoList[index].challengeEndedAt,
                                 isEditingPublisher: isEditingPublisher
                             )
-                            .background(vm.isEditing ? .gray60 : .clear)
                         }
                         if let isEventActive = vm.myRideInfoList[index].isEventActive, isEventActive {
                             CourseTitleChip(isEvent: true,
@@ -71,7 +70,6 @@ struct SingleCourseHistoryView: View {
                                             endedAt: "",
                                             isEditingPublisher: isEditingPublisher
                             )
-                            .background(vm.isEditing ? .gray60 : .clear)
                         }
                         Spacer()
                     }
