@@ -51,21 +51,14 @@ final class LoginViewModel: NSObject, ObservableObject {
     }
     // MARK: - Apple Login
     func requestAppleLogin() {
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        let request = appleIDProvider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-        
-        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        authorizationController.delegate = self
-        authorizationController.presentationContextProvider = self
-        authorizationController.performRequests()
+        OAuthAuthenticator.shared.requestAppleLogin(requestToBackend: self.requestAppleLoginToBackend(_:))
     }
     
-    func requestAppleLoginToBackend() {
+    func requestAppleLoginToBackend(_ token: String) {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let response = try await authService.request(.appleLogin(token: appleOAuthUserData.idToken), responseDTO: OAuthLoginResponseDTO.self)
+                let response = try await authService.request(.appleLogin(token: token), responseDTO: OAuthLoginResponseDTO.self)
                 
                 let accessToken = response.data.accessToken
                 let refreshToken = response.data.refreshToken
@@ -82,27 +75,7 @@ final class LoginViewModel: NSObject, ObservableObject {
     
     // MARK: - Kakao Login
     func requestKakaoLogin() {
-        if UserApi.isKakaoTalkLoginAvailable() {
-            UserApi.shared.loginWithKakaoTalk { [weak self] (oauthToken, error) in
-                guard let self = self else { return }
-                if let error = error {
-                    print(error)
-                } else {
-                    let token = oauthToken?.accessToken as? String ?? ""
-                    requestKakaoLoginToBackend(token)
-                }
-            }
-        } else {
-            UserApi.shared.loginWithKakaoAccount { [weak self] (oauthToken, error) in
-                guard let self = self else { return }
-                if let error = error {
-                    print(error)
-                } else {
-                    let token = oauthToken?.accessToken as? String ?? ""
-                    requestKakaoLoginToBackend(token)
-                }
-            }
-        }
+        OAuthAuthenticator.shared.requestKakaoLogin(requestToBackend: self.requestKakaoLoginToBackend(_:))
     }
     
     private func requestKakaoLoginToBackend(_ token: String) {
@@ -125,19 +98,7 @@ final class LoginViewModel: NSObject, ObservableObject {
     
     // MARK: - Google Login
     func requestGoogleLogin() {
-        guard let presentingViewController = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else { return }
-        
-        GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewController) { [weak self] _, error in
-            guard let self = self else { return }
-            
-            if let error = error {
-                print(error)
-            }
-            
-            let token = checkGoogleUserInfo()
-            
-            requestGoogleLoginToBackend(token)
-        }
+        OAuthAuthenticator.shared.requestGoogleLogin(requestToBackend: self.requestGoogleLoginToBackend(_:))
     }
     
     private func requestGoogleLoginToBackend(_ token: String) {
@@ -161,50 +122,11 @@ final class LoginViewModel: NSObject, ObservableObject {
         }
     }
     
-    private func checkGoogleUserInfo() -> String {
-        if GIDSignIn.sharedInstance.currentUser != nil {
-            let user = GIDSignIn.sharedInstance.currentUser
-            guard let user = user else { return "" }
-            return user.idToken?.tokenString ?? ""
-        } else {
-            return ""
-        }
-    }
-    
     private func saveTokens(accessToken: String, refreshToken: String) {
         let _ = keychainManager.save(token: accessToken, forKey: HTTPHeaderField.accessToken.rawValue)
         let _ = keychainManager.save(token: refreshToken, forKey: HTTPHeaderField.refreshToken.rawValue)
-    }
-}
-
-extension LoginViewModel: ASAuthorizationControllerPresentationContextProviding, ASAuthorizationControllerDelegate {
-    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        guard let windowScene = UIApplication.shared
-            .connectedScenes
-            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
-              
-                let window = windowScene.windows.first else {
-            fatalError("No active window found.")
-        }
-        
-        return window
-    }
-    
-    func authorizationController(controller _: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        switch authorization.credential { // 인증 정보에 따라 다르게 처리
-        case let appleIDCredential as ASAuthorizationAppleIDCredential://Apple ID 자격 증명을 처리
-            
-            let userIdentifier = appleIDCredential.user //사용자 식별자
-            let nameComponents = appleIDCredential.fullName // 전체 이름
-            let idToken = appleIDCredential.identityToken! // idToken
-            
-            appleOAuthUserData.oauthId = userIdentifier
-            appleOAuthUserData.idToken = String(data: idToken, encoding: .utf8) ?? ""
-            
-            requestAppleLoginToBackend()
-        default:
-            break
-        }
+        print("---------4242 Access Token ---------")
+        print(accessToken)
     }
 }
 
