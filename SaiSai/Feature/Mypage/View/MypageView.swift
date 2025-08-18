@@ -14,24 +14,28 @@ struct MypageView: View {
     @StateObject var vm: MypageViewModel
     
     var body: some View {
-        VStack(spacing: 0) {
+        VStack {
             HStack {
                 Text("Mypage")
                     .font(.hakgoyansimSamulham)
                 Spacer()
             }
             .padding(.horizontal, 24)
-            .padding(.bottom, 50)
+            .padding(.bottom, 24)
+            .padding(.top, 20)
             
-            ProfileView()
-            
-            MypageDetailListView()
-            
-            MypageMenuView()
-            
-            Spacer()
+            ScrollView {
+                VStack(spacing: 0) {
+                    ProfileView()
+                    
+                    MypageDetailListView()
+                    
+                    MypageMenuView()
+                    
+                    Spacer()
+                }
+            }
         }
-        .padding(.vertical, 20)
         .background(.gray90)
         .onAppear {
             vm.fetchData()

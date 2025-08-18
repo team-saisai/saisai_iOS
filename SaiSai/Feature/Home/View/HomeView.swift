@@ -12,32 +12,47 @@ struct HomeView: View {
     @StateObject var vm: HomeViewModel = .init()
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            ZStack {
-                LazyVStack(spacing: 40) {
-                    HomeHeaderView(vm: vm)
-                    
-                    if vm.isLoading {
-                        ProgressView()
-                    } else {
-                        if vm.isRecentRideExists { RecentCourseView(vm: vm) }
-                        
-                        PopularChallengesView(vm: vm)
-                        
-                        BadgeCollectionView(vm: vm)
-                    }
-                }
-                .padding(.vertical, 20)
-                .padding(.horizontal, 20)
+        ZStack {
+            VStack {
+                HomeHeaderView()
                 
-                if vm.isRequestingBookmarks {
-                    VStack {
-                        ProgressView()
-                            .opacity(0.7)
+                ScrollView(showsIndicators: false) {
+                    LazyVStack(spacing: 40) {
+                        HStack(spacing: 0) {
+                            VStack(alignment: .leading, spacing: 0) {
+                                Text("안녕하세요 \(vm.name)님!")
+                                Text("오늘도 함께 달려보아요:)")
+                            }
+                            .font(.pretendard(.medium, size: 26))
+                            .foregroundStyle(.white)
+                            .lineLimit(1)
+                            
+                            Spacer()
+                        }
+                        
+                        if vm.isLoading {
+                            ProgressView()
+                        } else {
+                            if vm.isRecentRideExists { RecentCourseView(vm: vm) }
+                            
+                            PopularChallengesView(vm: vm)
+                            
+                            BadgeCollectionView(vm: vm)
+                        }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(.gray5.opacity(0.05))
+                    .padding(.bottom, 20)
                 }
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 20)
+            
+            if vm.isRequestingBookmarks {
+                VStack {
+                    ProgressView()
+                        .opacity(0.7)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.gray5.opacity(0.05))
             }
         }
         .background(.gray90)
