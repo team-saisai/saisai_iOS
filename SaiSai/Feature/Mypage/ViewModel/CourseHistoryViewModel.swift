@@ -58,12 +58,7 @@ final class CourseHistoryViewModel: ObservableObject {
                     .deleteMyRides(rideIds: rideIds),
                     responseDTO: MyRidesDeleteResponseDTO.self
                 )
-                await removeAllCoursesFromList()
-                await initCurrentPage()
-                await toggleIsLoading(true)
-                await setIsRequesting(false)
-                await toggleIsEditing()
-                await resetIndexToRemove()
+                refreshList()
             } catch {
                 await setIsRequesting(false)
                 print("코스 기록 삭제 실패")
@@ -74,6 +69,21 @@ final class CourseHistoryViewModel: ObservableObject {
     
     func hasIndexInRemoveList(_ index: Int) -> Bool {
         return indexSetToRemove.contains(index)
+    }
+    
+    func refreshList() {
+        Task {
+            [weak self] in
+            guard let self = self else { return }
+            await toggleIsLoading(true)
+            await setIsRequesting(true)
+            await removeAllCoursesFromList()
+            await initCurrentPage()
+            if isEditing == true { await setIsEditing(false) }
+            await resetIndexToRemove()
+            await setIsRequesting(false)
+            fetchData()
+        }
     }
 }
 

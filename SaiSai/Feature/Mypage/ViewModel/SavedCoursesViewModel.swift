@@ -71,17 +71,26 @@ final class SavedCoursesViewModel: ObservableObject {
                     .deleteBookmarkedCourses(courseIds: courseIds),
                     responseDTO: MyBookmarkedCoursesDeleteResponseDTO.self
                 )
-                await removeAllCoursesFromList()
-                await initCurrentPage()
-                await toggleIsLoading(true)
-                await setIsRequesting(false)
-                await toggleIsEditing()
-                await resetIndexToRemove()
+                refreshList()
             } catch {
                 await setIsRequesting(false)
                 print("복수 북마크 제거 실패 🥲")
                 print(error)
             }
+        }
+    }
+    
+    private func refreshList() {
+        Task { [weak self] in
+            guard let self = self else { return }
+            await toggleIsLoading(true)
+            await setIsRequesting(true)
+            await removeAllCoursesFromList()
+            await initCurrentPage()
+            if isEditing == true { await setIsEditing(false) }
+            await resetIndexToRemove()
+            await setIsRequesting(false)
+            fetchData()
         }
     }
     
@@ -91,6 +100,11 @@ final class SavedCoursesViewModel: ObservableObject {
 }
 
 extension SavedCoursesViewModel {
+    @MainActor
+    private func setIsEditing(_ isEditing: Bool) {
+        self.isEditing = isEditing
+    }
+    
     @MainActor
     func toggleIsEditing() {
         self.isEditing.toggle()

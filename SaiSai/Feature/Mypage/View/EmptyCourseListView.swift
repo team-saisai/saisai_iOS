@@ -10,9 +10,19 @@ import Combine
 
 struct EmptyCourseListView: View {
     
-    let firstLineText: String
-    let secondLineText: String
+    let messageText: String
     let moveToCourseButtonTappedPublisher: PassthroughSubject<Void, Never>
+    let buttonVisibility: Bool
+    
+    init(
+        messageText: String,
+        moveToCourseButtonTappedPublisher: PassthroughSubject<Void, Never> = .init(),
+        buttonVisibility: Bool = true
+    ) {
+        self.messageText = messageText
+        self.moveToCourseButtonTappedPublisher = moveToCourseButtonTappedPublisher
+        self.buttonVisibility = buttonVisibility
+    }
     
     var body: some View {
         VStack(spacing: 24) {
@@ -23,25 +33,26 @@ struct EmptyCourseListView: View {
                 .frame(width: 201, height: 132)
             
             VStack(spacing: 2) {
-                Text(firstLineText)
-                Text(secondLineText)
+                Text(messageText)
             }
             .font(.pretendard(.medium, size: 16))
             .foregroundStyle(.white)
-            .padding(.bottom, 8)
+            .padding(.bottom, 16)
             
-            Button {
-                moveToCourseButtonTappedPublisher.send()
-            } label: {
-                Text("코스 보러가기")
-                    .font(.pretendard(.semibold, size: 15))
-                    .foregroundStyle(.gray90)
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, 90)
-                    .background(RoundedRectangle(cornerRadius: 6).fill(.customLime))
+            if buttonVisibility {
+                Button {
+                    moveToCourseButtonTappedPublisher.send()
+                } label: {
+                    Text("코스 보러가기")
+                        .font(.pretendard(.semibold, size: 15))
+                        .foregroundStyle(.gray90)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 90)
+                        .background(RoundedRectangle(cornerRadius: 6).fill(.customLime))
+                }
+                
+                Spacer()
             }
-            
-            Spacer()
         }
     }
 }

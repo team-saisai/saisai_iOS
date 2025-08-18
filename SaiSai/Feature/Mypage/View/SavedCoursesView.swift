@@ -130,8 +130,7 @@ struct SavedCoursesView: View {
             
             if vm.contentInfoList.isEmpty {
                 EmptyCourseListView(
-                    firstLineText: "저장한 코스가 없습니다.",
-                    secondLineText: "코스를 탐색해 나의 취향을 발견해보세요.",
+                    messageText: "저장한 코스가 없습니다.",
                     moveToCourseButtonTappedPublisher: moveToCourseButtonTappedPublisher
                 )
                 .ignoresSafeArea(.all)

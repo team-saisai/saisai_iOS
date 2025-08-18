@@ -148,8 +148,7 @@ struct CourseHistoryView: View {
             
             if vm.myRideInfoList.isEmpty && !vm.hasReachedSinglePageLast {
                 EmptyCourseListView(
-                    firstLineText: "아직 주행한 코스가 없습니다.",
-                    secondLineText: "새로운 라이딩 기록을 세워보세요.",
+                    messageText: "주행한 코스가 없습니다.",
                     moveToCourseButtonTappedPublisher: moveToCourseButtonTappedPublisher
                 )
                 .ignoresSafeArea(.all)
@@ -171,13 +170,7 @@ struct CourseHistoryView: View {
             isEditingPublisher.send(newValue)
         })
         .onChange(of: vm.isNotCompletedOnly, { oldValue, newValue in
-            vm.toggleIsLoading(true)
-            vm.setIsRequesting(true)
-            vm.removeAllCoursesFromList()
-            vm.initCurrentPage()
-            vm.setIsEditing(false)
-            vm.resetIndexToRemove()
-            vm.setIsRequesting(false)
+            vm.refreshList()
         })
         .background(.gray90)
         .navigationTitle("코스 기록\(vm.isEditing ? " 편집" : "")")
