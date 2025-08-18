@@ -104,14 +104,10 @@ struct AppConfigureView: View {
         }
         .onReceive(buttonTappedPublisher) {
             if vm.isLogoutAlertPresented {
-                withAnimation {
-                    vm.removeAlert()
-                }
+                vm.removeAlert()
                 if $0 { vm.requestLogout() }
             } else {
-                withAnimation {
-                    vm.removeAlert()
-                }
+                vm.removeAlert()
                 if $0 { vm.requestRemoveAccount() }
             }
         }

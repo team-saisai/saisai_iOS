@@ -165,7 +165,10 @@ extension MypageView {
         VStack(spacing: 0) {
             Divider()
             NavigationLink {
-                AppConfigureView(vm: AppConfigureViewModel(delegate: vm.delegate))
+                AppConfigureView(vm: AppConfigureViewModel(
+                    delegate: vm.delegate,
+                    authProvider: vm.authProvider
+                ))
             } label: {
                 HStack {
                     Text("APP 설정")
