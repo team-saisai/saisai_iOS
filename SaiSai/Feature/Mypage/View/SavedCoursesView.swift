@@ -133,7 +133,7 @@ struct SavedCoursesView: View {
                     messageText: "저장한 코스가 없습니다.",
                     moveToCourseButtonTappedPublisher: moveToCourseButtonTappedPublisher
                 )
-                .ignoresSafeArea(.all)
+                .frame(maxWidth: .infinity)
             }
         }
         .onReceive(buttonTappedPublisher, perform: {
