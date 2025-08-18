@@ -9,7 +9,7 @@ import Foundation
 import Moya
 
 enum AccountAPI {
-    case removeAccount
+    case removeAccount(token: String)
 }
 
 extension AccountAPI: TargetType {
@@ -17,7 +17,7 @@ extension AccountAPI: TargetType {
     var path: String {
         switch self {
         case .removeAccount:
-            "/account"
+            "/auth/withdraw"
         }
     }
     
@@ -49,8 +49,12 @@ extension AccountAPI: TargetType {
 extension AccountAPI {
     var task: Moya.Task {
         switch self {
-        case .removeAccount:
-            return .requestPlain
+        case .removeAccount(let token):
+            return .requestJSONEncodable(
+                AccountDeleteRequestDTO(
+                    socialAccessToken: token
+                )
+            )
         }
     }
 }
