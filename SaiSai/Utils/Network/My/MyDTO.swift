@@ -154,6 +154,7 @@ struct ProfileInfo: Decodable {
     let bookmarkCount: Int
     let reward: Int
     let badgeCount: Int
+    let provider: String
     
     init() {
         self.imageUrl = nil
@@ -163,6 +164,7 @@ struct ProfileInfo: Decodable {
         self.bookmarkCount = 0
         self.reward = 0
         self.badgeCount = 0
+        self.provider = ""
     }
 }
 
