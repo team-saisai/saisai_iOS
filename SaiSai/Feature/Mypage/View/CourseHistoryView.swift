@@ -13,6 +13,7 @@ struct CourseHistoryView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject var tabState: TabState
     @StateObject var vm: CourseHistoryViewModel = .init()
+    @State var isMenuFolded: Bool = true
     let buttonTappedPublisher: PassthroughSubject<Bool, Never> = .init()
     let isEditingPublisher: PassthroughSubject<Bool, Never> = .init()
     let moveToCourseButtonTappedPublisher: PassthroughSubject<Void, Never> = .init()
@@ -33,7 +34,7 @@ struct CourseHistoryView: View {
                     
                     Spacer()
                 }
-                .padding(.top, 10)
+                .padding(.top, 15)
                 .padding(.leading, 25)
                 
                 ScrollView(.vertical, showsIndicators: true) {
@@ -90,8 +91,34 @@ struct CourseHistoryView: View {
                     }
                     .padding(.horizontal, 20)
                 }
-                .padding(.top, 10)
+                .padding(.top, 13)
             }
+            
+            if !isMenuFolded {
+                Color.black.opacity(0.001)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation {
+                            isMenuFolded = true
+                        }
+                    }
+            }
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    HistoryDropDown(
+                        isFolded: $isMenuFolded,
+                        optionPublisher: vm.optionPublisher,
+                        tappedOutsidePublisher: vm.tappedoutsidePublisher
+                    )
+                }
+                .padding(.horizontal, 22)
+                Spacer()
+            }
+            .padding(.top, 10)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .zIndex(1)
             
             if vm.isEditing {
                 VStack {
@@ -166,6 +193,9 @@ struct CourseHistoryView: View {
             self.presentationMode.wrappedValue.dismiss()
             tabState.selectedTab = 1
         })
+        .onReceive(vm.optionPublisher) { option in
+            vm.setSortOption(option)
+        }
         .onChange(of: vm.isEditing, { _, newValue in
             isEditingPublisher.send(newValue)
         })
@@ -221,5 +251,64 @@ extension CourseHistoryView {
             .background(
                 RoundedRectangle(cornerRadius: 10)
                 .fill(vm.isNotCompletedOnly ? .white : .clear))
+    }
+}
+
+struct HistoryDropDown: View {
+    
+    @State var selectedOption: HistorySortOption = .newest
+    @Binding var isFolded: Bool
+    
+    let optionPublisher: PassthroughSubject<HistorySortOption, Never>
+    let tappedOutsidePublisher: PassthroughSubject<Void, Never>
+    
+    var body: some View {
+        VStack(spacing: 4) {
+            Button {
+                isFolded.toggle()
+            } label: {
+                HStack {
+                    Text("\(selectedOption.dropDownText)")
+                    
+                    Image(systemName: isFolded ? "arrowtriangle.down.fill" : "arrowtriangle.up.fill")
+                        .resizable()
+                        .frame(width: 7, height: 3.5)
+                }
+                .foregroundStyle(.white)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 7)
+                .background(RoundedRectangle(cornerRadius: 8).fill(.dropDownBg))
+            }
+            
+            if !isFolded {
+                VStack(spacing: 0) {
+                    ForEach(HistorySortOption.allCases, id: \.self) { option in
+                        Button {
+                            optionPublisher.send(option)
+                            isFolded = true
+                            selectedOption = option
+                        } label: {
+                            Text("\(option.dropDownText)")
+                                .padding(.vertical, 8)
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(selectedOption == option ? .iconPurple : .white)
+                                .background(RoundedRectangle(cornerRadius: 4).fill(Color.menuItemHighlightedBg.opacity(
+                                    selectedOption == option ? 1 : 0
+                                )))
+                        }
+                    }
+                }
+                .padding(.all, 4)
+                .frame(width: 70)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 8).stroke(Color.gray40, lineWidth: 1)
+                }
+                .background(RoundedRectangle(cornerRadius: 8).fill(Color.menuItemDefaultBg))
+            }
+        }
+        .font(.pretendard(.regular, size: 13))
+        .onReceive(tappedOutsidePublisher) {
+            isFolded = true
+        }
     }
 }

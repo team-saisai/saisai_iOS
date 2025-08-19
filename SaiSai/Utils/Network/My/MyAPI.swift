@@ -18,7 +18,7 @@ enum MyAPI {
     case deleteMyRides(rideIds: [Int])
     case getMyRides(
         page: Int = 1,
-        sort: CourseHistorySortOption = .newest,
+        sort: HistorySortOption = .newest,
         notCompletedOnly: Bool = false
     )
     case nicknameDuplicateCheck(nickname: String)
@@ -102,16 +102,20 @@ extension MyAPI {
         switch self {
         case .getMyInfo, .getMyRecentRide, .getMyRewards, .getMyProfile:
             return .requestPlain
+            
         case .getMyBookmarkedCourses(let page):
             return .requestParameters(
                 parameters:
                     ["page": page],
                 encoding: URLEncoding.queryString
             )
+            
         case .deleteBookmarkedCourses(let courseIds):
             return .requestJSONEncodable(MyBookmarkedCoursesDeleteRequestDTO(courseIds: courseIds))
+            
         case .deleteMyRides(let rideIds):
             return .requestJSONEncodable(MyRidesDeleteRequestDTO(rideIds: rideIds))
+            
         case .getMyRides(let page, let sort, let notCompletedOnly):
             return .requestParameters(
                 parameters: [
@@ -121,11 +125,13 @@ extension MyAPI {
                 ],
                 encoding: URLEncoding.queryString
             )
+            
         case .nicknameDuplicateCheck(let nickname):
             return .requestParameters(
                 parameters: ["nickname": nickname],
                 encoding: URLEncoding.queryString
             )
+            
         case .changeNickname(let nickname):
             return .requestJSONEncodable(ChangeNicknameRequestDTO(nickname: nickname))
         }

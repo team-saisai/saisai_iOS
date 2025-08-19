@@ -13,6 +13,7 @@ struct HistoryView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject var tabState: TabState
     @StateObject var vm: CourseHistoryViewModel = .init()
+    @State var isMenuFolded: Bool = true
     let buttonTappedPublisher: PassthroughSubject<Bool, Never> = .init()
     let isEditingPublisher: PassthroughSubject<Bool, Never> = .init()
     let moveToCourseButtonTappedPublisher: PassthroughSubject<Void, Never> = .init()
@@ -112,8 +113,34 @@ struct HistoryView: View {
                     }
                     .padding(.horizontal, 20)
                 }
-                .padding(.top, 10)
+                .padding(.top, 13)
             }
+            
+            if !isMenuFolded {
+                Color.black.opacity(0.001)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation {
+                            isMenuFolded = true
+                        }
+                    }
+            }
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    HistoryDropDown(
+                        isFolded: $isMenuFolded,
+                        optionPublisher: vm.optionPublisher,
+                        tappedOutsidePublisher: vm.tappedoutsidePublisher
+                    )
+                }
+                .padding(.horizontal, 22)
+                Spacer()
+            }
+            .padding(.top, 60)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .zIndex(1)
             
             if vm.isEditing {
                 VStack {
@@ -188,6 +215,9 @@ struct HistoryView: View {
             self.presentationMode.wrappedValue.dismiss()
             tabState.selectedTab = 1
         })
+        .onReceive(vm.optionPublisher) { option in
+            vm.setSortOption(option)
+        }
         .onChange(of: vm.isEditing, { _, newValue in
             isEditingPublisher.send(newValue)
         })

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 final class CourseHistoryViewModel: ObservableObject {
     
@@ -16,6 +17,9 @@ final class CourseHistoryViewModel: ObservableObject {
     @Published var indexSetToRemove = Set<Int>()
     @Published var isAlertPresented: Bool = false
     @Published var isNotCompletedOnly: Bool = true
+    let optionPublisher: PassthroughSubject<HistorySortOption, Never> = .init()
+    let tappedoutsidePublisher: PassthroughSubject<Void, Never> = .init()
+    var selectedOption: HistorySortOption = .newest
     
     var currentPage: Int = 1
     
@@ -29,7 +33,7 @@ final class CourseHistoryViewModel: ObservableObject {
                 let response = try await myService.request(
                     .getMyRides(
                         page: currentPage,
-//                        sort: <#T##CourseHistorySortOption#>, 추가 필요
+                        sort: selectedOption,
                         notCompletedOnly: isNotCompletedOnly
                     ),
                     responseDTO: MyRidesResponseDTO.self
@@ -82,6 +86,17 @@ final class CourseHistoryViewModel: ObservableObject {
             if isEditing == true { await setIsEditing(false) }
             await resetIndexToRemove()
             await setIsRequesting(false)
+            fetchData()
+        }
+    }
+    
+    func setSortOption(_ selectedOption: HistorySortOption) {
+        Task { [weak self] in
+            guard let self = self else { return }
+            await initCurrentPage()
+            await setSelectedOption(selectedOption)
+            await toggleIsLoading(true)
+            await removeAllCoursesFromList()
             fetchData()
         }
     }
@@ -158,5 +173,10 @@ extension CourseHistoryViewModel {
     @MainActor
     func toggleIsNotCompletedOnly() {
         self.isNotCompletedOnly.toggle()
+    }
+    
+    @MainActor
+    func setSelectedOption(_ selectedOption: HistorySortOption) {
+        self.selectedOption = selectedOption
     }
 }
