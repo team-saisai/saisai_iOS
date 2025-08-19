@@ -17,12 +17,17 @@ final class OAuthAuthenticator: NSObject {
     static let shared: OAuthAuthenticator = .init()
     
     var requestToBackend: ((String) -> ())? = nil
+    var isDelete: Bool = false
     
     private override init() { }
     
-    func requestAppleLogin(requestToBackend: @escaping (String) -> ()) {
+    func requestAppleLogin(
+        requestToBackend: @escaping (String) -> (),
+        isDelete: Bool = false
+    ) {
         self.requestToBackend = nil
         self.requestToBackend = requestToBackend
+        self.isDelete = isDelete
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         let request = appleIDProvider.createRequest()
         request.requestedScopes = [.fullName, .email]
@@ -100,16 +105,16 @@ extension OAuthAuthenticator: ASAuthorizationControllerPresentationContextProvid
         switch authorization.credential { // 인증 정보에 따라 다르게 처리
         case let appleIDCredential as ASAuthorizationAppleIDCredential://Apple ID 자격 증명을 처리
             
-            let userIdentifier = appleIDCredential.user //사용자 식별자
-            let nameComponents = appleIDCredential.fullName // 전체 이름
+//            let userIdentifier = appleIDCredential.user //사용자 식별자
+//            let nameComponents = appleIDCredential.fullName // 전체 이름
             let idToken = appleIDCredential.identityToken! // idToken
-            
             let authorizationCode = appleIDCredential.authorizationCode!
+            
             let authCode = String(data: authorizationCode, encoding: .utf8) ?? ""
-            print("디버깅: \(authCode)")
+            let token = String(data: idToken, encoding: .utf8) ?? ""
             
             if let requestToBackend = requestToBackend {
-                requestToBackend(authCode)
+                requestToBackend(isDelete ? authCode : token)
             }
         default:
             break

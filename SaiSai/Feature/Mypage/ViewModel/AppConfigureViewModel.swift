@@ -48,7 +48,10 @@ final class AppConfigureViewModel: ObservableObject {
         guard let authProvider = authProvider else { return }
         switch authProvider {
         case .apple:
-            OAuthAuthenticator.shared.requestAppleLogin(requestToBackend: requestRemoveAccountToBackend(_:))
+            OAuthAuthenticator.shared.requestAppleLogin(
+                requestToBackend: requestRemoveAccountToBackend(_:),
+                isDelete: true
+            )
         case .kakao:
             OAuthAuthenticator.shared.requestKakaoLogin(requestToBackend: requestRemoveAccountToBackend(_:))
         case .google:
