@@ -82,7 +82,7 @@ extension MypageView {
             .padding(.bottom, 8)
         }
         
-        Text("\(vm.profile.email)")
+        Text("\(vm.profile.email ?? "")")
             .foregroundStyle(.gray40)
             .font(.pretendard(.light, size: 14))
             .padding(.bottom, 28)

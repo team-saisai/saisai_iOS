@@ -18,7 +18,7 @@ struct CoreView: View {
                 if !vm.isLoggedIn {
                     Image(.icSplashImg)
                         .resizable()
-                        .scaledToFill()
+//                        .aspectRatio(contentMode: .fill)
                         .ignoresSafeArea()
                     
                     if !vm.isCheckingSavedTokens {

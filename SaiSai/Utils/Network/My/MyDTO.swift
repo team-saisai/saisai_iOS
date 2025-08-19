@@ -149,7 +149,7 @@ struct RecentRideInfo: Decodable {
 struct ProfileInfo: Decodable {
     let imageUrl: String?
     let nickname: String
-    let email: String
+    let email: String?
     let rideCount: Int
     let bookmarkCount: Int
     let reward: Int
