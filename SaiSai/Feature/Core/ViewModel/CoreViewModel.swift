@@ -10,7 +10,7 @@ import Foundation
 final class CoreViewModel: ObservableObject {
     @Published var isLoggedIn: Bool = false
     @Published var isCheckingSavedTokens: Bool = true
-    
+    @Published var isToastPresented: Bool = false
     
     let myInfoService = NetworkService<MyAPI>()
     let keychainManager = KeychainManagerImpl()
@@ -44,6 +44,11 @@ final class CoreViewModel: ObservableObject {
             self?.isLoggedIn = isLoggedIn
             self?.isCheckingSavedTokens = false
         }
+    }
+    
+    @MainActor
+    func setIsToastPresented(_ isToastPresented: Bool) {
+        self.isToastPresented = isToastPresented
     }
 }
 

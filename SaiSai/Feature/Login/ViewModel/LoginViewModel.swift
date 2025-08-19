@@ -17,8 +17,6 @@ final class LoginViewModel: NSObject, ObservableObject {
     @Published var emailText: String = "email"
     @Published var passwordText: String = "password"
     
-    var appleOAuthUserData: AppleOAuthUserData = .init()
-    
     let authService = NetworkService<AuthAPI>()
     let keychainManager = KeychainManagerImpl()
     
@@ -27,7 +25,6 @@ final class LoginViewModel: NSObject, ObservableObject {
     init(delegate: LoginViewModelDelegate) {
         self.delegate = delegate
     }
-    
     
     func requestLogin() {
         Task { [weak self] in

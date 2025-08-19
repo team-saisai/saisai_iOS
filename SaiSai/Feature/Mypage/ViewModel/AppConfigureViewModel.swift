@@ -31,10 +31,10 @@ final class AppConfigureViewModel: ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-//                let _ = try await authService.request(
-//                    .logout,
-//                    responseDTO: LogoutResponseDTO.self
-//                )
+                let _ = try await authService.request(
+                    .logout,
+                    responseDTO: LogoutResponseDTO.self
+                )
                 await deleteTokens()
                 delegate?.logout()
             } catch {
@@ -71,6 +71,7 @@ final class AppConfigureViewModel: ObservableObject {
                 )
                 await deleteTokens()
                 delegate?.logout()
+                await ToastManager.shared.toastPublisher.send(.withdrawSuccess)
             } catch {
                 print("회원탈퇴 실패")
                 print(error)

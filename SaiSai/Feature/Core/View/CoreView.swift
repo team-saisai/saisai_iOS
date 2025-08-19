@@ -10,6 +10,7 @@ import SwiftUI
 struct CoreView: View {
     
     @StateObject var vm: CoreViewModel = .init()
+    @State var toastType: ToastType = .requestFailure
     
     var body: some View {
         ZStack {
@@ -25,9 +26,31 @@ struct CoreView: View {
             } else {
                 MainView(vm: MainViewModel(delegate: self.vm))
             }
+            
+            if vm.isToastPresented {
+                VStack {
+                    CustomToastView(
+                        toastType: $toastType,
+                        vm: vm
+                    )
+                    Spacer()
+                }
+                .padding(.all, 20)
+            }
         }
         .onAppear {
             vm.validateToken()
+        }
+        .onReceive(ToastManager.shared.toastPublisher) { toast in
+            DispatchQueue.main.async {
+                self.toastType = toast
+            }
+            vm.setIsToastPresented(true)
+            withAnimation {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    vm.setIsToastPresented(false)
+                }
+            }
         }
     }
 }
