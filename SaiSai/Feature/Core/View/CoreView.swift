@@ -18,11 +18,11 @@ struct CoreView: View {
                 if !vm.isLoggedIn {
                     Image(.icSplashImg)
                         .resizable()
-//                        .aspectRatio(contentMode: .fill)
                         .ignoresSafeArea()
                     
                     if !vm.isCheckingSavedTokens {
                         LoginView(vm: LoginViewModel(delegate: self.vm))
+                            .position(x: proxy.size.width / 2, y: proxy.size.height / 3 * 2)
                     }
                 } else {
                     MainView(vm: MainViewModel(delegate: self.vm))

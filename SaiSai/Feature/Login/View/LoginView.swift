@@ -17,37 +17,37 @@ struct LoginView: View {
         VStack(spacing: 30) {
             Spacer()
             
-            TextField("이메일",
-                      text: $vm.emailText,
-                      prompt: Text("\(vm.emailText)").foregroundStyle(.white)
-            )
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                .textContentType(.emailAddress)
-                .padding(.all, 8)
-                .background(RoundedRectangle(cornerRadius: 6).fill(.gray60))
-            
-            SecureField("패스워드",
-                        text: $vm.passwordText,
-                        prompt: Text("\(vm.passwordText)").foregroundStyle(.white)
-            )
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                .textContentType(.password)
-                .padding(.all, 8)
-                .background(RoundedRectangle(cornerRadius: 6).fill(.gray60))
-            
-            Button {
-                vm.requestLogin()
-            } label: {
-                Text("로그인")
-                    .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(.white)
-                    .padding(.vertical, 12)
-                    .frame(maxWidth: .infinity)
-                    .background(.blue)
-                    .cornerRadius(12)
-            }
+//            TextField("이메일",
+//                      text: $vm.emailText,
+//                      prompt: Text("\(vm.emailText)").foregroundStyle(.white)
+//            )
+//                .textInputAutocapitalization(.never)
+//                .autocorrectionDisabled()
+//                .textContentType(.emailAddress)
+//                .padding(.all, 8)
+//                .background(RoundedRectangle(cornerRadius: 6).fill(.gray60))
+//            
+//            SecureField("패스워드",
+//                        text: $vm.passwordText,
+//                        prompt: Text("\(vm.passwordText)").foregroundStyle(.white)
+//            )
+//                .textInputAutocapitalization(.never)
+//                .autocorrectionDisabled()
+//                .textContentType(.password)
+//                .padding(.all, 8)
+//                .background(RoundedRectangle(cornerRadius: 6).fill(.gray60))
+//            
+//            Button {
+//                vm.requestLogin()
+//            } label: {
+//                Text("로그인")
+//                    .font(.system(size: 18, weight: .medium))
+//                    .foregroundStyle(.white)
+//                    .padding(.vertical, 12)
+//                    .frame(maxWidth: .infinity)
+//                    .background(.blue)
+//                    .cornerRadius(12)
+//            }
             
             HStack(spacing: 20) {
                 Button {
@@ -79,6 +79,5 @@ struct LoginView: View {
         }
         .padding(.horizontal, 50)
         .background(.clear)
-        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }
