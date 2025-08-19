@@ -14,28 +14,35 @@ struct CoreView: View {
     
     var body: some View {
         ZStack {
-            if !vm.isLoggedIn {
-                Image(.icSplashImg)
-                    .resizable()
-                    .scaledToFill()
-                    .ignoresSafeArea()
+            GeometryReader { proxy in
+                if !vm.isLoggedIn {
+                    Image(.icSplashImg)
+                        .resizable()
+                        .scaledToFill()
+                        .ignoresSafeArea()
+                    
+                    if !vm.isCheckingSavedTokens {
+                        LoginView(vm: LoginViewModel(delegate: self.vm))
+                    }
+                } else {
+                    MainView(vm: MainViewModel(delegate: self.vm))
+                }
                 
-                if !vm.isCheckingSavedTokens {
-                    LoginView(vm: LoginViewModel(delegate: self.vm))
+                if vm.isToastPresented {
+                    VStack {
+                        Color.clear
+                    }
+                    .overlay {
+                        VStack {
+                            CustomToastView(
+                                toastType: $toastType,
+                                vm: vm
+                            )
+                            Spacer()
+                        }
+                        .padding(.horizontal, 20)
+                    }
                 }
-            } else {
-                MainView(vm: MainViewModel(delegate: self.vm))
-            }
-            
-            if vm.isToastPresented {
-                VStack {
-                    CustomToastView(
-                        toastType: $toastType,
-                        vm: vm
-                    )
-                    Spacer()
-                }
-                .padding(.all, 20)
             }
         }
         .onAppear {

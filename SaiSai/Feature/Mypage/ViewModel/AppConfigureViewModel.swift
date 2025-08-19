@@ -71,7 +71,7 @@ final class AppConfigureViewModel: ObservableObject {
                 )
                 await deleteTokens()
                 delegate?.logout()
-                await ToastManager.shared.toastPublisher.send(.withdrawSuccess)
+                await sendToast()
             } catch {
                 print("회원탈퇴 실패")
                 print(error)
@@ -105,6 +105,11 @@ extension AppConfigureViewModel {
     private func deleteTokens() {
         KeychainManagerImpl().deleteToken(forKey: HTTPHeaderField.accessToken.rawValue)
         KeychainManagerImpl().deleteToken(forKey: HTTPHeaderField.refreshToken.rawValue)
+    }
+    
+    @MainActor
+    private func sendToast() {
+        ToastManager.shared.toastPublisher.send(.withdrawSuccess)
     }
 }
 

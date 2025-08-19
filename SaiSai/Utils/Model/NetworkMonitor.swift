@@ -14,15 +14,16 @@ final class NetworkMonitor {
     
     private let monitor: NWPathMonitor = .init()
     
-    var status: NWPath.Status = .satisfied
-    
     private init() { }
     
     func startMonitor() {
         monitor.start(queue: DispatchQueue.global())
-        monitor.pathUpdateHandler = { [weak self] path in
-            guard let self = self else { return }
-            self.status = path.status
+        monitor.pathUpdateHandler = { path in
+            if path.status != .satisfied {
+                DispatchQueue.main.async {
+                    ToastManager.shared.toastPublisher.send(.networkNotdetected)
+                }
+            }
         }
     }
 }
