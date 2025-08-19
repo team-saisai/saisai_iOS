@@ -181,9 +181,7 @@ extension MypageView {
                 .padding(.vertical, 23)
             }
             Divider()
-            NavigationLink {
-                
-            } label: {
+            Link(destination: URL(string: vm.notionURL)!) {
                 HStack {
                     Text("서비스 이용 약관")
                     Spacer()
