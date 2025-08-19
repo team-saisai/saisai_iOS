@@ -10,24 +10,54 @@ import SwiftUI
 struct CoreView: View {
     
     @StateObject var vm: CoreViewModel = .init()
+    @State var toastType: ToastType = .requestFailure
     
     var body: some View {
         ZStack {
-            if vm.isSplashRepresented || !vm.isLoggedIn {
-                Image(.icSplashImg)
-                    .resizable()
-                    .scaledToFill()
-                    .ignoresSafeArea()
-                
+            GeometryReader { proxy in
                 if !vm.isLoggedIn {
-                    LoginView(vm: LoginViewModel(delegate: self.vm))
+                    Image(.icSplashImg)
+                        .resizable()
+                        .scaledToFill()
+                        .ignoresSafeArea()
+                    
+                    if !vm.isCheckingSavedTokens {
+                        LoginView(vm: LoginViewModel(delegate: self.vm))
+                    }
+                } else {
+                    MainView(vm: MainViewModel(delegate: self.vm))
                 }
-            } else {
-                MainView()
+                
+                if vm.isToastPresented {
+                    VStack {
+                        Color.clear
+                    }
+                    .overlay {
+                        VStack {
+                            CustomToastView(
+                                toastType: $toastType,
+                                vm: vm
+                            )
+                            Spacer()
+                        }
+                        .padding(.horizontal, 20)
+                    }
+                }
             }
         }
         .onAppear {
             vm.validateToken()
+        }
+        .onReceive(ToastManager.shared.toastPublisher) { toast in
+            DispatchQueue.main.async {
+                self.toastType = toast
+            }
+            vm.setIsToastPresented(true)
+            withAnimation {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    vm.setIsToastPresented(false)
+                }
+            }
         }
     }
 }

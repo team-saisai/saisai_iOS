@@ -10,8 +10,20 @@ import Moya
 
 enum MyAPI {
     case getMyInfo
-    case getRecentMyRides
+    case getMyRecentRide
+    case getMyRewards
+    case getMyBookmarkedCourses(page: Int = 1)
+    case deleteBookmarkedCourses(courseIds: [Int])
     case getMyProfile
+    case deleteMyRides(rideIds: [Int])
+    case getMyRides(
+        page: Int = 1,
+        sort: HistorySortOption = .newest,
+        notCompletedOnly: Bool = false
+    )
+    case nicknameDuplicateCheck(nickname: String)
+    case changeNickname(nickname: String)
+//    case changeImage
 }
 
 extension MyAPI: TargetType {
@@ -20,15 +32,39 @@ extension MyAPI: TargetType {
         switch self {
         case .getMyInfo:
             return "/my"
-        case .getRecentMyRides:
-            return "/my/rides"
+        case .getMyRecentRide:
+            return "/my/rides/recent"
+        case .getMyRewards:
+            return "/my/rewards"
+        case .getMyBookmarkedCourses, .deleteBookmarkedCourses:
+            return "/my/bookmarks/courses"
         case .getMyProfile:
             return "/my/profile"
+        case .deleteMyRides, .getMyRides:
+            return "/my/rides"
+        case .nicknameDuplicateCheck:
+            return "/my/profile/nickname/check"
+        case .changeNickname:
+            return "/my/profile/nickname"
+//        case .changeProfileImage:
+//            return "/my/profile/image"
         }
     }
+    
     var method: Moya.Method {
         switch self {
-        case .getMyInfo, .getRecentMyRides, .getMyProfile: .get
+        case .getMyInfo,
+                .getMyRecentRide,
+                .getMyRewards,
+                .getMyBookmarkedCourses,
+                .getMyProfile,
+                .getMyRides,
+                .nicknameDuplicateCheck
+            : .get
+        case .deleteBookmarkedCourses,
+                .deleteMyRides
+            : .delete
+        case .changeNickname: .patch // + changeProfileImage
         }
     }
     
@@ -37,7 +73,23 @@ extension MyAPI: TargetType {
             return nil
         }
         
-        return [HTTPHeaderField.authorization.rawValue: accessToken]
+        switch self {
+        case .getMyInfo,
+                .getMyRecentRide,
+                .getMyRewards,
+                .getMyBookmarkedCourses,
+                .getMyProfile,
+                .getMyRides,
+                .nicknameDuplicateCheck
+            : return [HTTPHeaderField.authorization.rawValue: accessToken]
+        case .deleteBookmarkedCourses,
+                .deleteMyRides,
+                .changeNickname
+            : return [
+                HTTPHeaderField.authorization.rawValue: accessToken,
+                HTTPHeaderField.contentType.rawValue: ContentType.json.rawValue
+            ]
+        }
     }
     
     var validationType: ValidationType {
@@ -48,8 +100,40 @@ extension MyAPI: TargetType {
 extension MyAPI {
     var task: Moya.Task {
         switch self {
-        case .getMyInfo, .getRecentMyRides, .getMyProfile:
+        case .getMyInfo, .getMyRecentRide, .getMyRewards, .getMyProfile:
             return .requestPlain
+            
+        case .getMyBookmarkedCourses(let page):
+            return .requestParameters(
+                parameters:
+                    ["page": page],
+                encoding: URLEncoding.queryString
+            )
+            
+        case .deleteBookmarkedCourses(let courseIds):
+            return .requestJSONEncodable(MyBookmarkedCoursesDeleteRequestDTO(courseIds: courseIds))
+            
+        case .deleteMyRides(let rideIds):
+            return .requestJSONEncodable(MyRidesDeleteRequestDTO(rideIds: rideIds))
+            
+        case .getMyRides(let page, let sort, let notCompletedOnly):
+            return .requestParameters(
+                parameters: [
+                    "page": page,
+                    "sort": sort.rawValue,
+                    "notCompletedOnly": notCompletedOnly
+                ],
+                encoding: URLEncoding.queryString
+            )
+            
+        case .nicknameDuplicateCheck(let nickname):
+            return .requestParameters(
+                parameters: ["nickname": nickname],
+                encoding: URLEncoding.queryString
+            )
+            
+        case .changeNickname(let nickname):
+            return .requestJSONEncodable(ChangeNicknameRequestDTO(nickname: nickname))
         }
     }
 }

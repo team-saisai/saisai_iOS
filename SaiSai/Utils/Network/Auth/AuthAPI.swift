@@ -30,6 +30,8 @@ enum AuthAPI {
         role: AccountRole)
     
     case reissue
+    
+    case logout
 }
 
 // MARK: - Moya Properties
@@ -49,23 +51,29 @@ extension AuthAPI: TargetType {
             return "/auth/register"
         case .reissue:
             return "/auth/reissue"
+        case .logout:
+            return "/auth/logout"
         }
     }
     
     var method: Moya.Method { .post }
     
     var headers: [String : String]? {
-        var header: [String: String] = [:]
+        var header: [String: String] = [
+            HTTPHeaderField.contentType.rawValue: ContentType.json.rawValue
+            ]
         switch self {
-            
         case .reissue:
             let refreshToken = KeychainManagerImpl().retrieveToken(
                 forKey: HTTPHeaderField.refreshToken.rawValue)
             header[HTTPHeaderField.authorization.rawValue] = refreshToken
-            fallthrough
-            
+        case .logout:
+            let accessToken = KeychainManagerImpl().retrieveToken(
+                forKey: HTTPHeaderField.accessToken.rawValue
+            )
+            header[HTTPHeaderField.authorization.rawValue] = accessToken
         default:
-            header[HTTPHeaderField.contentType.rawValue] = ContentType.json.rawValue
+            break
         }
         return header
     }
@@ -92,6 +100,8 @@ extension AuthAPI {
                 email: email, nickname: nickname,
                 password: password, role: role.rawValue))
         case .reissue:
+            return .requestPlain
+        case .logout:
             return .requestPlain
         }
     }

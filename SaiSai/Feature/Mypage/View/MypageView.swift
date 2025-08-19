@@ -10,27 +10,32 @@ import Kingfisher
 
 struct MypageView: View {
     
-    @StateObject var vm: MypageViewModel = .init()
+    @EnvironmentObject var tabState: TabState
+    @StateObject var vm: MypageViewModel
     
     var body: some View {
-        VStack(spacing: 0) {
+        VStack {
             HStack {
                 Text("Mypage")
                     .font(.hakgoyansimSamulham)
                 Spacer()
             }
             .padding(.horizontal, 24)
-            .padding(.bottom, 50)
+            .padding(.bottom, 24)
+            .padding(.top, 20)
             
-            ProfileView()
-            
-            MypageDetailListView()
-            
-            MypageMenuView()
-            
-            Spacer()
+            ScrollView {
+                VStack(spacing: 0) {
+                    ProfileView()
+                    
+                    MypageDetailListView()
+                    
+                    MypageMenuView()
+                    
+                    Spacer()
+                }
+            }
         }
-        .padding(.vertical, 20)
         .background(.gray90)
         .onAppear {
             vm.fetchData()
@@ -44,16 +49,16 @@ extension MypageView {
         VStack(spacing: 0) {
             HStack {
                 KFImage(URL(string:vm.profile.imageUrl ?? ""))
-                    .resizable()
-                    .renderingMode(.template)
                     .placeholder {
                         Image(systemName: "person.fill")
                             .resizable()
+                            .renderingMode(.template)
                             .frame(width: 44, height: 44)
+                            .foregroundStyle(.gray70)
                     }
+                    .resizable()
                     .clipShape(Circle())
                     .scaledToFit()
-                    .foregroundStyle(.gray70)
                     .frame(width: 106, height: 106)
                     .overlay {
                         Circle()
@@ -124,16 +129,33 @@ extension MypageView {
         HStack {
             ForEach(0..<4) { idx in
                 NavigationLink {
-                    // switch idx
+                    switch idx {
+                    case 0:
+                        CourseHistoryView()
+                            .environmentObject(tabState)
+                    case 1:
+                        SavedCoursesView()
+                            .environmentObject(tabState)
+                    case 2:
+                        MyRewardsView()
+                    case 3:
+                        MyBadgesView()
+                    default:
+                        let _ = 1
+                    }
                 } label: {
                     SingleMypageVerticalItem(
                         highlightedText: highlightedTexts[idx],
                         defaultText: defaultTexts[idx]
                     )
                 }
+                if idx != 3 {
+                    Spacer()
+                }
             }
         }
         .padding(.bottom, 24)
+        .padding(.horizontal, 36)
     }
 }
 
@@ -143,8 +165,23 @@ extension MypageView {
         VStack(spacing: 0) {
             Divider()
             NavigationLink {
-                
+                AppConfigureView(vm: AppConfigureViewModel(
+                    delegate: vm.delegate,
+                    authProvider: vm.authProvider
+                ))
             } label: {
+                HStack {
+                    Text("APP 설정")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .resizable()
+                        .frame(width: 6, height: 12)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 23)
+            }
+            Divider()
+            Link(destination: URL(string: vm.notionURL)!) {
                 HStack {
                     Text("서비스 이용 약관")
                     Spacer()

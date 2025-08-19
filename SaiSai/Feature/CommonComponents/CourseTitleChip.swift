@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 enum TitleChipType {
     case event
@@ -15,7 +16,9 @@ enum TitleChipType {
 
 struct CourseTitleChip: View {
     
+    @State var isEditing: Bool = false
     let titleChip: TitleChipType
+    let isEditingPublisher: PassthroughSubject<Bool, Never>
     
     var body: some View {
         HStack(spacing: 3.5) {
@@ -31,18 +34,22 @@ struct CourseTitleChip: View {
         .padding(.horizontal, 9)
         .padding(.vertical, 6)
         .background(RoundedRectangle(cornerRadius: 8).fill(bgColor))
+        .onReceive(isEditingPublisher) {
+            self.isEditing = $0
+        }
     }
 }
 
 // MARK: - Init + Computed Property
 extension CourseTitleChip {
     
-    init(isEvent: Bool = false, challengeStatus: ChallengeStatus, endedAt: String?) {
+    init(isEvent: Bool = false, challengeStatus: ChallengeStatus, endedAt: String?, isEditingPublisher: PassthroughSubject<Bool, Never> = .init()) {
         if isEvent {
             titleChip = .event
         } else {
             titleChip = (challengeStatus == .ended ? .ended : .ongoing(endedAt: endedAt ?? ""))
         }
+        self.isEditingPublisher = isEditingPublisher
     }
     
     var text: String {
@@ -53,6 +60,8 @@ extension CourseTitleChip {
         }
     }
     var bgColor: Color {
+        if isEditing { return .gray60 }
+        
         switch titleChip {
         case .event:
             return .customLightPurple

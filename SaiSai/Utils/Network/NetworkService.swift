@@ -16,11 +16,22 @@ final class NetworkService<T: TargetType> {
         do {
             return try await sendRequest(target, D.self)
         } catch let error as MoyaError {
-            if error.response?.statusCode == 401 {
+            guard let statusCode = error.response?.statusCode else {
+                throw error
+            }
+            switch statusCode {
+            case 401:
                 try await reissue()
                 return try await sendRequest(target, D.self)
-            } else {
+            case 500..<600:
+                /// 스플래쉬화면에서 항상 띄우는 case 방지
+                if responseDTO != MyInfoDTO.self {
+                    DispatchQueue.main.async {
+                        ToastManager.shared.toastPublisher.send(.requestFailure)
+                    }                    
+                }
                 throw error
+            default: throw error
             }
         }
     }

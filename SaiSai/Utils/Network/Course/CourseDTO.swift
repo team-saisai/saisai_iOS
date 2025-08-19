@@ -29,15 +29,6 @@ struct AllCourseListResponse: Decodable {
         let first: Bool
         let empty: Bool
     }
-    
-    struct PageInfo: Decodable {
-        let pageNumber: Int
-        let pageSize: Int
-        let sort: SortInfo
-        let offset: Int
-        let unpaged: Bool
-        let paged: Bool
-    }
 }
 
 struct CourseDetailResponseDTO: Decodable {
@@ -79,6 +70,15 @@ struct CourseContentInfo: Decodable {
             return nil
         }
     }
+}
+
+struct PageInfo: Decodable {
+    let pageNumber: Int
+    let pageSize: Int
+    let sort: SortInfo
+    let offset: Int
+    let unpaged: Bool
+    let paged: Bool
 }
 
 struct SortInfo: Decodable {
