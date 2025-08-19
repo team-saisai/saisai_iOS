@@ -76,7 +76,23 @@ final class OAuthAuthenticator: NSObject {
         }
     }
     
+    func requestGoogleRevoke() {
+        if GIDSignIn.sharedInstance.currentUser != nil {
+            GIDSignIn.sharedInstance.disconnect() { error in
+                guard error == nil else {
+                    print("google revoke 실패...")
+                    DispatchQueue.main.async {
+                        ToastManager.shared.toastPublisher.send(.requestFailure)
+                    }
+                    return
+                }
+                print("google revoke 성공")
+            }
+        }
+    }
+    
     private func checkGoogleUserInfo() -> String {
+        
         if GIDSignIn.sharedInstance.currentUser != nil {
             let user = GIDSignIn.sharedInstance.currentUser
             guard let user = user else { return "" }

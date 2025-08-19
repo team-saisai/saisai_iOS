@@ -55,7 +55,8 @@ final class AppConfigureViewModel: ObservableObject {
         case .kakao:
             OAuthAuthenticator.shared.requestKakaoLogin(requestToBackend: requestRemoveAccountToBackend(_:))
         case .google:
-            OAuthAuthenticator.shared.requestGoogleLogin(requestToBackend: requestRemoveAccountToBackend(_:))
+            OAuthAuthenticator.shared.requestGoogleLogin(requestToBackend: revokeGoogleAccount(_:))
+            
         }
     }
     
@@ -69,6 +70,27 @@ final class AppConfigureViewModel: ObservableObject {
                     ),
                     responseDTO: AccountDeleteResponseDTO.self
                 )
+                await deleteTokens()
+                delegate?.logout()
+                await sendToast()
+            } catch {
+                print("회원탈퇴 실패")
+                print(error)
+            }
+        }
+    }
+    
+    func revokeGoogleAccount(_ token: String) {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+//                let _ = try await accountService.request(
+//                    .removeAccount(
+//                        token: token
+//                    ),
+//                    responseDTO: AccountDeleteResponseDTO.self
+//                )
+                OAuthAuthenticator.shared.requestGoogleRevoke()
                 await deleteTokens()
                 delegate?.logout()
                 await sendToast()
