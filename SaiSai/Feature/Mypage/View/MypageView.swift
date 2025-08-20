@@ -12,6 +12,7 @@ struct MypageView: View {
     
     @EnvironmentObject var tabState: TabState
     @StateObject var vm: MypageViewModel
+    @State var isWKRepresented: Bool = false
     
     var body: some View {
         VStack {
@@ -181,13 +182,18 @@ extension MypageView {
                 .padding(.vertical, 23)
             }
             Divider()
-            Link(destination: URL(string: vm.notionURL)!) {
+            Button {
+                self.isWKRepresented.toggle()
+            } label: {
                 HStack {
                     Text("서비스 이용 약관")
                     Spacer()
                     Image(systemName: "chevron.right")
                         .resizable()
                         .frame(width: 6, height: 12)
+                        .sheet(isPresented: $isWKRepresented) {
+                            TermsWebView()
+                        }
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 23)

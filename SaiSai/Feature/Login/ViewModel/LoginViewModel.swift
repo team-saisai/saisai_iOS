@@ -6,18 +6,19 @@
 //
 
 import Foundation
-import Combine
 import KakaoSDKUser
 import KakaoSDKCommon
 import GoogleSignIn
 import GoogleSignInSwift
 import AuthenticationServices
+import Moya
 
 final class LoginViewModel: NSObject, ObservableObject {
     @Published var emailText: String = "email"
     @Published var passwordText: String = "password"
     
     let authService = NetworkService<AuthAPI>()
+    let joinService = NetworkService<JoinAPI>()
     let keychainManager = KeychainManagerImpl()
     
     weak var delegate: LoginViewModelDelegate?
@@ -26,24 +27,57 @@ final class LoginViewModel: NSObject, ObservableObject {
         self.delegate = delegate
     }
     
-    func requestLogin() {
-        Task { [weak self] in
+    func requestAppleLoginInJoin(_ token: String) {
+        _Concurrency.Task { [weak self] in
             guard let self = self else { return }
             do {
-                let response = try await authService.request(
-                    .login(email: emailText, password: passwordText),
-                    responseDTO: LoginResponseDTO.self)
-                
-                let accessToken = response.data.accessToken
-                let refreshToken = response.data.refreshToken
-                saveTokens(accessToken: accessToken, refreshToken: refreshToken)
-                
-                await delegate?.isLoggedIn(true)
-            } catch {
-                // TODO: - Alert logic 추가
-                print("로그인 실패😣")
+                try await requestSocialLoginToBackend(.apple, token)
+            } catch let error as MoyaError {
+                if error.response?.statusCode == 400 {
+                    DispatchQueue.main.async {
+                        ToastManager.shared.toastPublisher.send(.requestFailure)
+                    }
+                }
+                print("로그인 실패")
                 print(error)
             }
+            OAuthTokenStore.shared.initTokens()
+        }
+    }
+    
+    func requestKakaoLoginInJoin(_ token: String) {
+        _Concurrency.Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                try await requestSocialLoginToBackend(.kakao, token)
+            } catch let error as MoyaError {
+                if error.response?.statusCode == 400 {
+                    DispatchQueue.main.async {
+                        ToastManager.shared.toastPublisher.send(.requestFailure)
+                    }
+                }
+                print("로그인 실패")
+                print(error)
+            }
+            OAuthTokenStore.shared.initTokens()
+        }
+    }
+    
+    func requestGoogleLoginInJoin(_ token: String) {
+        _Concurrency.Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                try await requestSocialLoginToBackend(.google, token)
+            } catch let error as MoyaError {
+                if error.response?.statusCode == 400 {
+                    DispatchQueue.main.async {
+                        ToastManager.shared.toastPublisher.send(.requestFailure)
+                    }
+                }
+                print("로그인 실패")
+                print(error)
+            }
+            OAuthTokenStore.shared.initTokens()
         }
     }
     // MARK: - Apple Login
@@ -51,17 +85,12 @@ final class LoginViewModel: NSObject, ObservableObject {
         OAuthAuthenticator.shared.requestAppleLogin(requestToBackend: self.requestAppleLoginToBackend(_:))
     }
     
-    func requestAppleLoginToBackend(_ token: String) {
-        Task { [weak self] in
+    private func requestAppleLoginToBackend(_ token: String) {
+        _Concurrency.Task { [weak self] in
             guard let self = self else { return }
             do {
-                let response = try await authService.request(.appleLogin(token: token), responseDTO: OAuthLoginResponseDTO.self)
-                
-                let accessToken = response.data.accessToken
-                let refreshToken = response.data.refreshToken
-                saveTokens(accessToken: accessToken, refreshToken: refreshToken)
-                
-                await delegate?.isLoggedIn(true)
+                try await requestisSocialJoinToBackend(.apple, token)
+                try await requestSocialLoginToBackend(.apple, token)
             } catch {
                 print("Apple 로그인 실패😣")
                 print(error)
@@ -76,16 +105,11 @@ final class LoginViewModel: NSObject, ObservableObject {
     }
     
     private func requestKakaoLoginToBackend(_ token: String) {
-        Task { [weak self] in
+        _Concurrency.Task { [weak self] in
             guard let self = self else { return }
             do {
-                let response = try await authService.request(.kakaoLogin(token: token), responseDTO: OAuthLoginResponseDTO.self)
-                
-                let accessToken = response.data.accessToken
-                let refreshToken = response.data.refreshToken
-                saveTokens(accessToken: accessToken, refreshToken: refreshToken)
-                
-                await delegate?.isLoggedIn(true)
+                try await requestisSocialJoinToBackend(.kakao, token)
+                try await requestSocialLoginToBackend(.kakao, token)
             } catch {
                 print("Kakao 로그인 실패😣")
                 print(error)
@@ -99,23 +123,72 @@ final class LoginViewModel: NSObject, ObservableObject {
     }
     
     private func requestGoogleLoginToBackend(_ token: String) {
-        Task { [weak self] in
+        _Concurrency.Task { [weak self] in
             guard let self = self else { return }
             do {
-                let response = try await authService.request(
-                    .googleLogin(token: token),
-                    responseDTO: OAuthLoginResponseDTO.self
-                )
-                
-                let accessToken = response.data.accessToken
-                let refreshToken = response.data.refreshToken
-                saveTokens(accessToken: accessToken, refreshToken: refreshToken)
-                
-                await delegate?.isLoggedIn(true)
+                try await requestisSocialJoinToBackend(.google, token)
+                try await requestSocialLoginToBackend(.google, token)
             } catch {
                 print("Google 로그인 실패😣")
                 print(error)
             }
+        }
+    }
+    
+    // MARK: - Util Methods
+    private func requestSocialLoginToBackend(_ provider: AuthProvider, _ token: String) async throws {
+        var authType: AuthAPI {
+            switch provider {
+            case .apple: return .appleLogin(token: token)
+            case .kakao: return .kakaoLogin(token: token)
+            case .google: return .googleLogin(token: token)
+            }
+        }
+        
+        let response = try await authService.request(
+            authType,
+            responseDTO: OAuthLoginResponseDTO.self
+        )
+        
+        let accessToken = response.data.accessToken
+        let refreshToken = response.data.accessToken
+        saveTokens(accessToken: accessToken, refreshToken: refreshToken)
+        
+        await delegate?.isLoggedIn(true)
+    }
+    
+    private func requestisSocialJoinToBackend(_ provider: AuthProvider, _ token: String) async throws {
+        var joinType: JoinAPI {
+            switch provider {
+            case .apple: return .isJoinApple(token: token)
+            case .kakao: return .isJoinKakao(token: token)
+            case .google: return .isJoinGoogle(token: token)
+            }
+        }
+        
+        let response = try await joinService.request(
+            joinType,
+            responseDTO: IsJoinResponseDTO.self
+        )
+        if response.data.isNewUser {
+            
+            switch provider {
+            case .apple:
+                OAuthTokenStore.shared.setAppleToken(token)
+                OAuthTokenStore.shared.completionHandler = requestAppleLoginInJoin(_:)
+            case .kakao:
+                OAuthTokenStore.shared.setKakaoToken(token)
+                OAuthTokenStore.shared.completionHandler = requestKakaoLoginInJoin(_:)
+            case .google:
+                OAuthTokenStore.shared.setGoogleToken(token)
+                OAuthTokenStore.shared.completionHandler = requestGoogleLoginInJoin(_:)
+            }
+            
+            OAuthTokenStore.shared.provider = provider
+            DispatchQueue.main.async {
+                OAuthTokenStore.shared.isJoinPublisher.send()
+            }
+            throw MoyaError.statusCode(Response.init(statusCode: 300, data: Data()))
         }
     }
     
@@ -125,6 +198,29 @@ final class LoginViewModel: NSObject, ObservableObject {
         print("---------4242 Access Token ---------")
         print(accessToken)
     }
+}
+
+extension LoginViewModel {
+    // MARK: - 기존 로그인
+    //    func requestLogin() {
+    //        _Concurrency.Task { [weak self] in
+    //            guard let self = self else { return }
+    //            do {
+    //                let response = try await authService.request(
+    //                    .login(email: emailText, password: passwordText),
+    //                    responseDTO: LoginResponseDTO.self)
+    //
+    //                let accessToken = response.data.accessToken
+    //                let refreshToken = response.data.refreshToken
+    //                saveTokens(accessToken: accessToken, refreshToken: refreshToken)
+    //
+    //                await delegate?.isLoggedIn(true)
+    //            } catch {
+    //                print("로그인 실패😣")
+    //                print(error)
+    //            }
+    //        }
+    //    }
 }
 
 @MainActor

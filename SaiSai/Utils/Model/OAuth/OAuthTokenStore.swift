@@ -13,6 +13,10 @@ struct OAuthTokenStore {
     static var shared: OAuthTokenStore = .init()
     
     let isJoinPublisher: PassthroughSubject<Void, Never> = .init()
+    var provider: AuthProvider = .kakao
+    var completionHandler: ((String) -> ()) = { _ in }
+    
+    private init() { }
     
     var appleToken: String = ""
     var kakaoToken: String = ""

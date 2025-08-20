@@ -21,7 +21,7 @@ extension JoinAPI: TargetType {
         case .isJoinKakao:
             return "/kakao/isJoin"
         case .isJoinGoogle:
-            return "/google/isJoin"
+            return "/google/ios/isJoin"
         case .isJoinApple:
             return "/apple/isJoin"
         }

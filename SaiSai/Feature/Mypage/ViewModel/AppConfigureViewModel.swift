@@ -5,8 +5,8 @@
 //  Created by ch on 8/16/25.
 //
 
-import CoreLocation
 import Foundation
+import Combine
 
 final class AppConfigureViewModel: ObservableObject {
     @Published var isLogoutAlertPresented: Bool = false
@@ -18,6 +18,8 @@ final class AppConfigureViewModel: ObservableObject {
     let accountService: NetworkService<AccountAPI> = .init()
     let keychainManager: KeychainManagerImpl = .init()
     let authProvider: AuthProvider?
+    
+    let logoutPublisher: PassthroughSubject<Void, Never> = .init()
     
     init(
         delegate: AppConfigureViewModelDelegate?,
@@ -37,6 +39,7 @@ final class AppConfigureViewModel: ObservableObject {
                 )
                 await deleteTokens()
                 delegate?.logout()
+                await sendLogoutWithNavigation()
             } catch {
                 print("로그아웃 실패")
                 print(error)
@@ -56,7 +59,6 @@ final class AppConfigureViewModel: ObservableObject {
             OAuthAuthenticator.shared.requestKakaoLogin(requestToBackend: requestRemoveAccountToBackend(_:))
         case .google:
             OAuthAuthenticator.shared.requestGoogleLogin(requestToBackend: revokeGoogleAccount(_:))
-            
         }
     }
     
@@ -72,32 +74,25 @@ final class AppConfigureViewModel: ObservableObject {
                 )
                 await deleteTokens()
                 delegate?.logout()
+                await sendLogoutWithNavigation()
                 await sendToast()
             } catch {
                 print("회원탈퇴 실패")
                 print(error)
             }
+            OAuthTokenStore.shared.initTokens()
         }
     }
     
     func revokeGoogleAccount(_ token: String) {
         Task { [weak self] in
             guard let self = self else { return }
-            do {
-//                let _ = try await accountService.request(
-//                    .removeAccount(
-//                        token: token
-//                    ),
-//                    responseDTO: AccountDeleteResponseDTO.self
-//                )
-                OAuthAuthenticator.shared.requestGoogleRevoke()
-                await deleteTokens()
-                delegate?.logout()
-                await sendToast()
-            } catch {
-                print("회원탈퇴 실패")
-                print(error)
-            }
+            OAuthAuthenticator.shared.requestGoogleRevoke()
+            await deleteTokens()
+            OAuthTokenStore.shared.initTokens()
+            delegate?.logout()
+            await sendLogoutWithNavigation()
+            await sendToast()
         }
     }
 }
@@ -132,6 +127,11 @@ extension AppConfigureViewModel {
     @MainActor
     private func sendToast() {
         ToastManager.shared.toastPublisher.send(.withdrawSuccess)
+    }
+    
+    @MainActor
+    private func sendLogoutWithNavigation() {
+        logoutPublisher.send()
     }
 }
 
