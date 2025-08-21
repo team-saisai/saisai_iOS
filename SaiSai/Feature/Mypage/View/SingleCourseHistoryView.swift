@@ -97,8 +97,6 @@ extension SingleCourseHistoryView {
             }
             
             HStack(spacing: 4) {
-                Text("\(String(format: "%.1f", vm.myRideInfoList[index].distance))km ")
-                Text("·")
                 Text("완주율")
                 Text("\(vm.myRideInfoList[index].progressRate)%")
                     .font(.pretendard(.medium, size: 13))
