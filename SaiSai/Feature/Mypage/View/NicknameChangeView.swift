@@ -12,13 +12,6 @@ struct NicknameChangeView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @StateObject var vm: NicknameChangeViewModel
     
-    var isCompleteButtonOn: Bool {
-        if let isInputNicknameValid = vm.isInputNicknameValid {
-            return (isInputNicknameValid ? true : false)
-        }
-        return false
-    }
-    
     var body: some View {
         VStack(spacing: 0) {
             ZStack {
@@ -29,7 +22,7 @@ struct NicknameChangeView: View {
                         RoundedRectangle(cornerRadius: 6)
                             .stroke(
                                 Color.gray60,
-                                lineWidth: vm.shouldHigihlight ? 1 : 0
+                                lineWidth: vm.isCompleteButtonOn ? 1 : 0
                             )
                     }
                 
@@ -42,64 +35,50 @@ struct NicknameChangeView: View {
                     .textInputAutocapitalization(.never)
                     
                     Spacer()
-                    
-                    Text("\(vm.nickname.count)/10")
-                        .font(.pretendard(size: 13))
-                        .monospaced()
-                        .padding(.horizontal, 12)
-                    
-                    Button {
-                        if vm.shouldHigihlight {
-                            vm.checkIfNicknameExists()
-                        }
-                    } label: {
-                        Text("중복확인")
-                            .font(.pretendard(.medium, size: 12))
-                            .foregroundStyle(vm.shouldHigihlight ? .customLime : .gray70)
-                            .padding(.vertical, 6)
-                            .padding(.horizontal, 10)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 4)
-                                    .stroke(
-                                        vm.shouldHigihlight ? Color.customLime : Color.gray70,
-                                        lineWidth: 1
-                                    )
-                            }
-                    }
                 }
                 .foregroundStyle(.white)
                 .padding(.vertical, 14)
                 .padding(.horizontal, 16)
             }
+            .padding(.bottom, 10)
             
-            if vm.isSubtextVisible {
-                if let isValid = vm.isInputNicknameValid {
-                    HStack(spacing: 4) {
-                        Image(
-                            systemName: isValid ?
-                              "checkmark.circle" : "exclamationmark.circle"
-                        )
-                        .resizable()
-                        .frame(width: 14, height: 14)
-                        
-                        Text(isValid ?
-                             "사용 가능한 닉네임입니다." : "사용 중인 닉네임입니다."
-                        )
-                        .font(.pretendard(size: 12))
-                        .padding(.vertical, 8)
-                        
-                        Spacer()
-                    }
-                    .foregroundStyle(isValid ? .blue : .red)
-                }
+            HStack(spacing: 4) {
+                Image(
+                    systemName: vm.isNicknameCharactersValid ?
+                    "checkmark.circle" : "exclamationmark.circle"
+                )
+                .resizable()
+                .frame(width: 14, height: 14)
+                
+                Text("영문/한글/숫자가능(공백불가)")
+                    .font(.pretendard(size: 12))
+                
+                Spacer()
             }
+            .padding(.vertical, 4)
+            .foregroundStyle(vm.isNicknameCharactersValid ? .blue : .red)
+            
+            HStack(spacing: 4) {
+                Image(
+                    systemName: vm.isNicknameLengthValid ?
+                    "checkmark.circle" : "exclamationmark.circle"
+                )
+                .resizable()
+                .frame(width: 14, height: 14)
+                
+                Text("1자 이상 7자 이하 입력"
+                )
+                .font(.pretendard(size: 12))
+                
+                Spacer()
+            }
+            .padding(.vertical, 4)
+            .foregroundStyle(vm.isNicknameLengthValid ? .blue : .red)
             
             Spacer()
             
             Button {
-                if let isValid = vm.isInputNicknameValid, isValid {
-                    vm.changeNickname()
-                }
+                vm.changeNickname()
             } label: {
                 Text("완료")
                     .font(.pretendard(.semibold, size: 16))
@@ -107,7 +86,7 @@ struct NicknameChangeView: View {
                     .frame(maxWidth: .infinity)
                     .background(RoundedRectangle(cornerRadius: 8)
                         .fill(
-                            isCompleteButtonOn ?
+                            vm.isCompleteButtonOn ?
                                 .customLime : .gray80))
                     .foregroundStyle(.gray90)
             }
@@ -118,7 +97,6 @@ struct NicknameChangeView: View {
                 newValue: newValue
             )
         })
-        .ignoresSafeArea(.all)
         .padding(.horizontal, 24)
         .padding(.vertical, 25)
         .background(.gray90)
@@ -140,7 +118,7 @@ struct NicknameChangeView: View {
                 }
             }
         }
-        .onReceive(vm.NicknameChangeSuccessPublisher) { _ in
+        .onReceive(vm.nicknameChangeSuccessPublisher) { _ in
             self.presentationMode.wrappedValue.dismiss()
         }
     }
