@@ -40,18 +40,20 @@ final class OAuthAuthenticator: NSObject {
     
     func requestKakaoLogin(requestToBackend: @escaping (String) -> ()) {
         if UserApi.isKakaoTalkLoginAvailable() {
-            UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
+            UserApi.shared.loginWithKakaoTalk { [weak self] (oauthToken, error) in
                 if let error = error {
                     print(error)
+                    self?.sendToast()
                 } else {
                     let token = oauthToken?.accessToken as? String ?? ""
                     requestToBackend(token)
                 }
             }
         } else {
-            UserApi.shared.loginWithKakaoAccount { (oauthToken, error) in
+            UserApi.shared.loginWithKakaoAccount { [weak self] (oauthToken, error) in
                 if let error = error {
                     print(error)
+                    self?.sendToast()
                 } else {
                     let token = oauthToken?.accessToken as? String ?? ""
                     requestToBackend(token)
@@ -68,6 +70,7 @@ final class OAuthAuthenticator: NSObject {
             
             if let error = error {
                 print(error)
+                self.sendToast()
             }
             
             let token = checkGoogleUserInfo()
@@ -78,12 +81,10 @@ final class OAuthAuthenticator: NSObject {
     
     func requestGoogleRevoke() {
         if GIDSignIn.sharedInstance.currentUser != nil {
-            GIDSignIn.sharedInstance.disconnect() { error in
+            GIDSignIn.sharedInstance.disconnect() { [weak self] error in
                 guard error == nil else {
                     print("google revoke 실패...")
-                    DispatchQueue.main.async {
-                        ToastManager.shared.toastPublisher.send(.requestFailure)
-                    }
+                    self?.sendToast()
                     return
                 }
                 print("google revoke 성공")
@@ -134,6 +135,13 @@ extension OAuthAuthenticator: ASAuthorizationControllerPresentationContextProvid
             }
         default:
             break
+        }
+    }
+    
+    private func sendToast() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            ToastManager.shared.toastPublisher.send(.requestFailure)
         }
     }
 }
