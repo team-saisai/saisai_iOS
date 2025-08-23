@@ -11,7 +11,7 @@ struct RidingStatusBottomItem: View {
     
     @ObservedObject var vm: CourseDetailViewModel
     private let buttonImage: [some View]  = [
-        Image(systemName: "pause")
+        Image(systemName: "pause.fill")
             .frame(width: 12.5, height: 14.1)
         ,
         Image(systemName: "play.fill")
@@ -19,24 +19,35 @@ struct RidingStatusBottomItem: View {
     ]
     
     var body: some View {
-        HStack {
+        HStack(spacing: 24) {
             VStack(alignment: .leading, spacing: 0) {
                 VStack(alignment: .leading, spacing: 0) {
                     if vm.isPaused {
-                        HStack(spacing: 4) {
-                            Image(systemName: "pause")
-                                .resizable()
-                                .frame(width: 6.5, height: 9.8)
+                        HStack {
+                            HStack(spacing: 8) {
+                                Image(systemName: "pause.fill")
+                                    .resizable()
+                                    .frame(width: 6.5, height: 9.8)
+                                
+                                Text("일시정지 중")
+                                    .font(.pretendard(size: 12))
+                                
+                            }
+                            .foregroundStyle(.titleChipRed)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(RoundedRectangle(cornerRadius: 50).fill(.pauseBgRed))
                             
-                            Text("일시정지 중")
-                                .font(.pretendard(size: 12))
+                            Spacer()
                         }
-                        .foregroundStyle(.titleChipRed)
-                        .background(RoundedRectangle(cornerRadius: 50).fill(.pauseBgRed))
+                        .padding(.bottom, 20)
                     } else {
-                        Text("체크포인트 달성률")
-                            .font(.pretendard(.medium, size: 10))
-                            .foregroundStyle(.gray40)
+                        HStack {
+                            Text("체크포인트 달성률")
+                                .font(.pretendard(.medium, size: 10))
+                                .foregroundStyle(.gray40)
+                            Spacer()
+                        }
                         
                         HStack(spacing: 5) {
                             Text("\(Int(vm.numOfPassedCheckpoints / vm.numOfTotalCheckpoints * 100))%")
@@ -46,19 +57,23 @@ struct RidingStatusBottomItem: View {
                             Text("\(vm.numOfPassedCheckpoints)/\(vm.numOfTotalCheckpoints) points")
                                 .font(.pretendard(size: 12))
                                 .foregroundStyle(.white)
+                            
+                            Spacer()
                         }
+                        .padding(.bottom, 11)
                     }
                 }
-                .padding(.bottom, 11)
+
+                CheckpointStatusBar()
             }
-            
+            .frame(maxWidth: .infinity)
             
             
             Button {
                 vm.requestToggleIsPaused()
             } label: {
                 VStack(spacing: 6.6) {
-                    buttonImage[vm.isPaused ? 0 : 1]
+                    buttonImage[vm.isPaused ? 1 : 0]
                     
                     Text(vm.isPaused ? "이어하기" : "일시정지")
                         .font(.pretendard(.semibold, size: 12))
@@ -71,6 +86,7 @@ struct RidingStatusBottomItem: View {
         }
         .padding(.vertical, 18)
         .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity)
         .background(RoundedRectangle(cornerRadius: 16).fill(.courseDetailBg))
         .overlay {
             RoundedRectangle(cornerRadius: 16)
@@ -81,7 +97,28 @@ struct RidingStatusBottomItem: View {
 
 extension RidingStatusBottomItem {
     @ViewBuilder
-    private func RidingStatusBar() -> some View {
-        
+    private func CheckpointStatusBar() -> some View {
+        VStack(spacing: 4) {
+            ProgressView(value: Double(vm.numOfPassedCheckpoints / vm.numOfTotalCheckpoints))
+                .tint(.customLime)
+                .overlay {
+                    HStack {
+                        Circle().fill(.customLime)
+                            .frame(width: 13, height: 13)
+                        
+                        Spacer()
+                        
+                        Circle().fill(.customLime)
+                            .frame(width: 13, height: 13)
+                    }
+                }
+            HStack {
+                Text("GO")
+                Spacer()
+                Text("FIN")
+            }
+            .font(.pretendard(.medium, size: 10))
+            .foregroundStyle(.white)
+        }
     }
 }

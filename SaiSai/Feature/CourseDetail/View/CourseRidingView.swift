@@ -35,6 +35,22 @@ struct CourseRidingView: View {
                         CustomUserAnnotationView(heading: heading)
                     }
                 }
+                
+                if !vm.checkpointList.isEmpty {
+                    ForEach(vm.checkpointList.indices, id: \.self) {
+                        Annotation(
+                            "",
+                            coordinate: CLLocationCoordinate2D(
+                                latitude: vm.checkpointList[$0].latitude,
+                                longitude: vm.checkpointList[$0].longitude
+                            )
+                        ) {
+                            Circle()
+                                .fill(Color.customLime)
+                                .frame(width: 14, height: 14)
+                        }
+                    }
+                }
             }
         }
         .ignoresSafeArea(.all)

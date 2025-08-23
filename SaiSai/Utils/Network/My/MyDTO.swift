@@ -176,7 +176,7 @@ struct MyRidesInfo: Decodable {
     let level: Int
     let lastRideDate: String
     let distance: Double
-    let estimatedTime: Int
+    let durationSecond: Int
     let progressRate: Int
     let imageUrl: String?
     let isCompleted: Bool

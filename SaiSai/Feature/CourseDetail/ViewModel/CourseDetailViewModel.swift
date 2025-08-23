@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreLocation
+import Combine
 
 final class CourseDetailViewModel: NSObject, ObservableObject {
     
@@ -25,6 +26,11 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     @Published var hasUncompletedRide: Bool = false
     @Published var isCompleted: Bool = false
     @Published var isPaused: Bool = true
+    @Published var isRidingCourseSummaryFolded: Bool = true
+    @Published var isCancelAlertPresented: Bool = false
+    
+    let cancelAlertButtonTappedPublisher: PassthroughSubject<Bool, Never> = .init()
+    
     let locationManager: CLLocationManager = {
         let locationManager = CLLocationManager()
         locationManager.startUpdatingHeading()
@@ -34,7 +40,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     private weak var timer: Timer? = nil
     private var baseSeconds: Int = 0
     var numOfTotalCheckpoints: Int {
-        checkpointList.count
+        checkpointList.count + 2
     }
     var numOfPassedCheckpoints: Int {
         lastCheckedPointIdx + 1
@@ -54,7 +60,6 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     
     // MARK: - Deinit
     deinit {
-        exitTimer()
         print("DEINIT: CourseDetailViewModel")
     }
     
@@ -67,6 +72,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     .getCourseDetail(courseId: courseId),
                     responseDTO: CourseDetailResponseDTO.self)
                 await setCourseDetail(response.data)
+                await setCheckPointList(response.data.checkpoint)
                 await setRideId(response.data.rideId)
                 if let _ = response.data.rideId {
                     requestResumeRiding()
@@ -82,12 +88,16 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let response = try await ridesService.request(.startRides(courseId: courseId), responseDTO: StartRidesResponseDTO.self)
-                startTimer()
-                await setRideId(response.data.rideId)
-                print(response.data.rideId)
-                await setIsRideCompleted(false)
-                await setTotalDistance(response.data.distance)
+                if isOnStartingPoint() {
+                    let response = try await ridesService.request(.startRides(courseId: courseId), responseDTO: StartRidesResponseDTO.self)
+                    startTimer()
+                    await setRideId(response.data.rideId)
+                    print(response.data.rideId)
+                    await setIsRideCompleted(false)
+                    await setTotalDistance(response.data.distance)
+                } else {
+                    await sendDistanceToFarToast()
+                }
             } catch {
                 print(error)
                 print("라이딩 시작 실패")
@@ -115,7 +125,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         }
     }
     
-    func requestResumeRiding() {
+    private func requestResumeRiding() {
         Task { [weak self] in
             guard let self = self else { return }
             do {
@@ -134,7 +144,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         }
     }
     
-    func requestCompleteRiding() {
+    private func requestCompleteRiding() {
         Task { [weak self] in
             guard let self = self else { return }
             do {
@@ -146,9 +156,32 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     ),
                     responseDTO: CompleteRidesResponseDTO.self
                 )
+                await setIsRideCompleted(true)
+                // complete modal on
             } catch {
                 print(error)
                 print("라이딩 종료 실패")
+            }
+        }
+    }
+    
+    private func requestSyncCheckpoint() {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                guard let rideId = rideId else { return }
+                let _ = try await ridesService.request(
+                    .syncRide(
+                        rideId: rideId,
+                        duration: spentSeconds,
+                        checkpointIdx: lastCheckedPointIdx
+                    ),
+                    responseDTO: SyncRideResponseDTO.self
+                )
+                await setLastCheckpointIdx(lastCheckedPointIdx + 1)
+            } catch {
+                print(error)
+                print("체크포인트 sync 실패")
             }
         }
     }
@@ -159,6 +192,26 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
             isPaused ? requestResumeRiding() : requestPauseRiding()
         }
     }
+    
+    private func isOnLocation(_ location1: CLLocation, _ location2: CLLocation) -> Bool {
+        let distance = location1.distance(from: location2)
+        return distance <= 50
+    }
+    
+    private func isOnStartingPoint() -> Bool {
+        let userLocation = CLLocation(
+            latitude: userLatitude,
+            longitude: userLongitude
+        )
+        if let locations = courseDetail?.locations, !locations.isEmpty {
+            let startingPointLocation = CLLocation(
+                latitude: locations[0].latitude,
+                longitude: locations[1].longitude
+            )
+            return isOnLocation(startingPointLocation, userLocation)
+        }
+        return false
+    }
 }
 
 extension CourseDetailViewModel: CLLocationManagerDelegate {
@@ -166,10 +219,29 @@ extension CourseDetailViewModel: CLLocationManagerDelegate {
     {
         Task { [weak self] in
             guard let self = self else { return }
-            guard let location = locations.last else { return }
-            print("latitude: \(location.coordinate.latitude)")
-            print("longitude: \(location.coordinate.longitude)")
-            await setUserLocation(location.coordinate.latitude, location.coordinate.longitude)
+            guard let userLocation = locations.last else { return }
+            print("latitude: \(userLocation.coordinate.latitude)")
+            print("longitude: \(userLocation.coordinate.longitude)")
+            await setUserLocation(userLocation.coordinate.latitude, userLocation.coordinate.longitude)
+            if lastCheckedPointIdx < checkpointList.count && !checkpointList.isEmpty {
+                let checkpointLocation = CLLocation(
+                    latitude: checkpointList[lastCheckedPointIdx].latitude,
+                    longitude: checkpointList[lastCheckedPointIdx].longitude
+                )
+                if isOnLocation(checkpointLocation, userLocation) {
+                    requestSyncCheckpoint()
+                }
+            } else {
+                if let destination = courseDetail?.locations.last {
+                    let destLocation = CLLocation(
+                        latitude: destination.latitude,
+                        longitude: destination.longitude
+                    )
+                    if isOnLocation(destLocation, userLocation) {
+                        requestCompleteRiding()
+                    }
+                }
+            }
         }
     }
     
@@ -208,7 +280,8 @@ extension CourseDetailViewModel {
         timer?.invalidate()
         timer = nil
         DispatchQueue.main.async { [weak self] in
-            self?.isPaused = true
+            guard let self = self else { return }
+            self.isPaused = true
         }
         print("EXIT TIMER")
     }
@@ -230,7 +303,6 @@ extension CourseDetailViewModel {
     @MainActor
     func setRideId(_ rideId: Int?) {
         self.rideId = rideId
-        print("Ride Id DEBUG: \(rideId)")
         if rideId == nil {
             hasUncompletedRide = false
         }
@@ -271,5 +343,21 @@ extension CourseDetailViewModel {
     @MainActor
     func setIsRideCompleted(_ isRideCompleted: Bool) {
         self.hasUncompletedRide = isRideCompleted
+        self.isCompleted = true
+    }
+    
+    @MainActor
+    func toggleIsRidingCourseSummaryFolded() {
+        self.isRidingCourseSummaryFolded.toggle()
+    }
+    
+    @MainActor
+    func setIsCancelAlertPresented(_ isCancelAlertPresented: Bool) {
+        self.isCancelAlertPresented = isCancelAlertPresented
+    }
+    
+    @MainActor
+    func sendDistanceToFarToast() {
+        ToastManager.shared.toastPublisher.send(.distanceToFar)
     }
 }
