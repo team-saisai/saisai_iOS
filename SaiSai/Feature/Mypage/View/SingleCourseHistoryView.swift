@@ -105,6 +105,7 @@ extension SingleCourseHistoryView {
             }
             .font(.pretendard(size: 13))
             .foregroundStyle(.white)
+            .padding(.top, 3)
         }
     }
 }

@@ -9,22 +9,25 @@ import Foundation
 import Moya
 
 enum RidesAPI {
+    case syncRide(rideId: Int, duration: Int, checkpointIdx: Int)
     case startRides(courseId: Int)
-    case pauseRides(rideId: Int, duration: Int, totalDistance: Double)
+    case pauseRides(rideId: Int, duration: Int, checkpointIdx: Int)
     case resumeRides(rideId: Int)
-    case completeRides(rideId: Int, duration: Int, actualDistance: Double)
+    case completeRides(rideId: Int, duration: Int)
 }
 
 extension RidesAPI: TargetType {
     var path: String {
         switch self {
+        case .syncRide(let rideId, _, _):
+            "/rides/\(rideId)/sync"
         case .startRides(let courseId):
             "/courses/\(courseId)/rides"
         case .pauseRides(let rideId, _, _):
             "/rides/\(rideId)/pause"
         case .resumeRides(let rideId):
             "/rides/\(rideId)/resume"
-        case .completeRides(let rideId, _, _):
+        case .completeRides(let rideId, _):
             "/rides/\(rideId)/complete"
         }
     }
@@ -32,7 +35,7 @@ extension RidesAPI: TargetType {
     var method: Moya.Method {
         switch self {
         case .startRides: .post
-        case .pauseRides, .resumeRides, .completeRides: .patch
+        case .syncRide, .pauseRides, .resumeRides, .completeRides: .patch
         }
     }
     
@@ -59,10 +62,12 @@ extension RidesAPI {
         switch self {
         case .startRides, .resumeRides:
             return .requestPlain
-        case .pauseRides(_, let duration, let totalDistance):
-            return .requestJSONEncodable(PauseRidesRequestDTO(duration: duration, totalDistance: totalDistance))
-        case .completeRides(_, let duration, let actualDistance):
-            return .requestJSONEncodable(CompleteRidesRequestDTO(duration: duration, actualDistance: actualDistance))
+        case .syncRide(_, let duration, let checkpointIdx):
+            return .requestJSONEncodable(SyncRideRequestDTO(duration: duration, checkpointIdx: checkpointIdx))
+        case .pauseRides(_, let duration, let checkpointIdx):
+            return .requestJSONEncodable(PauseRidesRequestDTO(duration: duration, checkpointIdx: checkpointIdx))
+        case .completeRides(_, let duration):
+            return .requestJSONEncodable(CompleteRidesRequestDTO(duration: duration))
         }
     }
 }

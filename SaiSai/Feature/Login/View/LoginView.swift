@@ -55,7 +55,7 @@ struct LoginView: View {
                 } label: {
                     Image(.icAppleLogo)
                         .resizable()
-                        .frame(width: 48, height: 48)
+                        .frame(width: 44, height: 44)
                 }
                 
                 Button {
@@ -63,7 +63,7 @@ struct LoginView: View {
                 } label: {
                     Image(.icGoogleLogo)
                         .resizable()
-                        .frame(width: 48, height: 48)
+                        .frame(width: 44, height: 44)
                 }
                 
                 Button {
@@ -71,7 +71,7 @@ struct LoginView: View {
                 } label: {
                     Image(.icKakaoLogo)
                         .resizable()
-                        .frame(width: 48, height: 48)
+                        .frame(width: 44, height: 44)
                 }
             }
             

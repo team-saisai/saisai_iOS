@@ -19,16 +19,12 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     @Published var spentSeconds: Int = 0
     @Published var rideId: Int? = nil
     @Published var totalDistance: Double = 0.0
-    @Published var currentDistance: Double = 0.0
     @Published var heading: CLLocationDirection? = nil
+    @Published var checkpointList: [CheckPointInfo] = []
+    @Published var lastCheckedPointIdx: Int = -1
     @Published var hasUncompletedRide: Bool = false
     @Published var isCompleted: Bool = false
-    var progressPercentage: Double {
-        if totalDistance <= 0 {
-            return 0
-        }
-        return currentDistance / totalDistance
-    }
+    @Published var isPaused: Bool = true
     let locationManager: CLLocationManager = {
         let locationManager = CLLocationManager()
         locationManager.startUpdatingHeading()
@@ -37,6 +33,12 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     private var startTime: Date? = nil
     private weak var timer: Timer? = nil
     private var baseSeconds: Int = 0
+    var numOfTotalCheckpoints: Int {
+        checkpointList.count
+    }
+    var numOfPassedCheckpoints: Int {
+        lastCheckedPointIdx + 1
+    }
     
     let courseService = NetworkService<CourseAPI>()
     let ridesService = NetworkService<RidesAPI>()
@@ -102,7 +104,8 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     .pauseRides(
                         rideId: rideId,
                         duration: spentSeconds,
-                        totalDistance: currentDistance),
+                        checkpointIdx: lastCheckedPointIdx
+                    ),
                     responseDTO: PauseRidesResponseDTO.self)
                 exitTimer()
             } catch {
@@ -122,7 +125,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     .resumeRides(rideId: rideId),
                     responseDTO: ResumeRidesResponseDTO.self)
                 baseSeconds = response.data.durationSecond
-                await setCurrentDistance(response.data.actualDistance)
+                await setLastCheckpointIdx(response.data.checkpointIdx)
                 startTimer()
             } catch {
                 print(error)
@@ -137,14 +140,23 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
             do {
                 guard let rideId = rideId else { return }
                 let _ = try await ridesService.request(
-                    .completeRides(rideId: rideId,
-                                   duration: spentSeconds,
-                                   actualDistance: currentDistance),
-                    responseDTO: CompleteRidesResponseDTO.self)
+                    .completeRides(
+                        rideId: rideId,
+                        duration: spentSeconds
+                    ),
+                    responseDTO: CompleteRidesResponseDTO.self
+                )
             } catch {
                 print(error)
                 print("라이딩 종료 실패")
             }
+        }
+    }
+    
+    func requestToggleIsPaused() {
+        Task { [weak self] in
+            guard let self = self else { return }
+            isPaused ? requestResumeRiding() : requestPauseRiding()
         }
     }
 }
@@ -173,6 +185,7 @@ extension CourseDetailViewModel {
     func startTimer() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            self.isPaused = false
             startTime = Date()
             timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerPerSecond), userInfo: nil, repeats: true)
             if let timer = timer {
@@ -194,6 +207,9 @@ extension CourseDetailViewModel {
     func exitTimer() {
         timer?.invalidate()
         timer = nil
+        DispatchQueue.main.async { [weak self] in
+            self?.isPaused = true
+        }
         print("EXIT TIMER")
     }
 }
@@ -238,13 +254,18 @@ extension CourseDetailViewModel {
     }
     
     @MainActor
-    func setTotalDistance(_ totalDistance: Double) {
-        self.totalDistance = totalDistance
+    func setCheckPointList(_ checkpointList: [CheckPointInfo]) {
+        self.checkpointList = checkpointList
     }
     
     @MainActor
-    func setCurrentDistance(_ currentDistance: Double) {
-        self.currentDistance = currentDistance
+    func setLastCheckpointIdx(_ checkpointIdx: Int) {
+        self.lastCheckedPointIdx = checkpointIdx
+    }
+    
+    @MainActor
+    func setTotalDistance(_ totalDistance: Double) {
+        self.totalDistance = totalDistance
     }
     
     @MainActor
