@@ -151,7 +151,7 @@ final class LoginViewModel: NSObject, ObservableObject {
         )
         
         let accessToken = response.data.accessToken
-        let refreshToken = response.data.accessToken
+        let refreshToken = response.data.refreshToken
         saveTokens(accessToken: accessToken, refreshToken: refreshToken)
         
         await delegate?.isLoggedIn(true)
