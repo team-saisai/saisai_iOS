@@ -29,6 +29,8 @@ struct SingleHorizontalCourseView: View {
                         HStack {
                             Text("\(vm.contentInfoList[index].courseName)")
                                 .font(.pretendard(.medium, size: 16))
+                                .lineLimit(1)
+                                .multilineTextAlignment(.leading)
                             Spacer()
                             Button {
                                 vm.requestBookmark(
