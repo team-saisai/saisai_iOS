@@ -104,7 +104,7 @@ struct CourseDetailInfo: Decodable {
     let challengeEndedAt: String?
     let isEventActive: Bool?
     let gpxPoints: [GpxPointInfo]
-    let checkPoints: [CheckPointInfo]
+    let checkpoint: [CheckPointInfo]
     
     var estimatedHour: Int {
         let totalTime = Int(estimatedTime)

@@ -214,6 +214,7 @@ extension CourseDetailViewModel {
     @MainActor
     func setRideId(_ rideId: Int?) {
         self.rideId = rideId
+        print("Ride Id DEBUG: \(rideId)")
         if rideId == nil {
             hasUncompletedRide = false
         }
