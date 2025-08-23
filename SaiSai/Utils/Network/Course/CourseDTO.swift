@@ -99,11 +99,12 @@ struct CourseDetailInfo: Decodable {
     let challengerCount: Int
     let finisherCount: Int
     let isCompleted: Bool
-    let rideId: Int?
+    let rideId: Int? // null이면 CourseDetail, 있으면 CourseRiding
     let challengeStatus: String?
     let challengeEndedAt: String?
     let isEventActive: Bool?
     let gpxPoints: [GpxPointInfo]
+    let checkPoints: [CheckPointInfo]
     
     var estimatedHour: Int {
         let totalTime = Int(estimatedTime)
@@ -140,4 +141,9 @@ struct GpxPointInfo: Decodable {
     let elevation: Double?
     let segmentDistance: Double
     let totalDistance: Double
+}
+
+struct CheckPointInfo: Decodable {
+    let latitude: Double
+    let longitude: Double
 }
