@@ -14,6 +14,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     
     // MARK: - Properties
     let courseId: Int
+    let isByContinueButton: Bool
     @Published var courseDetail: CourseDetailInfo? = nil
     @Published var isSummaryViewFolded: Bool = true
     @Published var userLatitude: Double = 0
@@ -60,8 +61,12 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     
     
     // MARK: - Init
-    init(courseId: Int) {
+    init(
+        courseId: Int,
+        isByContinueButton: Bool = false
+    ) {
         self.courseId = courseId
+        self.isByContinueButton = isByContinueButton
         super.init()
         self.locationManager.delegate = self
 //        self.locationManager.startUpdatingLocation()
@@ -85,6 +90,9 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                 await setRideId(response.data.rideId)
                 if let _ = response.data.rideId {
                     requestResumeRiding()
+                    if !isByContinueButton {
+                        requestPauseRiding()
+                    }
                 }
             } catch let error as MoyaError {
                 print(error)
