@@ -13,24 +13,29 @@ struct EmptyCourseListView: View {
     let messageText: String
     let moveToCourseButtonTappedPublisher: PassthroughSubject<Void, Never>
     let buttonVisibility: Bool
+    let bikeVisibility: Bool
     
     init(
         messageText: String,
         moveToCourseButtonTappedPublisher: PassthroughSubject<Void, Never> = .init(),
-        buttonVisibility: Bool = true
+        buttonVisibility: Bool = true,
+        bikeVisibility: Bool = false
     ) {
         self.messageText = messageText
         self.moveToCourseButtonTappedPublisher = moveToCourseButtonTappedPublisher
         self.buttonVisibility = buttonVisibility
+        self.bikeVisibility = bikeVisibility
     }
     
     var body: some View {
         VStack(spacing: 24) {
             Spacer()
             
-            Image(.icBigBike)
-                .resizable()
-                .frame(width: 201, height: 132)
+            if bikeVisibility {
+                Image(.icBigBike)
+                    .resizable()
+                    .frame(width: 201, height: 132)
+            }
             
             VStack(spacing: 2) {
                 Text(messageText)

@@ -212,7 +212,6 @@ struct HistoryView: View {
             }
         })
         .onReceive(moveToCourseButtonTappedPublisher, perform: {
-            self.presentationMode.wrappedValue.dismiss()
             tabState.selectedTab = 1
         })
         .onReceive(vm.optionPublisher) { option in

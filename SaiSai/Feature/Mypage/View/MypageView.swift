@@ -139,6 +139,7 @@ extension MypageView {
                             .environmentObject(tabState)
                     case 2:
                         MyRewardsView()
+                            .environmentObject(tabState)
                     case 3:
                         MyBadgesView()
                     default:
