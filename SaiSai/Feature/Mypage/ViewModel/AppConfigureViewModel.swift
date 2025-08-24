@@ -58,7 +58,9 @@ final class AppConfigureViewModel: ObservableObject {
         case .kakao:
             OAuthAuthenticator.shared.requestKakaoLogin(requestToBackend: requestRemoveAccountToBackend(_:))
         case .google:
-            OAuthAuthenticator.shared.requestGoogleLogin(requestToBackend: revokeGoogleAccount(_:))
+            OAuthAuthenticator.shared.requestGoogleLogin(requestToBackend: requestRemoveAccountToBackend(_:),
+                                                               isDelete: true
+            )
         }
     }
     
@@ -81,18 +83,6 @@ final class AppConfigureViewModel: ObservableObject {
                 print(error)
             }
             OAuthTokenStore.shared.initTokens()
-        }
-    }
-    
-    func revokeGoogleAccount(_ token: String) {
-        Task { [weak self] in
-            guard let self = self else { return }
-            OAuthAuthenticator.shared.requestGoogleRevoke()
-            await deleteTokens()
-            OAuthTokenStore.shared.initTokens()
-            delegate?.logout()
-            await sendLogoutWithNavigation()
-            await sendToast()
         }
     }
 }
