@@ -14,6 +14,7 @@ enum ToastType {
     case networkNotdetected
     case success(prefix: String)
     case distanceToFar
+    case anotherRidingExists
     
     var toastText: String {
         switch self {
@@ -27,19 +28,21 @@ enum ToastType {
             "\(prefix) 성공"
         case .distanceToFar:
             "출발점으로 이동 후 시작해주세요."
+        case .anotherRidingExists:
+            "라이딩 중인 코스가 존재합니다."
         }
     }
     
     var imageText: String {
         switch self {
-        case .requestFailure, .networkNotdetected, .distanceToFar: "exclamationmark.triangle.fill"
+        case .requestFailure, .networkNotdetected, .distanceToFar, .anotherRidingExists: "exclamationmark.triangle.fill"
         case .withdrawSuccess, .success: "checkmark.circle.fill"
         }
     }
     
     var imageColor: Color {
         switch self {
-        case .requestFailure, .networkNotdetected, .distanceToFar: .red
+        case .requestFailure, .networkNotdetected, .distanceToFar, .anotherRidingExists: .red
         case .withdrawSuccess, .success: .customLime
         }
     }

@@ -138,6 +138,9 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                 if error.response?.statusCode ?? 0 / 100 == 5 {
                     await sendToast(.requestFailure)
                 }
+                if error.response?.statusCode == 409 {
+                    await sendToast(.anotherRidingExists)
+                }
                 print("라이딩 중지 실패")
             }
         }
@@ -159,6 +162,9 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                 print(error)
                 if error.response?.statusCode ?? 0 / 100 == 5 {
                     await sendToast(.requestFailure)
+                }
+                if error.response?.statusCode == 409 {
+                    await sendToast(.anotherRidingExists)
                 }
                 print("라이딩 재개 실패")
             }
