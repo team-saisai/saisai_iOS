@@ -10,6 +10,7 @@ import SwiftUI
 struct PopularChallengesView: View {
     
     @ObservedObject var vm: HomeViewModel
+    @EnvironmentObject var tabState: TabState
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -26,6 +27,7 @@ struct PopularChallengesView: View {
                     ForEach(vm.popularChallenges.indices, id: \.self) { idx in
                         NavigationLink {
                             CourseDetailView(vm: CourseDetailViewModel(courseId: vm.popularChallenges[idx].courseId))
+                                .environmentObject(tabState)
                         } label: {
                             SingleVerticalCourseView(index: idx, vm: vm)
                         }

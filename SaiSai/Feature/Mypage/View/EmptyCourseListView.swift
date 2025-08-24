@@ -19,7 +19,7 @@ struct EmptyCourseListView: View {
         messageText: String,
         moveToCourseButtonTappedPublisher: PassthroughSubject<Void, Never> = .init(),
         buttonVisibility: Bool = true,
-        bikeVisibility: Bool = false
+        bikeVisibility: Bool = true
     ) {
         self.messageText = messageText
         self.moveToCourseButtonTappedPublisher = moveToCourseButtonTappedPublisher

@@ -48,7 +48,8 @@ struct MyRewardsView: View {
             } else {
                 EmptyCourseListView(
                     messageText: "얻은 리워드 포인트가 없습니다.",
-                    moveToCourseButtonTappedPublisher: moveToCourseButtonTappedPublisher
+                    moveToCourseButtonTappedPublisher: moveToCourseButtonTappedPublisher,
+                    bikeVisibility: false
                 )
             }
         }

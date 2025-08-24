@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct CourseDetailView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @EnvironmentObject var tabState: TabState
     @StateObject var vm: CourseDetailViewModel
     
     var body: some View {
@@ -50,25 +52,47 @@ struct CourseDetailView: View {
             .padding(.horizontal, 18)
             .padding(.bottom, 42)
             
+            
+            
+            if vm.isAlertPresented {
+                Color.black.opacity(0.001)
+            }
+            
+            if vm.isUserLocationAllowAlertPresented {
+                CustomTwoButtonAlert(buttonTitleText: "위치 권한이 필요합니다. 설정에서 변경해주세요.",
+                                     buttonText: "설정으로 이동",
+                                     isAction: true,
+                                     buttonTappedPublisher: vm.userLocationAlertButtonTappedPublisher
+                )
+            }
+            
             if vm.isCancelAlertPresented {
-                ZStack {
-                    Color.black.opacity(0.001)
-                    
-                    CustomTwoButtonAlert(
-                        buttonTitleText: "코스를 중단하고 나가시겠습니까?",
-                        buttonMessageText: "코스는 홈에서 이어서 도전할 수 있습니다.",
-                        buttonText: "나가기",
-                        isAction: true,
-                        buttonTappedPublisher: vm.cancelAlertButtonTappedPublisher)
+                CustomTwoButtonAlert(
+                    buttonTitleText: "코스를 중단하고 나가시겠습니까?",
+                    buttonMessageText: "코스는 홈에서 이어서 도전할 수 있습니다.",
+                    buttonText: "나가기",
+                    isAction: true,
+                    buttonTappedPublisher: vm.cancelAlertButtonTappedPublisher)
+            }
+            
+            if vm.isToastPresented {
+                VStack {
+                    ToastView()
+                    Spacer()
                 }
-                .ignoresSafeArea(.all)
+                .padding(.horizontal, 20)
             }
         }
         .onAppear {
+            vm.isUserLocationAvailable()
             vm.fetchData()
         }
         .onDisappear() {
             vm.exitTimer()
+        }
+        .navigationDestination(isPresented: $vm.isCompleted) {
+            CourseCompleteView(vm: vm)
+                .environmentObject(tabState)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.gray20)
@@ -98,6 +122,13 @@ struct CourseDetailView: View {
             if $0 {
                 vm.requestPauseRiding()
                 presentationMode.wrappedValue.dismiss()
+            }
+        }
+        .onReceive(vm.userLocationAlertButtonTappedPublisher) {
+            vm.setIsUserLocationAlertPresented(false)
+            self.presentationMode.wrappedValue.dismiss()
+            if $0 {
+                openAppSettings()
             }
         }
     }
@@ -172,6 +203,42 @@ extension CourseDetailView {
             .background(RoundedRectangle(cornerRadius: 40).fill(.courseDetailBg))
             
             Spacer()
+        }
+    }
+}
+
+extension CourseDetailView {
+    @ViewBuilder
+    private func ToastView() -> some View {
+        HStack(spacing: 5) {
+            Image(systemName: vm.toastType.imageText)
+                .foregroundStyle(vm.toastType.imageColor)
+            
+            Text(vm.toastType.toastText)
+                .font(.pretendard(size: 12))
+                .foregroundStyle(.gray90)
+            
+            Spacer()
+            
+            Button {
+                withAnimation {
+                    vm.setIsToastPresented(false)
+                }
+            } label: {
+                Image(systemName: "xmark")
+                    .foregroundStyle(.gray90)
+            }
+        }
+        .padding()
+        .background(RoundedRectangle(cornerRadius: 12).fill(.white))
+    }
+}
+
+extension CourseDetailView {
+    private func openAppSettings() {
+        if let url = URL(string: UIApplication.openSettingsURLString),
+           UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
 }

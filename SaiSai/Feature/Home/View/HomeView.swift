@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     
     @StateObject var vm: HomeViewModel = .init()
+    @EnvironmentObject var tabState: TabState
     
     var body: some View {
         ZStack {
@@ -33,9 +34,13 @@ struct HomeView: View {
                         if vm.isLoading {
                             ProgressView()
                         } else {
-                            if vm.isRecentRideExists { RecentCourseView(vm: vm) }
+                            if vm.isRecentRideExists {
+                                RecentCourseView(vm: vm)
+                                    .environmentObject(tabState)
+                            }
                             
                             PopularChallengesView(vm: vm)
+                                .environmentObject(tabState)
                             
                             BadgeCollectionView(vm: vm)
                         }

@@ -68,6 +68,7 @@ struct HistoryView: View {
                                         vm: CourseDetailViewModel(
                                             courseId: vm.myRideInfoList[index].courseId)
                                     )
+                                    .environmentObject(tabState)
                                 } label: {
                                     HStack(spacing: 13.5) {
                                         if vm.isEditing {

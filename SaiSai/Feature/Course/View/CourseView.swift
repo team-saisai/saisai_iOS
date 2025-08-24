@@ -11,6 +11,7 @@ struct CourseView: View {
     
     @State var isMenuFolded: Bool = true
     @StateObject var vm: CourseViewModel = .init()
+    @EnvironmentObject var tabState: TabState
     
     var body: some View {
         ZStack {
@@ -39,6 +40,7 @@ struct CourseView: View {
                                     CourseDetailView(
                                         vm: CourseDetailViewModel(
                                             courseId: vm.contentInfoList[index].courseId))
+                                    .environmentObject(tabState)
                                 } label: {
                                     HStack {
                                         SingleHorizontalCourseView(
@@ -50,6 +52,11 @@ struct CourseView: View {
                                 }
                                 
                             }
+                        } else {
+                            EmptyCourseListView(messageText: "코스가 없습니다.",
+                                                buttonVisibility: false,
+                                                bikeVisibility: true
+                            )
                         }
                         
                         if vm.hasReachedSinglePageLast {

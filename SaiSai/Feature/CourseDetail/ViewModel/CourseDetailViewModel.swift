@@ -8,6 +8,7 @@
 import Foundation
 import CoreLocation
 import Combine
+import Moya
 
 final class CourseDetailViewModel: NSObject, ObservableObject {
     
@@ -28,8 +29,16 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     @Published var isPaused: Bool = true
     @Published var isRidingCourseSummaryFolded: Bool = true
     @Published var isCancelAlertPresented: Bool = false
+    @Published var isInstructionAlertPresented: Bool = false
+    @Published var isUserLocationAllowAlertPresented: Bool = false
+    @Published var isToastPresented: Bool = false
+    @Published var toastType: ToastType = .requestFailure
+    var isAlertPresented: Bool {
+        isCancelAlertPresented || isInstructionAlertPresented || isUserLocationAllowAlertPresented
+    }
     
     let cancelAlertButtonTappedPublisher: PassthroughSubject<Bool, Never> = .init()
+    let userLocationAlertButtonTappedPublisher: PassthroughSubject<Bool, Never> = .init()
     
     let locationManager: CLLocationManager = {
         let locationManager = CLLocationManager()
@@ -65,7 +74,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     
     // MARK: - Methods
     func fetchData() {
-        Task { [weak self] in
+        _Concurrency.Task { [weak self] in
             guard let self = self else { return }
             do {
                 let response = try await courseService.request(
@@ -77,15 +86,18 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                 if let _ = response.data.rideId {
                     requestResumeRiding()
                 }
-            } catch {
+            } catch let error as MoyaError {
                 print(error)
+                if error.response?.statusCode ?? 0 / 100 == 5 {
+                    await sendToast(.requestFailure)
+                }
                 print("코스 디테일 조회 실패😭")
             }
         }
     }
     
     func requestStartRiding() {
-        Task { [weak self] in
+        _Concurrency.Task { [weak self] in
             guard let self = self else { return }
             do {
                 if isOnStartingPoint() {
@@ -96,17 +108,20 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     await setIsRideCompleted(false)
                     await setTotalDistance(response.data.distance)
                 } else {
-                    await sendDistanceToFarToast()
+                    await sendToast(.distanceToFar)
                 }
-            } catch {
+            } catch let error as MoyaError {
                 print(error)
+                if error.response?.statusCode ?? 0 / 100 == 5 {
+                    await sendToast(.requestFailure)
+                }
                 print("라이딩 시작 실패")
             }
         }
     }
     
     func requestPauseRiding() {
-        Task { [weak self] in
+        _Concurrency.Task { [weak self] in
             guard let self = self else { return }
             do {
                 guard let rideId = rideId else { return }
@@ -118,15 +133,18 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     ),
                     responseDTO: PauseRidesResponseDTO.self)
                 exitTimer()
-            } catch {
+            } catch let error as MoyaError {
                 print(error)
+                if error.response?.statusCode ?? 0 / 100 == 5 {
+                    await sendToast(.requestFailure)
+                }
                 print("라이딩 중지 실패")
             }
         }
     }
     
     private func requestResumeRiding() {
-        Task { [weak self] in
+        _Concurrency.Task { [weak self] in
             guard let self = self else { return }
             do {
                 guard let rideId = rideId else { return }
@@ -137,15 +155,18 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                 baseSeconds = response.data.durationSecond
                 await setLastCheckpointIdx(response.data.checkpointIdx)
                 startTimer()
-            } catch {
+            } catch let error as MoyaError {
                 print(error)
+                if error.response?.statusCode ?? 0 / 100 == 5 {
+                    await sendToast(.requestFailure)
+                }
                 print("라이딩 재개 실패")
             }
         }
     }
     
     private func requestCompleteRiding() {
-        Task { [weak self] in
+        _Concurrency.Task { [weak self] in
             guard let self = self else { return }
             do {
                 guard let rideId = rideId else { return }
@@ -157,16 +178,18 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     responseDTO: CompleteRidesResponseDTO.self
                 )
                 await setIsRideCompleted(true)
-                // complete modal on
-            } catch {
+            } catch let error as MoyaError {
                 print(error)
+                if error.response?.statusCode ?? 0 / 100 == 5 {
+                    await sendToast(.requestFailure)
+                }
                 print("라이딩 종료 실패")
             }
         }
     }
     
     private func requestSyncCheckpoint() {
-        Task { [weak self] in
+        _Concurrency.Task { [weak self] in
             guard let self = self else { return }
             do {
                 guard let rideId = rideId else { return }
@@ -179,15 +202,18 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     responseDTO: SyncRideResponseDTO.self
                 )
                 await setLastCheckpointIdx(lastCheckedPointIdx + 1)
-            } catch {
+            } catch let error as MoyaError {
                 print(error)
+                if error.response?.statusCode ?? 0 / 100 == 5 {
+                    await sendToast(.requestFailure)
+                }
                 print("체크포인트 sync 실패")
             }
         }
     }
     
     func requestToggleIsPaused() {
-        Task { [weak self] in
+        _Concurrency.Task { [weak self] in
             guard let self = self else { return }
             isPaused ? requestResumeRiding() : requestPauseRiding()
         }
@@ -217,21 +243,22 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
 extension CourseDetailViewModel: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
-        Task { [weak self] in
+        _Concurrency.Task { [weak self] in
             guard let self = self else { return }
             guard let userLocation = locations.last else { return }
             print("latitude: \(userLocation.coordinate.latitude)")
             print("longitude: \(userLocation.coordinate.longitude)")
             await setUserLocation(userLocation.coordinate.latitude, userLocation.coordinate.longitude)
-            if lastCheckedPointIdx < checkpointList.count && !checkpointList.isEmpty {
+            let nextCheckPointIdx = lastCheckedPointIdx + 1
+            if (nextCheckPointIdx < checkpointList.count) && !checkpointList.isEmpty {
                 let checkpointLocation = CLLocation(
-                    latitude: checkpointList[lastCheckedPointIdx].latitude,
-                    longitude: checkpointList[lastCheckedPointIdx].longitude
+                    latitude: checkpointList[nextCheckPointIdx].latitude,
+                    longitude: checkpointList[nextCheckPointIdx].longitude
                 )
                 if isOnLocation(checkpointLocation, userLocation) {
                     requestSyncCheckpoint()
                 }
-            } else {
+            } else if nextCheckPointIdx == checkpointList.count {
                 if let destination = courseDetail?.locations.last {
                     let destLocation = CLLocation(
                         latitude: destination.latitude,
@@ -357,7 +384,28 @@ extension CourseDetailViewModel {
     }
     
     @MainActor
-    func sendDistanceToFarToast() {
-        ToastManager.shared.toastPublisher.send(.distanceToFar)
+    func setIsUserLocationAlertPresented(_ isUserLocationAlertPresented: Bool) {
+        self.isUserLocationAllowAlertPresented = isUserLocationAlertPresented
+    }
+    
+    @MainActor
+    private func sendToast(_ toastType: ToastType) {
+        self.toastType = toastType
+        self.isToastPresented = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.isToastPresented = false
+        }
+    }
+    
+    @MainActor
+    func setIsToastPresented(_ isToastPresented: Bool) {
+        self.isToastPresented = isToastPresented
+    }
+    
+    @MainActor
+    func isUserLocationAvailable() {
+        let locationManager = LocationPermissionManager()
+        let isAvailable =  locationManager.manager.authorizationStatus == .authorizedWhenInUse || locationManager.manager.authorizationStatus == .authorizedAlways
+        self.isUserLocationAllowAlertPresented = !isAvailable
     }
 }

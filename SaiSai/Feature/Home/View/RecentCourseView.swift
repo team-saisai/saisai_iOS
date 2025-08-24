@@ -10,6 +10,7 @@ import SwiftUI
 struct RecentCourseView: View {
     
     @ObservedObject var vm: HomeViewModel
+    @EnvironmentObject var tabState: TabState
     
     var body: some View {
         HStack(spacing: 0) {
@@ -64,7 +65,7 @@ struct RecentCourseView: View {
                         
                         NavigationLink(
                             destination: CourseDetailView(
-                                vm: CourseDetailViewModel(courseId: vm.recentRide?.courseId ?? 0))) {
+                                vm: CourseDetailViewModel(courseId: vm.recentRide?.courseId ?? 0)).environmentObject(tabState)) {
                                     CustomRoundedRectangle(radius: 4,
                                                   bgColor: .customPurple,
                                                   text: (vm.isRecentRideDone ? "다시 도전하기" : "이어하기"))
