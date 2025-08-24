@@ -176,13 +176,23 @@ struct MyRidesInfo: Decodable {
     let level: Int
     let lastRideDate: String
     let distance: Double
-    let durationSecond: Int
+    let durationSecond: Int?
     let progressRate: Int
     let imageUrl: String?
     let isCompleted: Bool
     let challengeStatus: String? // ONGOING(진행), null
     let challengeEndedAt: String? // 챌린지 기간 아니면 null
     let isEventActive: Bool? // 챌린지 아니면 null
+    
+    var durationHour: Int {
+        let totalTime = Int(durationSecond ?? 0)
+        return totalTime / 60
+    }
+    
+    var durationMinute: Int {
+        let totalTime = Int(durationSecond ?? 0)
+        return totalTime % 60
+    }
     
     var challengeStatusCase: ChallengeStatus? {
         if let challengeStatus = challengeStatus, let status = ChallengeStatus(rawValue: challengeStatus) {

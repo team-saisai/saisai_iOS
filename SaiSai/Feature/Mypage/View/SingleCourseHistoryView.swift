@@ -97,6 +97,17 @@ extension SingleCourseHistoryView {
             }
             
             HStack(spacing: 4) {
+                Image(systemName: "timer")
+                    .renderingMode(.template)
+                    .resizable()
+                    .frame(width: 15, height: 15)
+                
+                Text("\(vm.myRideInfoList[index].durationHour)h \(vm.myRideInfoList[index].durationMinute)m")
+                    .font(.pretendard(.medium, size: 13))
+                    .foregroundStyle(.customLime)
+                
+                Text("·")
+                
                 Text("완주율")
                 Text("\(vm.myRideInfoList[index].progressRate)%")
                     .font(.pretendard(.medium, size: 13))
@@ -109,4 +120,3 @@ extension SingleCourseHistoryView {
         }
     }
 }
-
