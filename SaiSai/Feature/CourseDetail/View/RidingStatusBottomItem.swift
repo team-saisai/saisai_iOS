@@ -50,7 +50,7 @@ struct RidingStatusBottomItem: View {
                         }
                         
                         HStack(spacing: 5) {
-                            Text("\(Int(vm.numOfPassedCheckpoints * 100 / vm.numOfTotalCheckpoints))%")
+                            Text("\(vm.checkpointPercentage)%")
                                 .font(.pretendard(.medium, size: 22))
                                 .foregroundStyle(.customLime)
                             

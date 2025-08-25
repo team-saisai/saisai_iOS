@@ -50,10 +50,16 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     private weak var timer: Timer? = nil
     private var baseSeconds: Int = 0
     var numOfTotalCheckpoints: Int {
-        checkpointList.count + 2
+        checkpointList.count
     }
     var numOfPassedCheckpoints: Int {
         lastCheckedPointIdx + 1
+    }
+    var checkpointPercentage: Int {
+        if (numOfPassedCheckpoints == numOfTotalCheckpoints) && !isCompleted {
+            return 99
+        }
+        return Int(numOfPassedCheckpoints * 100 / numOfTotalCheckpoints)
     }
     
     let courseService = NetworkService<CourseAPI>()
