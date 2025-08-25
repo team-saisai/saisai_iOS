@@ -16,6 +16,7 @@ struct RecentCourseView: View {
         NavigationLink {
             CourseDetailView(
                 vm: CourseDetailViewModel(courseId: vm.recentRide?.courseId ?? 0))
+            .environmentObject(tabState)
         } label: {
             HStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 0) {

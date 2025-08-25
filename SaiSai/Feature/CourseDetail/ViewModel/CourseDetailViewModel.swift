@@ -89,10 +89,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                 await setCheckPointList(response.data.checkpoint)
                 await setRideId(response.data.rideId)
                 if let _ = response.data.rideId {
-                    requestResumeRiding()
-                    if !isByContinueButton {
-                        requestPauseRiding()
-                    }
+                    requestResumeRiding(isByContinueButton)
                 }
             } catch let error as MoyaError {
                 print(error)
@@ -154,7 +151,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         }
     }
     
-    private func requestResumeRiding() {
+    private func requestResumeRiding(_ isByContinueButton: Bool = true) {
         _Concurrency.Task { [weak self] in
             guard let self = self else { return }
             do {
@@ -165,7 +162,11 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     responseDTO: ResumeRidesResponseDTO.self)
                 baseSeconds = response.data.durationSecond
                 await setLastCheckpointIdx(response.data.checkpointIdx)
-                startTimer()
+                if isByContinueButton {
+                    startTimer()
+                } else {
+                    await setSpentSeconds(baseSeconds)
+                }
             } catch let error as MoyaError {
                 print(error)
                 if error.response?.statusCode ?? 0 / 100 == 5 {
@@ -344,9 +345,7 @@ extension CourseDetailViewModel {
     @MainActor
     func setRideId(_ rideId: Int?) {
         self.rideId = rideId
-        if rideId == nil {
-            hasUncompletedRide = false
-        }
+        hasUncompletedRide = !(rideId == nil)
     }
     
     @MainActor
@@ -421,5 +420,10 @@ extension CourseDetailViewModel {
         let locationManager = LocationPermissionManager()
         let isAvailable =  locationManager.manager.authorizationStatus == .authorizedWhenInUse || locationManager.manager.authorizationStatus == .authorizedAlways
         self.isUserLocationAllowAlertPresented = !isAvailable
+    }
+    
+    @MainActor
+    func setSpentSeconds(_ seconds: Int) {
+        self.spentSeconds = seconds
     }
 }
