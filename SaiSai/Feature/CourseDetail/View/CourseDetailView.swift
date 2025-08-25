@@ -75,6 +75,13 @@ struct CourseDetailView: View {
                     buttonTappedPublisher: vm.cancelAlertButtonTappedPublisher)
             }
             
+            if vm.isInstructionAlertPresented {
+                CourseRidingInstructionView(
+                    startButtonOnInstructionPublisher: vm.startButtonOnInstructionPublisher
+                )
+                .padding(.horizontal, 35)
+            }
+            
             if vm.isToastPresented {
                 VStack {
                     ToastView()

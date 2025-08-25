@@ -40,6 +40,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     
     let cancelAlertButtonTappedPublisher: PassthroughSubject<Bool, Never> = .init()
     let userLocationAlertButtonTappedPublisher: PassthroughSubject<Bool, Never> = .init()
+    let startButtonOnInstructionPublisher: PassthroughSubject<Bool, Never> = .init()
     
     let locationManager: CLLocationManager = {
         let locationManager = CLLocationManager()

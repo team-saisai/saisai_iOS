@@ -23,16 +23,21 @@ struct CourseRidingInstructionView: View {
             Text("주행 안내사항")
                 .font(.pretendard(.medium, size: 18))
                 .foregroundStyle(.white)
-                .padding(.bottom, 16)
+                .padding(.bottom, 24)
             
-            ForEach(instructions, id: \.self) { instruction in
-                HStack(spacing: 12) {
-                    Image(.icInstructionBike)
-                        .resizable()
-                        .frame(width: 32, height: 32)
-                    Text(instruction)
-                        .font(.pretendard(size: 14))
-                        .foregroundStyle(.white)
+            VStack(spacing: 12) {
+                ForEach(instructions, id: \.self) { instruction in
+                    HStack(spacing: 12) {
+                        Image(.icInstructionBike)
+                            .resizable()
+                            .frame(width: 32, height: 32)
+                        Text(instruction)
+                            .font(.pretendard(size: 14))
+                            .foregroundStyle(.white)
+                            .multilineTextAlignment(.leading)
+                        
+                        Spacer()
+                    }
                 }
             }
             
@@ -50,7 +55,7 @@ struct CourseRidingInstructionView: View {
                         .foregroundStyle(.white)
                 }
                 .padding(.top, 38)
-                .padding(.bottom, 10)
+                .padding(.bottom, 20)
             }
             
             Button {
@@ -64,5 +69,9 @@ struct CourseRidingInstructionView: View {
                     .background(RoundedRectangle(cornerRadius: 8).fill(.customLime))
             }
         }
+        .padding(.horizontal, 20)
+        .padding(.top, 36)
+        .padding(.bottom, 20)
+        .background(RoundedRectangle(cornerRadius: 20).fill(.gray90))
     }
 }
