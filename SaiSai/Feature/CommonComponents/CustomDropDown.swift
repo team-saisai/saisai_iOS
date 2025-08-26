@@ -10,8 +10,9 @@ import Combine
 
 struct CustomDropDown: View {
 
-    @State var selectedOption: CourseSortOption = .levelAsc
+    @Binding var selectedOption: CourseSortOption
     @Binding var isFolded: Bool
+    @Binding var isChallengeSelected: Bool
     
     let optionPublisher: PassthroughSubject<CourseSortOption, Never>
     let tappedOutsidePublisher: PassthroughSubject<Void, Never>
@@ -37,18 +38,20 @@ struct CustomDropDown: View {
             if !isFolded {
                 VStack(spacing: 0) {
                     ForEach(CourseSortOption.allCases, id: \.self) { option in
-                        Button {
-                            optionPublisher.send(option)
-                            isFolded = true
-                            selectedOption = option
-                        } label: {
-                            Text("\(option.dropDownText)")
-                                .padding(.vertical, 8)
-                                .frame(maxWidth: .infinity)
-                                .foregroundStyle(selectedOption == option ? .iconPurple : .white)
-                                .background(RoundedRectangle(cornerRadius: 4).fill(Color.menuItemHighlightedBg.opacity(
-                                    selectedOption == option ? 1 : 0
-                                )))
+                        if isChallengeSelected || !(option == .endSoon) {
+                            Button {
+                                optionPublisher.send(option)
+                                isFolded = true
+                                selectedOption = option
+                            } label: {
+                                Text("\(option.dropDownText)")
+                                    .padding(.vertical, 8)
+                                    .frame(maxWidth: .infinity)
+                                    .foregroundStyle(selectedOption == option ? .iconPurple : .white)
+                                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.menuItemHighlightedBg.opacity(
+                                        selectedOption == option ? 1 : 0
+                                    )))
+                            }
                         }
                     }
                 }

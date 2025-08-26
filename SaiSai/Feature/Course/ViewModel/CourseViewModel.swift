@@ -13,9 +13,9 @@ final class CourseViewModel: ObservableObject {
     @Published var isChallengeSelected: Bool = true
     @Published var contentInfoList: [CourseContentInfo] = []
     @Published var isRequestingBookmarks: Bool = false
+    @Published var selectedOption: CourseSortOption = .levelAsc
     let optionPublisher: PassthroughSubject<CourseSortOption, Never> = .init()
     let tappedoutsidePublisher: PassthroughSubject<Void, Never> = .init()
-    var selectedOption: CourseSortOption = .levelAsc
     var currentPage: Int = 1
     
     let courseService = NetworkService<CourseAPI>()

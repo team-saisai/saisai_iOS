@@ -86,7 +86,9 @@ struct CourseView: View {
                 HStack {
                     Spacer()
                     CustomDropDown(
+                        selectedOption: $vm.selectedOption,
                         isFolded: $isMenuFolded,
+                        isChallengeSelected: $vm.isChallengeSelected,
                         optionPublisher: vm.optionPublisher,
                         tappedOutsidePublisher: vm.tappedoutsidePublisher
                     )
@@ -109,6 +111,13 @@ struct CourseView: View {
         }
         .onReceive(vm.optionPublisher) { option in
             vm.setSortOption(option)
+        }
+        .onChange(of: vm.isChallengeSelected) { oldValue, newValue in
+            if oldValue {
+                if vm.selectedOption == .endSoon {
+                    vm.selectedOption = .levelAsc
+                }
+            }
         }
     }
 }
