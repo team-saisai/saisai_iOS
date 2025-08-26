@@ -34,6 +34,8 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     @Published var isUserLocationAllowAlertPresented: Bool = false
     @Published var isToastPresented: Bool = false
     @Published var toastType: ToastType = .requestFailure
+    let neverCheckedDate: String = "lastNeverChecked"
+    
     var isAlertPresented: Bool {
         isCancelAlertPresented || isInstructionAlertPresented || isUserLocationAllowAlertPresented
     }
@@ -41,6 +43,8 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     let cancelAlertButtonTappedPublisher: PassthroughSubject<Bool, Never> = .init()
     let userLocationAlertButtonTappedPublisher: PassthroughSubject<Bool, Never> = .init()
     let startButtonOnInstructionPublisher: PassthroughSubject<Bool, Never> = .init()
+    
+    private var subscriptions: Set<AnyCancellable> = .init()
     
     let locationManager: CLLocationManager = {
         let locationManager = CLLocationManager()
@@ -76,6 +80,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         self.isByContinueButton = isByContinueButton
         super.init()
         self.locationManager.delegate = self
+        self.bind()
 //        self.locationManager.startUpdatingLocation()
     }
     
@@ -104,6 +109,21 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     await sendToast(.requestFailure)
                 }
                 print("코스 디테일 조회 실패😭")
+            }
+        }
+    }
+    
+    func requestStart() {
+        _Concurrency.Task { [weak self] in
+            guard let self = self else { return }
+            if let lastNeverChecked = UserDefaults.standard.value(forKey: neverCheckedDate) {
+                if lastNeverChecked as? String == Date().yearMonthDayDate {
+                    requestStartRiding()
+                } else {
+                    await setIsInstructionAlertPresented(true)
+                }
+            } else {
+                await setIsInstructionAlertPresented(true)
             }
         }
     }
@@ -260,6 +280,26 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         }
         return false
     }
+    
+    private func bind() {
+        startButtonOnInstructionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let self = self else { return }
+                _Concurrency.Task { [weak self] in
+                    guard let self = self else { return }
+                    await setIsInstructionAlertPresented(false)
+                    requestStartRiding()
+                }
+                switch $0 {
+                case true:
+                    UserDefaults.standard.set(Date().yearMonthDayDate, forKey: neverCheckedDate)
+                case false:
+                    break
+                }
+            }
+            .store(in: &subscriptions)
+    }
 }
 
 extension CourseDetailViewModel: CLLocationManagerDelegate {
@@ -409,6 +449,11 @@ extension CourseDetailViewModel {
     }
     
     @MainActor
+    func setIsInstructionAlertPresented(_ isInstructionAlertPresented: Bool) {
+        self.isInstructionAlertPresented = isInstructionAlertPresented
+    }
+    
+    @MainActor
     private func sendToast(_ toastType: ToastType) {
         self.toastType = toastType
         self.isToastPresented = true
@@ -432,5 +477,15 @@ extension CourseDetailViewModel {
     @MainActor
     func setSpentSeconds(_ seconds: Int) {
         self.spentSeconds = seconds
+    }
+    
+    @MainActor
+    func removeAlert() {
+        if isCancelAlertPresented {
+            isCancelAlertPresented = false
+        }
+        if isInstructionAlertPresented {
+            isInstructionAlertPresented = false
+        }
     }
 }

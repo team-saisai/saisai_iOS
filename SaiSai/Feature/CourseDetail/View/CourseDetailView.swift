@@ -56,6 +56,9 @@ struct CourseDetailView: View {
             
             if vm.isAlertPresented {
                 Color.black.opacity(0.001)
+                    .onTapGesture {
+                        vm.removeAlert()
+                    }
             }
             
             if vm.isUserLocationAllowAlertPresented {
@@ -109,7 +112,7 @@ struct CourseDetailView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
-                    if vm.hasUncompletedRide && !vm.isPaused {
+                    if vm.hasUncompletedRide && !vm.isPaused && !vm.isAlertPresented {
                         vm.setIsCancelAlertPresented(true)
                     } else {
                         self.presentationMode.wrappedValue.dismiss()

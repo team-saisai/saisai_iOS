@@ -62,7 +62,7 @@ extension CourseDetailBottomItem {
     private func ChallengeButton() -> some View {
         VStack(spacing: 6) {
             Button {
-                vm.requestStartRiding()
+                vm.requestStart()
                 vm.isSummaryViewFolded = true
             } label: {
                 VStack(spacing: 6.5) {
