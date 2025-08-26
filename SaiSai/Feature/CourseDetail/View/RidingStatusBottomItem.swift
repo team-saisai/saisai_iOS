@@ -99,17 +99,28 @@ extension RidingStatusBottomItem {
     @ViewBuilder
     private func CheckpointStatusBar() -> some View {
         VStack(spacing: 4) {
-            ProgressView(value: Double(vm.numOfPassedCheckpoints / vm.numOfTotalCheckpoints))
+            ProgressView(value: Double(vm.numOfPassedCheckpoints) / Double(vm.numOfTotalCheckpoints))
                 .tint(.customLime)
                 .overlay {
                     HStack {
-                        Circle().fill(.customLime)
-                            .frame(width: 13, height: 13)
-                        
-                        Spacer()
-                        
-                        Circle().fill(.customLime)
-                            .frame(width: 13, height: 13)
+                        ForEach(0...vm.numOfTotalCheckpoints, id: \.self) {
+                            Circle().fill(.gray70)
+                                .frame(width: 13, height: 13)
+                            if $0 != vm.numOfTotalCheckpoints {
+                                Spacer()
+                            }
+                        }
+                    }
+                }
+                .overlay {
+                    HStack {
+                        ForEach(0...vm.numOfTotalCheckpoints, id: \.self) {
+                            Circle().fill(.customLime.opacity($0 <= vm.numOfPassedCheckpoints ? 1 : 0))
+                                .frame(width: 13, height: 13)
+                            if $0 != vm.numOfTotalCheckpoints {
+                                Spacer()
+                            }
+                        }
                     }
                 }
             HStack {
