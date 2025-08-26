@@ -94,14 +94,14 @@ extension MypageView {
 extension MypageView {
     
     @ViewBuilder func SingleMypageVerticalItem(
-        image: Image = Image(systemName: ""), // TEMP
+        image: Image = Image(systemName: ""),
         highlightedText: String,
         defaultText: String
     ) -> some View {
         VStack {
-            Circle()
-                .stroke(Color.gray40, lineWidth: 1)
-                .frame(width: 44, height: 44)
+            image
+                .resizable()
+                .frame(width: 44, height: 47)
             HStack(spacing: 1) {
                 Text("\(highlightedText)")
                     .foregroundStyle(.customLime)
@@ -126,6 +126,12 @@ extension MypageView {
             "\(vm.profile.reward)",
             "\(vm.profile.badgeCount)"
         ]
+        let images: [Image] = [
+            Image(.icMypageHistoryIcon),
+            Image(.icMypageSavedIcon),
+            Image(.icMypageRewardsIcon),
+            Image(.icMypageBadgeIcon)
+        ]
         
         HStack {
             ForEach(0..<4) { idx in
@@ -147,6 +153,7 @@ extension MypageView {
                     }
                 } label: {
                     SingleMypageVerticalItem(
+                        image: images[idx],
                         highlightedText: highlightedTexts[idx],
                         defaultText: defaultTexts[idx]
                     )
