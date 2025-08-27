@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Kingfisher
+import Combine
 
 struct CourseCompleteView: View {
     
@@ -24,9 +25,7 @@ struct CourseCompleteView: View {
             CompletedCourseImageView()
             
             Button {
-                dismiss()
-                dismiss()
-                tabState.selectedTab = 0
+                
             } label: {
                 HStack {
                     Text("홈으로 돌아가기")
@@ -46,8 +45,7 @@ struct CourseCompleteView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
-                    dismiss()
-                    dismiss()
+                    
                 }) {
                     HStack {
                         Image(systemName: "chevron.left")
@@ -97,5 +95,6 @@ extension CourseCompleteView {
             .background(.black)
         }
         .background(RoundedRectangle(cornerRadius: 16))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
