@@ -11,6 +11,7 @@ struct CourseView: View {
     
     @State var isMenuFolded: Bool = true
     @StateObject var vm: CourseViewModel = .init()
+    @EnvironmentObject var tabState: TabState
     
     var body: some View {
         ZStack {
@@ -39,6 +40,7 @@ struct CourseView: View {
                                     CourseDetailView(
                                         vm: CourseDetailViewModel(
                                             courseId: vm.contentInfoList[index].courseId))
+                                    .environmentObject(tabState)
                                 } label: {
                                     HStack {
                                         SingleHorizontalCourseView(
@@ -50,6 +52,11 @@ struct CourseView: View {
                                 }
                                 
                             }
+                        } else {
+                            EmptyCourseListView(messageText: "코스가 없습니다.",
+                                                buttonVisibility: false,
+                                                bikeVisibility: true
+                            )
                         }
                         
                         if vm.hasReachedSinglePageLast {
@@ -79,7 +86,9 @@ struct CourseView: View {
                 HStack {
                     Spacer()
                     CustomDropDown(
+                        selectedOption: $vm.selectedOption,
                         isFolded: $isMenuFolded,
+                        isChallengeSelected: $vm.isChallengeSelected,
                         optionPublisher: vm.optionPublisher,
                         tappedOutsidePublisher: vm.tappedoutsidePublisher
                     )
@@ -102,6 +111,13 @@ struct CourseView: View {
         }
         .onReceive(vm.optionPublisher) { option in
             vm.setSortOption(option)
+        }
+        .onChange(of: vm.isChallengeSelected) { oldValue, newValue in
+            if oldValue {
+                if vm.selectedOption == .endSoon {
+                    vm.selectedOption = .levelAsc
+                }
+            }
         }
     }
 }

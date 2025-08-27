@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import Combine
 
 struct MyRewardsView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @EnvironmentObject var tabState: TabState
     @StateObject var vm: MyRewardsViewModel = .init()
+    let moveToCourseButtonTappedPublisher: PassthroughSubject<Void, Never> = .init()
     
     var body: some View {
         ScrollView(.vertical) {
@@ -43,17 +46,20 @@ struct MyRewardsView: View {
                         }
                 }
             } else {
-                VStack {
-                    Spacer()
-                    Text("리워드 내역이 없습니다.")
-                        .font(.pretendard(.medium, size: 16))
-                    Spacer()
-                }
+                EmptyCourseListView(
+                    messageText: "얻은 리워드 포인트가 없습니다.",
+                    moveToCourseButtonTappedPublisher: moveToCourseButtonTappedPublisher,
+                    bikeVisibility: false
+                )
             }
         }
         .onAppear {
             vm.fetchData()
         }
+        .onReceive(moveToCourseButtonTappedPublisher, perform: {
+            self.presentationMode.wrappedValue.dismiss()
+            tabState.selectedTab = 1
+        })
         .padding(.vertical, 20)
         .padding(.horizontal, 22)
         .background(.gray90)

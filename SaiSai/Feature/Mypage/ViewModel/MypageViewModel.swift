@@ -12,7 +12,6 @@ final class MypageViewModel: ObservableObject {
     @Published var version: String = "0.0.0"
     
     var authProvider: AuthProvider? = nil
-    let notionURL: String = "https://www.notion.so/ihayeong/2471c81f481d8092b7c5e2dfe57bc681"
     
     weak var delegate: AppConfigureViewModelDelegate?
     
@@ -21,7 +20,6 @@ final class MypageViewModel: ObservableObject {
     init(delegate: AppConfigureViewModelDelegate?) {
         self.delegate = delegate
     }
-    
     
     func fetchData() {
         Task { [weak self] in

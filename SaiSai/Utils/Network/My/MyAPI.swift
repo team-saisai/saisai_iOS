@@ -121,7 +121,7 @@ extension MyAPI {
                 parameters: [
                     "page": page,
                     "sort": sort.rawValue,
-                    "notCompletedOnly": notCompletedOnly
+                    "ridingCourseOnly": notCompletedOnly
                 ],
                 encoding: URLEncoding.queryString
             )

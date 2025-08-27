@@ -98,6 +98,8 @@ extension HomeViewModel {
             if let isCompleted = isCompleted {
                 self.isRecentRideDone = isCompleted
             }
+        } else {
+            self.isRecentRideExists = false
         }
     }
     

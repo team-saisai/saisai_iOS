@@ -68,6 +68,7 @@ struct HistoryView: View {
                                         vm: CourseDetailViewModel(
                                             courseId: vm.myRideInfoList[index].courseId)
                                     )
+                                    .environmentObject(tabState)
                                 } label: {
                                     HStack(spacing: 13.5) {
                                         if vm.isEditing {
@@ -212,7 +213,6 @@ struct HistoryView: View {
             }
         })
         .onReceive(moveToCourseButtonTappedPublisher, perform: {
-            self.presentationMode.wrappedValue.dismiss()
             tabState.selectedTab = 1
         })
         .onReceive(vm.optionPublisher) { option in

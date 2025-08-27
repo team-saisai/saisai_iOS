@@ -12,6 +12,7 @@ struct MypageView: View {
     
     @EnvironmentObject var tabState: TabState
     @StateObject var vm: MypageViewModel
+    @State var isWKRepresented: Bool = false
     
     var body: some View {
         VStack {
@@ -82,7 +83,7 @@ extension MypageView {
             .padding(.bottom, 8)
         }
         
-        Text("\(vm.profile.email)")
+        Text("\(vm.profile.email ?? "")")
             .foregroundStyle(.gray40)
             .font(.pretendard(.light, size: 14))
             .padding(.bottom, 28)
@@ -93,14 +94,14 @@ extension MypageView {
 extension MypageView {
     
     @ViewBuilder func SingleMypageVerticalItem(
-        image: Image = Image(systemName: ""), // TEMP
+        image: Image = Image(systemName: ""),
         highlightedText: String,
         defaultText: String
     ) -> some View {
         VStack {
-            Circle()
-                .stroke(Color.gray40, lineWidth: 1)
-                .frame(width: 44, height: 44)
+            image
+                .resizable()
+                .frame(width: 44, height: 47)
             HStack(spacing: 1) {
                 Text("\(highlightedText)")
                     .foregroundStyle(.customLime)
@@ -125,6 +126,12 @@ extension MypageView {
             "\(vm.profile.reward)",
             "\(vm.profile.badgeCount)"
         ]
+        let images: [Image] = [
+            Image(.icMypageHistoryIcon),
+            Image(.icMypageSavedIcon),
+            Image(.icMypageRewardsIcon),
+            Image(.icMypageBadgeIcon)
+        ]
         
         HStack {
             ForEach(0..<4) { idx in
@@ -138,6 +145,7 @@ extension MypageView {
                             .environmentObject(tabState)
                     case 2:
                         MyRewardsView()
+                            .environmentObject(tabState)
                     case 3:
                         MyBadgesView()
                     default:
@@ -145,6 +153,7 @@ extension MypageView {
                     }
                 } label: {
                     SingleMypageVerticalItem(
+                        image: images[idx],
                         highlightedText: highlightedTexts[idx],
                         defaultText: defaultTexts[idx]
                     )
@@ -181,13 +190,18 @@ extension MypageView {
                 .padding(.vertical, 23)
             }
             Divider()
-            Link(destination: URL(string: vm.notionURL)!) {
+            Button {
+                self.isWKRepresented.toggle()
+            } label: {
                 HStack {
                     Text("서비스 이용 약관")
                     Spacer()
                     Image(systemName: "chevron.right")
                         .resizable()
                         .frame(width: 6, height: 12)
+                        .sheet(isPresented: $isWKRepresented) {
+                            TermsWebView()
+                        }
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 23)

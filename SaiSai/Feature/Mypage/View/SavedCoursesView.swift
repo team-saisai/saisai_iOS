@@ -28,6 +28,7 @@ struct SavedCoursesView: View {
                                     vm: CourseDetailViewModel(
                                         courseId: vm.contentInfoList[index].courseId)
                                 )
+                                .environmentObject(tabState)
                             } label: {
                                 HStack(spacing: 13.5) {
                                     if vm.isEditing {

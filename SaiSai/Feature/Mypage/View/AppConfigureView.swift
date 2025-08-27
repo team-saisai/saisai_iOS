@@ -11,6 +11,7 @@ import Combine
 struct AppConfigureView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Environment(\.dismiss) var dismiss
     @StateObject var vm: AppConfigureViewModel
     let buttonTappedPublisher: PassthroughSubject<Bool, Never> = .init()
     
@@ -110,6 +111,9 @@ struct AppConfigureView: View {
                 vm.removeAlert()
                 if $0 { vm.requestRemoveAccount() }
             }
+        }
+        .onReceive(vm.logoutPublisher) {
+            self.dismiss()
         }
     }
 }

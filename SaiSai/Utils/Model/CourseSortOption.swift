@@ -18,7 +18,7 @@ enum CourseSortOption: String, CaseIterable {
         case .levelAsc: "난이도 낮은 순"
         case .levelDesc: "난이도 높은 순"
         case .participantsDesc: "참가자 순"
-        case .endSoon: "종료일 순"
+        case .endSoon: "종료임박순"
         }
     }
 }

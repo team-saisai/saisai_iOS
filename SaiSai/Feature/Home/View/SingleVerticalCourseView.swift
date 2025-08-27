@@ -25,6 +25,8 @@ struct SingleVerticalCourseView: View {
                     HStack {
                         Text("\(vm.popularChallenges[index].courseName)")
                             .font(.pretendard(.medium, size: 16))
+                            .lineLimit(1)
+                            .multilineTextAlignment(.leading)
                             .padding(.bottom, 4)
                         Spacer()
                         Button {

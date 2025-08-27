@@ -12,43 +12,48 @@ struct CourseDetailBottomItem: View {
     @ObservedObject var vm: CourseDetailViewModel
     
     var body: some View {
-        VStack(spacing: 0) {
-            LazyVStack(alignment: .leading, spacing: 0) {
-                HStack(alignment: .top) {
-                    CourseDetailSummaryView()
-                    
-                    Spacer()
-                    
-                    ChallengeButton()
-                }
-                
-                HStack(spacing: 11) {
-                    HStack(spacing: 5) {
-                        Image(.icThunderIcon)
-                            .resizable()
-                            .frame(width: 11.7, height: 16.6)
-                        Text("\(vm.courseDetail?.challengerCount.commaDecimal ?? "")명 도전중")
+        Button {
+            vm.toggleSummaryFoldState()
+        } label: {
+            VStack(spacing: 0) {
+                VStack(alignment: .leading, spacing: 0) {
+                    HStack(alignment: .top) {
+                        CourseDetailSummaryView()
+                        
+                        Spacer()
+                        
+                        ChallengeButton()
                     }
-                    HStack(spacing: 3.5) {
-                        Image(.icStarInCircle)
-                            .frame(width: 15, height: 15)
-                        Text("\(vm.courseDetail?.finisherCount.commaDecimal ?? "")명 완주")
+                    
+                    HStack(spacing: 11) {
+                        HStack(spacing: 5) {
+                            Image(.icThunderIcon)
+                                .resizable()
+                                .frame(width: 11.7, height: 16.6)
+                            Text("\(vm.courseDetail?.challengerCount.commaDecimal ?? "")명 도전중")
+                        }
+                        HStack(spacing: 3.5) {
+                            Image(.icStarInCircle)
+                                .frame(width: 15, height: 15)
+                            Text("\(vm.courseDetail?.finisherCount.commaDecimal ?? "")명 완주")
+                        }
+                        Spacer()
                     }
-                    Spacer()
+                    .font(.pretendard(.regular, size: 12))
+                    .foregroundStyle(.iconPurple)
+                    
+                    if !vm.isSummaryViewFolded {
+                        SummaryView()
+                            .padding(.top, 24)
+                    }
                 }
-                .font(.pretendard(.regular, size: 12))
-                .foregroundStyle(.iconPurple)
+                .padding(.vertical, 18)
+                .padding(.horizontal, 22)
+                .background(RoundedRectangle(cornerRadius: 16).fill(Color.courseDetailBg))
                 
-                if !vm.isSummaryViewFolded {
-                    SummaryView()
-                        .padding(.top, 24)
-                }
+                FoldButton()
+                
             }
-            .padding(.vertical, 18)
-            .padding(.horizontal, 22)
-            .background(RoundedRectangle(cornerRadius: 16).fill(Color.courseDetailBg))
-            
-            FoldButton()
         }
     }
 }
@@ -57,7 +62,7 @@ extension CourseDetailBottomItem {
     private func ChallengeButton() -> some View {
         VStack(spacing: 6) {
             Button {
-                vm.requestStartRiding()
+                vm.requestStart()
                 vm.isSummaryViewFolded = true
             } label: {
                 VStack(spacing: 6.5) {
@@ -83,6 +88,7 @@ extension CourseDetailBottomItem {
         VStack(alignment: .leading, spacing: 0) {
             Text(vm.courseDetail?.courseName ?? "")
                 .font(.pretendard(size: 20))
+                .multilineTextAlignment(.leading)
                 .foregroundStyle(.white)
                 .padding(.bottom, 6)
             
@@ -106,17 +112,17 @@ extension CourseDetailBottomItem {
     }
     
     private func FoldButton() -> some View {
-        Button {
-            vm.toggleSummaryFoldState()
-        } label: {
+        ZStack {
+            Image(.icDetailSummaryExtender)
+                .resizable()
+                .frame(width: 200, height: 10)
+            
             Image(systemName: vm.isSummaryViewFolded ? "chevron.down" : "chevron.up")
                 .resizable()
                 .renderingMode(.template)
                 .frame(width: 40, height: 4)
                 .foregroundStyle(.gray20)
+            
         }
-        .clipShape(RoundedRectangle(cornerRadius: 16).trim(from: 0, to: 0.5))
-        .frame(width: 200, height: 10)
-        .background(.courseDetailBg)
     }
 }

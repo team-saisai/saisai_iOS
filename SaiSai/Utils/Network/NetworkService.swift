@@ -76,6 +76,7 @@ extension NetworkService {
                         let _ = KeychainManagerImpl().save(
                             token: response.data.refreshToken,
                             forKey: HTTPHeaderField.refreshToken.rawValue)
+                        print("-----New Access Token-----")
                         print("REISSUE SUCCESS!")
                         continuation.resume()
                     } catch {

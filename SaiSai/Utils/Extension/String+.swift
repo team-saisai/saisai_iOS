@@ -26,4 +26,14 @@ extension String {
         
         return ("~\(month)/\(day)")
     }
+    
+    var isNicknameLengthValid: Bool {
+        let lengthRegex = "^\\S{1,7}$"
+        return NSPredicate(format: "SELF MATCHES %@", lengthRegex).evaluate(with: self)
+    }
+    
+    var isNicknameCharactersValid: Bool {
+        let regex = "^[A-Za-z0-9가-힣]+$"
+        return NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: self)
+    }
 }

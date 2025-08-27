@@ -8,17 +8,29 @@
 import Foundation
 
 // MARK: - Request DTO
+struct SyncRideRequestDTO: Codable {
+    let duration: Int
+    let checkpointIdx: Int
+}
+
 struct PauseRidesRequestDTO: Codable {
     let duration: Int
-    let totalDistance: Double
+    let checkpointIdx: Int
 }
 
 struct CompleteRidesRequestDTO: Codable {
     let duration: Int
-    let actualDistance: Double
 }
 
 // MARK: - Response DTO
+struct SyncRideResponseDTO: Decodable {
+    let code: String
+    let message: String
+    let data: EmptyData?
+    
+    struct EmptyData: Decodable { }
+}
+
 struct StartRidesResponseDTO: Decodable {
     let code: String
     let message: String
@@ -30,6 +42,7 @@ struct StartRidesResponseDTO: Decodable {
         let courseName: String
         let distance: Double
         let gpxPoints: [GpxPointInfo]
+        let checkpoints: [CheckPointInfo]
     }
 }
 
@@ -51,7 +64,7 @@ struct ResumeRidesResponseDTO: Decodable {
     struct DataInfo: Decodable {
         let rideId: Int
         let durationSecond: Int
-        let actualDistance: Double
+        let checkpointIdx: Int
     }
 }
 

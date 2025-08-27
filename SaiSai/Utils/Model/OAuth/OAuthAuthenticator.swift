@@ -40,18 +40,20 @@ final class OAuthAuthenticator: NSObject {
     
     func requestKakaoLogin(requestToBackend: @escaping (String) -> ()) {
         if UserApi.isKakaoTalkLoginAvailable() {
-            UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
+            UserApi.shared.loginWithKakaoTalk { [weak self] (oauthToken, error) in
                 if let error = error {
                     print(error)
+                    self?.sendToast()
                 } else {
                     let token = oauthToken?.accessToken as? String ?? ""
                     requestToBackend(token)
                 }
             }
         } else {
-            UserApi.shared.loginWithKakaoAccount { (oauthToken, error) in
+            UserApi.shared.loginWithKakaoAccount { [weak self] (oauthToken, error) in
                 if let error = error {
                     print(error)
+                    self?.sendToast()
                 } else {
                     let token = oauthToken?.accessToken as? String ?? ""
                     requestToBackend(token)
@@ -60,7 +62,10 @@ final class OAuthAuthenticator: NSObject {
         }
     }
     
-    func requestGoogleLogin(requestToBackend: @escaping (String) -> ()) {
+    func requestGoogleLogin(
+        requestToBackend: @escaping (String) -> (),
+        isDelete: Bool = false
+    ) {
         guard let presentingViewController = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else { return }
         
         GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewController) { [weak self] _, error in
@@ -68,36 +73,39 @@ final class OAuthAuthenticator: NSObject {
             
             if let error = error {
                 print(error)
+                self.sendToast()
             }
             
-            let token = checkGoogleUserInfo()
+            let token = checkGoogleUserInfo(isDelete)
             
             requestToBackend(token)
         }
     }
+//    
+//    func requestGoogleRevoke() {
+//        if GIDSignIn.sharedInstance.currentUser != nil {
+//            GIDSignIn.sharedInstance.disconnect() { [weak self] error in
+//                guard error == nil else {
+//                    print("google revoke 실패...")
+//                    self?.sendToast()
+//                    return
+//                }
+//                print("google revoke 성공")
+//            }
+//        }
+//    }
     
-    func requestGoogleRevoke() {
-        if GIDSignIn.sharedInstance.currentUser != nil {
-            GIDSignIn.sharedInstance.disconnect() { error in
-                guard error == nil else {
-                    print("google revoke 실패...")
-                    DispatchQueue.main.async {
-                        ToastManager.shared.toastPublisher.send(.requestFailure)
-                    }
-                    return
-                }
-                print("google revoke 성공")
-            }
-        }
-    }
-    
-    private func checkGoogleUserInfo() -> String {
+    private func checkGoogleUserInfo(_ isDelete: Bool) -> String {
         
         if GIDSignIn.sharedInstance.currentUser != nil {
             let user = GIDSignIn.sharedInstance.currentUser
             guard let user = user else { return "" }
             print("DEBUG: \(user.accessToken.tokenString)")
-            return user.idToken?.tokenString ?? ""
+            if isDelete {
+                return user.accessToken.tokenString
+            } else {
+                return user.idToken?.tokenString ?? ""
+            }
         } else {
             return ""
         }
@@ -134,6 +142,13 @@ extension OAuthAuthenticator: ASAuthorizationControllerPresentationContextProvid
             }
         default:
             break
+        }
+    }
+    
+    private func sendToast() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            ToastManager.shared.toastPublisher.send(.requestFailure)
         }
     }
 }
