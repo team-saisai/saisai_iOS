@@ -25,7 +25,8 @@ struct CourseCompleteView: View {
             CompletedCourseImageView()
             
             Button {
-                
+                UIApplication.popToRoot()
+                tabState.selectedTab = 0
             } label: {
                 HStack {
                     Text("홈으로 돌아가기")
@@ -45,7 +46,7 @@ struct CourseCompleteView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
-                    
+                    UIApplication.popBack(2)
                 }) {
                     HStack {
                         Image(systemName: "chevron.left")
@@ -66,6 +67,10 @@ extension CourseCompleteView {
         VStack(spacing: 0) {
             KFImage(URL(string: (vm.courseDetail?.imageUrl ?? "")))
                 .resizable()
+                .placeholder({
+                    Image(systemName: "photo")
+                        .foregroundStyle(.gray50)
+                })
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             VStack(spacing: 0) {
                 HStack {

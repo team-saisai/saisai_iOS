@@ -219,6 +219,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     ),
                     responseDTO: CompleteRidesResponseDTO.self
                 )
+                exitTimer()
                 await setIsRideCompleted(true)
             } catch let error as MoyaError {
                 print(error)
@@ -312,7 +313,7 @@ extension CourseDetailViewModel: CLLocationManagerDelegate {
             print("longitude: \(userLocation.coordinate.longitude)")
             await setUserLocation(userLocation.coordinate.latitude, userLocation.coordinate.longitude)
             let nextCheckPointIdx = lastCheckedPointIdx + 1
-            if (nextCheckPointIdx < checkpointList.count) && !checkpointList.isEmpty {
+            if (nextCheckPointIdx < checkpointList.count) && !checkpointList.isEmpty && !isPaused {
                 let checkpointLocation = CLLocation(
                     latitude: checkpointList[nextCheckPointIdx].latitude,
                     longitude: checkpointList[nextCheckPointIdx].longitude
@@ -320,7 +321,7 @@ extension CourseDetailViewModel: CLLocationManagerDelegate {
                 if isOnLocation(checkpointLocation, userLocation) {
                     requestSyncCheckpoint()
                 }
-            } else if nextCheckPointIdx == checkpointList.count {
+            } else if nextCheckPointIdx == checkpointList.count && !isPaused {
                 if let destination = courseDetail?.locations.last {
                     let destLocation = CLLocation(
                         latitude: destination.latitude,
@@ -429,8 +430,7 @@ extension CourseDetailViewModel {
     
     @MainActor
     func setIsRideCompleted(_ isRideCompleted: Bool) {
-        self.hasUncompletedRide = isRideCompleted
-        self.isCompleted = true
+        self.isCompleted = isRideCompleted
     }
     
     @MainActor
