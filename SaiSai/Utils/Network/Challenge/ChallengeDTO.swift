@@ -28,7 +28,7 @@ struct CourseInfo: Decodable {
     let challengeStatus: String?
     let endedAt: String?
     var isBookmarked: Bool
-    let challengerCount: Int?
+    let participantsCount: Int?
     let isEventActive: Bool?
     let reward: Int?
     
