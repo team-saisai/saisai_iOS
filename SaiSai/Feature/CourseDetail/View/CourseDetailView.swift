@@ -12,6 +12,7 @@ import Combine
 struct CourseDetailView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var tabState: TabState
     @StateObject var vm: CourseDetailViewModel
     
@@ -121,7 +122,7 @@ struct CourseDetailView: View {
                 }) {
                     HStack {
                         Image(systemName: "chevron.left")
-                            .foregroundColor(.white)
+                            .foregroundColor(colorScheme == .dark ? .white : .black)
                             .frame(width: 10, height: 20)
                     }
                     .padding(.horizontal, 8)

@@ -100,10 +100,15 @@ struct NicknameChangeView: View {
         .padding(.horizontal, 24)
         .padding(.vertical, 25)
         .background(.gray90)
-        .navigationTitle("닉네임 수정")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("닉네임 수정")
+                    .font(.pretendard(.semibold, size: 16))
+                    .foregroundColor(.white)
+            }
+            
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()

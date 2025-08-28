@@ -63,10 +63,15 @@ struct MyRewardsView: View {
         .padding(.vertical, 20)
         .padding(.horizontal, 22)
         .background(.gray90)
-        .navigationTitle("리워드 포인트")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("리워드 포인트")
+                    .font(.pretendard(.semibold, size: 16))
+                    .foregroundColor(.white)
+            }
+            
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()

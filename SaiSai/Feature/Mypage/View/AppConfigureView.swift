@@ -85,10 +85,15 @@ struct AppConfigureView: View {
             }
         }
         .background(.gray90)
-        .navigationTitle("APP 설정")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("APP 설정")
+                    .font(.pretendard(.semibold, size: 16))
+                    .foregroundColor(.white)
+            }
+            
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()

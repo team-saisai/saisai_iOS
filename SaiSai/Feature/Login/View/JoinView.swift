@@ -144,10 +144,15 @@ struct JoinView: View {
                 )
             }
         }
-        .navigationTitle("회원 가입")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("회원 가입")
+                    .font(.pretendard(.semibold, size: 16))
+                    .foregroundColor(.white)
+            }
+            
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()

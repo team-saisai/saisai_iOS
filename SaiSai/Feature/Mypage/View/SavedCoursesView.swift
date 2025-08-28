@@ -153,10 +153,15 @@ struct SavedCoursesView: View {
             isEditingPublisher.send(newValue)
         })
         .background(.gray90)
-        .navigationTitle("저장한 코스\(vm.isEditing ? " 편집" : "")")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("저장한 코스\(vm.isEditing ? " 편집" : "")")
+                    .font(.pretendard(.semibold, size: 16))
+                    .foregroundColor(.white)
+            }
+            
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()

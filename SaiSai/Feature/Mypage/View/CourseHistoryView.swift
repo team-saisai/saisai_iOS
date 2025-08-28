@@ -204,10 +204,15 @@ struct CourseHistoryView: View {
             vm.refreshList()
         })
         .background(.gray90)
-        .navigationTitle("코스 기록\(vm.isEditing ? " 편집" : "")")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("코스 기록\(vm.isEditing ? " 편집" : "")")
+                    .font(.pretendard(.semibold, size: 16))
+                    .foregroundColor(.white)
+            }
+            
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()

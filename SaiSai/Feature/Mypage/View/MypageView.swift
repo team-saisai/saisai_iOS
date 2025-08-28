@@ -19,6 +19,7 @@ struct MypageView: View {
             HStack {
                 Text("Mypage")
                     .font(.hakgoyansimSamulham)
+                    .foregroundStyle(.white)
                 Spacer()
             }
             .padding(.horizontal, 24)

@@ -46,10 +46,15 @@ struct MyBadgesView: View {
             vm.fetchData()
         }
         .background(.gray90)
-        .navigationTitle("나의 뱃지")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("나의 뱃지")
+                    .font(.pretendard(.semibold, size: 16))
+                    .foregroundColor(.white)
+            }
+            
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()
