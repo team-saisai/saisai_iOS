@@ -62,7 +62,7 @@ struct SingleVerticalCourseView: View {
                 HStack(spacing: 4) {
                     if let status = vm.popularChallenges[index].challengeStatusCase {
                         CourseTitleChip(challengeStatus: status,
-                                        endedAt: vm.popularChallenges[index].endedAt)
+                                        endedAt: vm.popularChallenges[index].challengeEndedAt)
                     }
                     if let isEventActive = vm.popularChallenges[index].isEventActive, isEventActive {
                         CourseTitleChip(isEvent: true, challengeStatus: .ended, endedAt: "")
