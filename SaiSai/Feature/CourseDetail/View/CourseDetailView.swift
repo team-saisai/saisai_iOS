@@ -82,7 +82,8 @@ struct CourseDetailView: View {
             
             if vm.isInstructionAlertPresented {
                 CourseRidingInstructionView(
-                    startButtonOnInstructionPublisher: vm.startButtonOnInstructionPublisher
+                    startButtonOnInstructionPublisher: vm.startButtonOnInstructionPublisher,
+                    isPresented: $vm.isInstructionAlertPresented
                 )
                 .padding(.horizontal, 35)
             }

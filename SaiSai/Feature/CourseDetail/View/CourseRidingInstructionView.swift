@@ -16,9 +16,23 @@ struct CourseRidingInstructionView: View {
         "일시정지 된 코스는 코스 기록에서 확인할 수 있어요."
     ]
     @State var isNeverAgainOn: Bool = false
+    @Binding var isPresented: Bool
     
     var body: some View {
         VStack(spacing: 0) {
+            
+            HStack {
+                Spacer()
+                
+                Button {
+                    isPresented.toggle()
+                } label: {
+                    Image(systemName: "xmark")
+                        .resizable()
+                        .frame(width: 13.3, height: 13.3)
+                        .foregroundColor(.white)
+                }
+            }
             
             Text("주행 안내사항")
                 .font(.pretendard(.medium, size: 18))
@@ -70,8 +84,7 @@ struct CourseRidingInstructionView: View {
             }
         }
         .padding(.horizontal, 20)
-        .padding(.top, 36)
-        .padding(.bottom, 20)
+        .padding(.vertical, 20)
         .background(RoundedRectangle(cornerRadius: 20).fill(.gray90))
     }
 }
