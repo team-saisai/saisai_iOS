@@ -64,7 +64,7 @@ struct CoreView: View {
             }
             vm.setIsToastPresented(true)
             withAnimation {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     vm.setIsToastPresented(false)
                 }
             }

@@ -456,9 +456,11 @@ extension CourseDetailViewModel {
     @MainActor
     private func sendToast(_ toastType: ToastType) {
         self.toastType = toastType
-        self.isToastPresented = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.isToastPresented = false
+        if !isToastPresented {
+            self.isToastPresented = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                self.isToastPresented = false
+            }
         }
     }
     
