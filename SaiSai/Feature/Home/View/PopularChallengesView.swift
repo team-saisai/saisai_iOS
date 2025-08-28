@@ -15,7 +15,7 @@ struct PopularChallengesView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 0) {
-                Text("인기 챌린지")
+                Text("추천 코스")
                     .foregroundStyle(.white)
                     .font(.pretendard(.semibold, size: 18))
                 Spacer()
