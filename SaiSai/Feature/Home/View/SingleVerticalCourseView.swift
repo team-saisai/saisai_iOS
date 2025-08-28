@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct SingleVerticalCourseView: View {
     
@@ -16,8 +17,12 @@ struct SingleVerticalCourseView: View {
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
                 
-                Image(.icMapEx) /// ImageUrl 로 수정 필요
+                KFImage(URL(string: vm.popularChallenges[index].courseImageUrl ?? ""))
                     .resizable()
+                    .placeholder({
+                        Image(systemName: "photo")
+                            .foregroundStyle(.gray50)
+                    })
                     .frame(height: 160)
                     .frame(maxWidth: .infinity)
                 

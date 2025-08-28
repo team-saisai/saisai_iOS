@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct SingleHorizontalCourseView: View {
     
@@ -16,8 +17,12 @@ struct SingleHorizontalCourseView: View {
         if vm.contentInfoList.count > index {
             ZStack {
                 HStack(spacing: 0) {
-                    Image(.icMapEx) /// ImageUrl 로 수정 필요
+                    KFImage(URL(string: vm.contentInfoList[index].imageUrl ?? ""))
                         .resizable()
+                        .placeholder({
+                            Image(systemName: "photo")
+                                .foregroundStyle(.gray50)
+                        })
                         .frame(width: 168)
                         .frame(maxHeight: .infinity)
                         .overlay {

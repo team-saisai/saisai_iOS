@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct RecentCourseView: View {
     
@@ -58,10 +59,12 @@ struct RecentCourseView: View {
                 Spacer()
                 
                 ZStack {
-                    Image(.icMapEx)
+                    KFImage(URL(string: vm.recentRide?.courseImageUrl ?? ""))
                         .resizable()
-                    //                    .frame(width: 155, height: 145)
-                    //                    .frame(maxWidth: .infinity) // TODO: - 나중에 수정 확인
+                        .placeholder({
+                            Image(systemName: "photo")
+                                .foregroundStyle(.gray50)
+                        })
                     VStack(alignment: .trailing) {
                         Spacer()
                         
