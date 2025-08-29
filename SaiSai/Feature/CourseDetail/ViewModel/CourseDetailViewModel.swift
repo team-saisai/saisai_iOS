@@ -64,7 +64,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
         if (numOfPassedCheckpoints == numOfTotalCheckpoints) && !isCompleted {
             return 99
         }
-        return Int(numOfPassedCheckpoints * 100 / numOfTotalCheckpoints)
+        return Int((Double(numOfPassedCheckpoints) * 100.0 / Double(numOfTotalCheckpoints)).rounded())
     }
     
     let courseService = NetworkService<CourseAPI>()
