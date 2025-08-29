@@ -186,12 +186,12 @@ struct MyRidesInfo: Decodable {
     
     var durationHour: Int {
         let totalTime = Int(durationSecond ?? 0)
-        return totalTime / 60
+        return totalTime / 3600
     }
     
     var durationMinute: Int {
         let totalTime = Int(durationSecond ?? 0)
-        return totalTime % 60
+        return totalTime % 3600 / 60
     }
     
     var challengeStatusCase: ChallengeStatus? {
