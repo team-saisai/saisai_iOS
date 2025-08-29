@@ -25,6 +25,10 @@ struct SingleVerticalCourseView: View {
                     })
                     .frame(height: 160)
                     .frame(maxWidth: .infinity)
+                    .overlay {
+                        LinearGradient(gradient: .init(colors: [.clear, .main]),
+                                       startPoint: .center, endPoint: .bottom)
+                    }
                 
                 VStack(alignment: .leading, spacing: 0) {
                     HStack {
