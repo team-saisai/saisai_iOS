@@ -17,7 +17,7 @@ struct SingleVerticalCourseView: View {
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
                 
-                KFImage(URL(string: vm.popularChallenges[index].courseImageUrl ?? ""))
+                KFImage(URL(string: vm.popularChallenges[index].imageUrl ?? ""))
                     .resizable()
                     .placeholder({
                         Image(systemName: "photo")

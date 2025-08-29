@@ -24,7 +24,7 @@ struct CourseInfo: Decodable {
     let distance: Double
     let estimatedTime: Double
     let sigun: String
-    let courseImageUrl: String?
+    let imageUrl: String?
     let challengeStatus: String?
     let challengeEndedAt: String?
     var isBookmarked: Bool
