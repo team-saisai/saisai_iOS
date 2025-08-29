@@ -42,6 +42,31 @@ final class CourseViewModel: ObservableObject {
         }
     }
     
+    private func refreshFetchData() {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let courseListResponse = try await courseService.request(
+                    .getCoursesList(
+                        page: currentPage,
+                        isChallenge: isChallengeSelected,
+                        sort: selectedOption
+                    ),
+                    responseDTO: AllCourseListResponse.self)
+                currentPage += 1
+                await setCourseList(courseListResponse.data.content)
+                if courseListResponse.data.last {
+                    await toggleIsLoading(false)
+                } else {
+                    await toggleIsLoading(true)
+                }
+            } catch let error {
+                print(error)
+                print("코스 리스트 정보 제공 실패")
+            }
+        }
+    }
+    
     func requestBookmark(courseId: Int, index: Int, pastValue: Bool) {
         Task { [weak self] in
             guard let self = self else { return }
@@ -72,9 +97,9 @@ final class CourseViewModel: ObservableObject {
             guard let self = self else { return }
             await initCurrentPage()
             await setOnlyOngoingFilterStatus(isOnlyOngoing)
-            await toggleIsLoading(true)
+            await toggleIsLoading(false)
             await removeAllCoursesFromList()
-            fetchData()
+            refreshFetchData()
         }
     }
     
@@ -83,9 +108,9 @@ final class CourseViewModel: ObservableObject {
             guard let self = self else { return }
             await initCurrentPage()
             await setSelectedOption(selectedOption)
-            await toggleIsLoading(true)
+            await toggleIsLoading(false)
             await removeAllCoursesFromList()
-            fetchData()
+            refreshFetchData()
         }
     }
     

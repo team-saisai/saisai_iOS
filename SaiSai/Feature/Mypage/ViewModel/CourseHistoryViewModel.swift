@@ -49,6 +49,33 @@ final class CourseHistoryViewModel: ObservableObject {
         }
     }
     
+    private func refreshFetchData() {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let response = try await myService.request(
+                    .getMyRides(
+                        page: currentPage,
+                        sort: selectedOption,
+                        notCompletedOnly: isNotCompletedOnly
+                    ),
+                    responseDTO: MyRidesResponseDTO.self
+                )
+                currentPage += 1
+                await setCourseList(response.data.content)
+                if response.data.last {
+                    await toggleIsLoading(false)
+                } else {
+                    await toggleIsLoading(true)
+                }
+            } catch {
+                await setIsRequesting(false)
+                print("코스 기록 불러오기 실패")
+                print(error)
+            }
+        }
+    }
+    
     func requestRemoveMultipleHistory() {
         Task { [weak self] in
             guard let self = self else { return }
@@ -79,14 +106,14 @@ final class CourseHistoryViewModel: ObservableObject {
         Task {
             [weak self] in
             guard let self = self else { return }
-            await toggleIsLoading(true)
+            await toggleIsLoading(false)
             await setIsRequesting(true)
             await removeAllCoursesFromList()
             await initCurrentPage()
             if isEditing == true { await setIsEditing(false) }
             await resetIndexToRemove()
             await setIsRequesting(false)
-            fetchData()
+            refreshFetchData()
         }
     }
     
@@ -95,9 +122,9 @@ final class CourseHistoryViewModel: ObservableObject {
             guard let self = self else { return }
             await initCurrentPage()
             await setSelectedOption(selectedOption)
-            await toggleIsLoading(true)
+            await toggleIsLoading(false)
             await removeAllCoursesFromList()
-            fetchData()
+            refreshFetchData()
         }
     }
 }
