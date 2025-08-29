@@ -38,7 +38,7 @@ final class HomeViewModel: ObservableObject {
                     let detailResponse = try await courseService.request(
                         .getCourseDetail(courseId: recent!.courseId),
                         responseDTO: CourseDetailResponseDTO.self)
-                    isCompleted = detailResponse.data.isCompleted
+                    isCompleted = detailResponse.data.rideId == nil
                 }
                 await setRecentRides(recent, isCompleted)
                 
