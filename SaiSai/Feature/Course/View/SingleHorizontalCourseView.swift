@@ -101,10 +101,11 @@ extension SingleHorizontalCourseView {
         HStack(spacing: 8) {
             HStack(spacing: 2) {
                 if let participantsCount = vm.contentInfoList[index].participantsCount {
-                    Image(.icThunderIcon)
+                    Image(systemName: "figure.stand")
                         .resizable()
                         .frame(width: 10, height: 14)
-                    Text("\(participantsCount.commaDecimal)명 도전중")
+                        .foregroundStyle(.customLightPurple)
+                    Text("\(participantsCount.commaDecimal)명 참가")
                 }
             }
             if let reward = vm.contentInfoList[index].reward {

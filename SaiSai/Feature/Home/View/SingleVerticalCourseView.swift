@@ -90,9 +90,10 @@ extension SingleVerticalCourseView {
     private func FooterView() -> some View {
         HStack(spacing: 8) {
             HStack(spacing: 2) {
-                Image(.icThunderIcon)
+                Image(systemName: "figure.stand")
                     .resizable()
                     .frame(width: 10, height: 14)
+                    .foregroundStyle(.customLightPurple)
                 Text("\(vm.popularChallenges[index].participantsCount ?? 0)명")
             }
             if let reward = vm.popularChallenges[index].reward {
