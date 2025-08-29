@@ -106,14 +106,14 @@ extension SingleSavedCourseView {
     private func FooterView() -> some View {
         HStack(spacing: 8) {
             HStack(spacing: 2) {
-                if let participantsCount = vm.contentInfoList[index].participantsCount, participantsCount != 0 {
+                if let participantsCount = vm.contentInfoList[index].participantsCount {
                     Image(.icThunderIcon)
                         .resizable()
                         .frame(width: 10, height: 14)
                     Text("\(participantsCount.commaDecimal)명 도전중")
                 }
             }
-            if let reward = vm.contentInfoList[index].reward, reward != 0 {
+            if let reward = vm.contentInfoList[index].reward {
                 HStack(spacing: 2) {
                     Image(.icStarIcon)
                         .frame(width: 12.5, height: 12)

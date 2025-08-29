@@ -95,7 +95,7 @@ extension SingleVerticalCourseView {
                     .frame(width: 10, height: 14)
                 Text("\(vm.popularChallenges[index].participantsCount ?? 0)명")
             }
-            if let reward = vm.popularChallenges[index].reward, reward != 0 {
+            if let reward = vm.popularChallenges[index].reward {
                 HStack(spacing: 2) {
                     Image(.icStarIcon)
                         .frame(width: 12.5, height: 12)
