@@ -65,20 +65,3 @@ struct CourseRidingView: View {
         }
     }
 }
-
-struct CustomUserAnnotation: View {
-    var heading: CLLocationDirection
-
-    var body: some View {
-        ZStack {
-            Circle()
-                .fill(Color.customLime)
-                .frame(width: 16, height: 16)
-
-            Image(systemName: "arrowtriangle.up.fill")
-                .foregroundColor(.white)
-                .rotationEffect(.degrees(heading))
-                .offset(y: -12)
-        }
-    }
-}
