@@ -30,10 +30,8 @@ struct CourseRidingView: View {
                         .frame(width: 14, height: 14)
                 }
                 
-                if let heading = vm.heading {
-                    UserAnnotation {
-                        CustomUserAnnotationView(heading: heading)
-                    }
+                UserAnnotation {
+                    CustomUserAnnotationView()
                 }
                 
                 if !vm.checkpointList.isEmpty {

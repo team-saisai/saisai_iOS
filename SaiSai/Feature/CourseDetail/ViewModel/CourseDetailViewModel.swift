@@ -22,7 +22,6 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
     @Published var spentSeconds: Int = 0
     @Published var rideId: Int? = nil
     @Published var totalDistance: Double = 0.0
-    @Published var heading: CLLocationDirection? = nil
     @Published var checkpointList: [CheckPointInfo] = []
     @Published var lastCheckedPointIdx: Int = -1
     @Published var hasUncompletedRide: Bool = false
@@ -332,12 +331,6 @@ extension CourseDetailViewModel: CLLocationManagerDelegate {
                     }
                 }
             }
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        DispatchQueue.main.async {
-            self.heading = newHeading.trueHeading
         }
     }
 }

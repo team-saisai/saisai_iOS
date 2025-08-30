@@ -9,12 +9,9 @@ import SwiftUI
 
 struct CustomUserAnnotationView: View {
     
-    var heading: Double
-    
     var body: some View {
         Image(.userPositionIcon)
             .resizable()
             .frame(width: 32, height: 32)
-            .rotationEffect(.degrees(heading))
     }
 }
