@@ -39,7 +39,7 @@ struct CourseRidingView: View {
                 if !vm.checkpointList.isEmpty {
                     ForEach(vm.checkpointList.indices, id: \.self) {
                         Annotation(
-                            "",
+                            "체크포인트 \($0 + 1)",
                             coordinate: CLLocationCoordinate2D(
                                 latitude: vm.checkpointList[$0].latitude,
                                 longitude: vm.checkpointList[$0].longitude
