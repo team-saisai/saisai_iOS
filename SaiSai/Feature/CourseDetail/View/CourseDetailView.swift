@@ -33,15 +33,21 @@ struct CourseDetailView: View {
                 Spacer()
                 
                 if vm.rideId != nil {
-                    Button {
-                        withAnimation {
-                            vm.toggleIsRidingCourseSummaryFolded()
+                    HStack {
+                        Button {
+                            withAnimation {
+                                vm.toggleIsRidingCourseSummaryFolded()
+                            }
+                        } label: {
+                            if vm.isRidingCourseSummaryFolded {
+                                RenderRidingCourseSummaryButton()
+                            } else {
+                                RidingCourseSummaryView()
+                            }
                         }
-                    } label: {
+                        
                         if vm.isRidingCourseSummaryFolded {
-                            RenderRidingCourseSummaryButton()
-                        } else {
-                            RidingCourseSummaryView()
+                            Spacer()
                         }
                     }
                     RidingStatusBottomItem(vm: vm)
@@ -173,9 +179,12 @@ extension CourseDetailView {
     @ViewBuilder
     private func RidingCourseSummaryView() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(vm.courseDetail?.courseName ?? "")
-                .font(.pretendard(.semibold, size: 16))
-                .padding(.bottom, 5)
+            HStack {
+                Text(vm.courseDetail?.courseName ?? "")
+                    .font(.pretendard(.semibold, size: 16))
+                Spacer()
+            }
+            .padding(.bottom, 5)
             
             HStack(spacing: 5) {
                 Text("\(String(format: "%.1f", vm.courseDetail?.distance ?? 0.0))km")
@@ -189,7 +198,6 @@ extension CourseDetailView {
             Text(vm.courseDetail?.convertedSummary ?? "")
                 .font(.pretendard(size: 14))
                 .multilineTextAlignment(.leading)
-//                .lineLimit(0)
         }
         .padding(.horizontal, 18)
         .padding(.vertical, 16)
@@ -199,24 +207,21 @@ extension CourseDetailView {
     
     @ViewBuilder
     private func RenderRidingCourseSummaryButton() -> some View {
-        HStack {
-            HStack(spacing: 9) {
-                Image(.icForkRight)
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 11, height: 14.8)
-                
-                Text("경로 소개")
-                    .font(.pretendard(.medium, size: 13))
-                
-            }
-            .foregroundStyle(.white)
-            .padding(.vertical, 9)
-            .padding(.horizontal, 14)
-            .background(RoundedRectangle(cornerRadius: 40).fill(.courseDetailBg))
+        HStack(spacing: 9) {
+            Image(.icForkRight)
+                .renderingMode(.template)
+                .resizable()
+                .frame(width: 11, height: 14.8)
             
-            Spacer()
+            Text("경로 소개")
+                .font(.pretendard(.medium, size: 13))
+            
         }
+        .foregroundStyle(.white)
+        .padding(.vertical, 9)
+        .padding(.horizontal, 14)
+        .background(RoundedRectangle(cornerRadius: 40).fill(.courseDetailBg))
+        
     }
 }
 
