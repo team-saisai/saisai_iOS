@@ -239,7 +239,7 @@ final class CourseDetailViewModel: NSObject, ObservableObject {
                     .syncRide(
                         rideId: rideId,
                         duration: spentSeconds,
-                        checkpointIdx: lastCheckedPointIdx
+                        checkpointIdx: lastCheckedPointIdx + 1
                     ),
                     responseDTO: SyncRideResponseDTO.self
                 )
