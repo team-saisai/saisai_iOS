@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E202BAEB2E1E3F2A00ECEE0E /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E202BAEA2E1E3F2A00ECEE0E /* Debug.xcconfig */; };
-		E202BAED2E1E3F3900ECEE0E /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E202BAEC2E1E3F3900ECEE0E /* Release.xcconfig */; };
 		E202BC402E1E91D300ECEE0E /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = E202BC3F2E1E91D300ECEE0E /* CombineMoya */; };
 		E202BC422E1E91D300ECEE0E /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = E202BC412E1E91D300ECEE0E /* Moya */; };
 		E202BC442E1E91D300ECEE0E /* ReactiveMoya in Frameworks */ = {isa = PBXBuildFile; productRef = E202BC432E1E91D300ECEE0E /* ReactiveMoya */; };
@@ -144,7 +142,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1630;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					D24556B12E192BE100409BD7 = {
 						CreatedOnToolsVersion = 16.3;
@@ -182,8 +180,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E202BAED2E1E3F3900ECEE0E /* Release.xcconfig in Resources */,
-				E202BAEB2E1E3F2A00ECEE0E /* Debug.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,6 +202,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -272,6 +269,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
