@@ -152,11 +152,12 @@
 				};
 			};
 			buildConfigurationList = D24556AD2E192BE100409BD7 /* Build configuration list for PBXProject "SaiSai" */;
-			developmentRegion = en;
+			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = D24556A92E192BE100409BD7;
 			minimizedProjectReferenceProxies = 1;
