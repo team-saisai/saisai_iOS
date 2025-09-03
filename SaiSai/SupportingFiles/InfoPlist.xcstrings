@@ -25,7 +25,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Used to display the user's current location on the map and to check the progress along the route."
+            "value" : "This app uses your location to show your current position on the map and track your route progress."
           }
         },
         "ko" : {
