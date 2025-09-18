@@ -81,19 +81,6 @@ final class OAuthAuthenticator: NSObject {
             requestToBackend(token)
         }
     }
-//    
-//    func requestGoogleRevoke() {
-//        if GIDSignIn.sharedInstance.currentUser != nil {
-//            GIDSignIn.sharedInstance.disconnect() { [weak self] error in
-//                guard error == nil else {
-//                    print("google revoke 실패...")
-//                    self?.sendToast()
-//                    return
-//                }
-//                print("google revoke 성공")
-//            }
-//        }
-//    }
     
     private func checkGoogleUserInfo(_ isDelete: Bool) -> String {
         
@@ -146,8 +133,7 @@ extension OAuthAuthenticator: ASAuthorizationControllerPresentationContextProvid
     }
     
     private func sendToast() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+        DispatchQueue.main.async {
             ToastManager.shared.toastPublisher.send(.requestFailure)
         }
     }
